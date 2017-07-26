@@ -2,7 +2,7 @@
 <html lang="en">
 <!--
    index.html template
-   
+
    Author: Marek Chalupa <xchalup4@fi.muni.cz>, 2017
 -->
 
@@ -13,11 +13,12 @@
 
 <body>
 
-<h2>Benchexec results viewer</h2>
+#include("../header.html")
+<div id="content">
 <h3>Select tools:</h3>
 
 <form action="/results">
-  <select name="tool" multiple="multiple">
+  <select name="tool" multiple="multiple" style="width:50%;">
   #set @idx = 0:
   #for @toolrun in @tools:
     <option value=@idx>@toolrun.getShortName()</option>
@@ -27,6 +28,8 @@
   <br/>
   <input type="submit" value="Show!">
 </form>
+
+</div> <!-- content -->
 </body>
 
 </html>

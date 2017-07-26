@@ -33,8 +33,10 @@ function toggleRolling(div) {
 </script>
 
 <body>
-  <h2>Benchexec results viewer</h2>
 
+#include("../header.html")
+
+<div id="content">
   <table>
   <th>
   #for @tool in @tools:
@@ -42,6 +44,8 @@ function toggleRolling(div) {
   #end
   </th>
   </table>
+
+</div> <!-- content -->
 </body>
 
 </html>
