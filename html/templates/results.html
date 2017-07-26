@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<!--
+   index.html template
+   
+   Author: Marek Chalupa <xchalup4@fi.muni.cz>, 2017
+-->
+<head>
+<meta charset="utf-8" />
+<title>Benchexec results viewer</title>
+</head>
+
+<style>
+    .rolled {
+        overflow:hidden;
+        height:20px;
+    }
+
+    .unrolled {
+        height: 100%;
+    }
+</style>
+<script>
+function toggleRolling(div) {
+  var className = div.getAttribute("class");
+  if(className=="rolled") {
+    div.className = "unrolled";
+  }
+  else{
+    div.className = "rolled";
+  }
+}
+</script>
+
+<body>
+  <h2>Benchexec results viewer</h2>
+
+  <table>
+  <th>
+  #for @tool in @tools:
+    <td>@tool.getShortName()</td>
+  #end
+  </th>
+  </table>
+</body>
+
+</html>

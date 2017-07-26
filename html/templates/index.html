@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<!--
+   index.html template
+   
+   Author: Marek Chalupa <xchalup4@fi.muni.cz>, 2017
+-->
+
+<head>
+<meta charset="utf-8" />
+<title>Benchexec results viewer</title>
+</head>
+
+<body>
+
+<h2>Benchexec results viewer</h2>
+<h3>Select tools:</h3>
+
+<form action="/results">
+  <select name="tool" multiple="multiple">
+  #set @idx = 0:
+  #for @toolrun in @tools:
+    <option value=@idx>@toolrun.getShortName()</option>
+    #set @idx = @idx + 1:
+  #end
+  </select>
+  <br/>
+  <input type="submit" value="Show!">
+</form>
+</body>
+
+</html>

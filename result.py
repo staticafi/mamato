@@ -101,37 +101,3 @@ class DirectRunInfo(RunInfo):
     def property(self):
         return self._property
 
-class ToolResult(object):
-    """
-    Represents a run of a tool on a set of benchmarks
-    """
-
-    def __init__(self):
-	# a descriptor of this run
-	self.name = None
-        self.tool = None
-        self.tool_version = None
-        self.date = None
-        self.options = None
-        self.timelimit = None
-	self.block = None
-        # list of results (RunInfo objects)
-        self.results = []
-
-    def append(self, r):
-	"""
-	Add a run result to this tool run
-	"""
-	self.results.append(r)
-
-    def dump(self):
-	print('-- Run of a tool --')
-	print('{0} {1} -- {2}'.format(self.tool, self.tool_version, self.name))
-	print('Date: {0}'.format(self.date))
-	print('Block: {0}'.format(self.block))
-	print('Timelimit: {0}'.format(self.timelimit))
-	print('Results:')
-	for r in self.results:
-	    r.dump()
-
-

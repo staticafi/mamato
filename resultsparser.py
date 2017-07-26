@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
-from result import RunInfo, DirectRunInfo, ToolResult
+from result import RunInfo, DirectRunInfo
+from tools import ToolResult
 
 import sys
 import os
@@ -70,6 +71,7 @@ def createToolResult(xmlfl):
     tr.block = root.getAttribute('block')
 
     return tr
+
 
 def parse_xml(filePath):
     """
