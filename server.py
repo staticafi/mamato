@@ -41,11 +41,23 @@ def _parse_args(args):
 def showResults(wfile, tm, args):
     opts = _parse_args(args)
     tools = tm.getTools(map(int, opts['tool']))
-    _render_template(wfile, 'results.html', {'tools':tools})
+    categories = set()
+    for tool in tools:
+        for r in tool.getResults():
+            categories.add(r.block)
+    cats = [x for x in categories]
+    _render_template(wfile, 'results.html',
+                     {'tools':tools, 'categories' : cats})
+
+def sendStyle(wfile):
+    f = open('html/style.css')
+    wfile.write(f.read())
+    f.close()
 
 handlers = {
     'root'       : showRoot,
     'results'    : showResults,
+    'style.css'  : None, # we handle this specially
 }
 
 # see http://www.acmesystems.it/python_httpd
@@ -75,24 +87,30 @@ class Handler(SimpleHTTPServer.SimpleHTTPRequestHandler):
         else:
             return (None, [])
 
-    def _send_headers(self):
+    def _send_headers(self, mimetype = 'text/html'):
         self.send_response(200)
-        self.send_header('Content-type','text/html')
+        self.send_header('Content-type', mimetype)
         self.end_headers()
 
     def do_GET(self):
-        self._send_headers()
-
         act, args = self._parsePath()
+        print(act, args)
+
         if act is None:
+            self._send_headers()
             self.send_error(404, 'Unhandled request')
             print(self.path)
             return
+        elif act == 'style.css':
+            self._send_headers('text/css')
+            sendStyle(self.wfile)
+            return
 
         global handlers
+        global tm
         assert act in handlers.keys()
-        print('DBG', act, args)
-	global tm
+
+        self._send_headers()
         handlers[act](self.wfile, tm, args)
 
 # redefine server_bind so that we do not have TIME_WAIT issue
@@ -105,7 +123,7 @@ class Server(SocketServer.TCPServer):
 
 httpd = Server(("", PORT), Handler)
 
-print("serving at port", PORT)
+print("Serving at port", PORT)
 try:
     httpd.serve_forever()
 except KeyboardInterrupt:

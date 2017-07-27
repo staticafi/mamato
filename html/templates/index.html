@@ -8,6 +8,7 @@
 
 <head>
 <meta charset="utf-8" />
+<link rel="stylesheet" type="text/css" href="../style.css">
 <title>Benchexec results viewer</title>
 </head>
 
@@ -20,8 +21,8 @@
 <form action="/results">
   <select name="tool" multiple="multiple" style="width:50%;">
   #set @idx = 0:
-  #for @toolrun in @tools:
-    <option value=@idx>@toolrun.getShortName()</option>
+  #for @tool in @tools:
+    <option value=@idx>@tool.tool</option>
     #set @idx = @idx + 1:
   #end
   </select>
