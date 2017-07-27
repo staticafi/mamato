@@ -49,8 +49,8 @@ function toggleRolling(div) {
   </tr>
 
   #for @cat in @categories:
-  <tr>
-    <td>@cat</td>
+  <!--<tr onclick="window.document.location.href.replace(/results/category_results/);">-->
+    <td><a href="/category_results?cat=@{cat}@toolsGETList()">@cat</a></td>
     #for @tool in @tools:
       #set @sum = @tool.getResultsSummaryForCat(@cat):
       <td align="center">

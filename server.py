@@ -6,7 +6,7 @@ import socket
 
 import sys, os
 from result import RunInfo
-from tools import ToolResult, ToolsManager
+from tools import ToolResult, ToolsManager, DirectJoinedToolResults
 
 try:
     from quik import FileLoader
@@ -31,6 +31,9 @@ def _parse_args(args):
     opts = {}
     for a in args:
         tmp = a.split('=', 1)
+        if len(tmp) != 2:
+            print('ERROR: unhandled GET arg: {0}'.format(a))
+            continue
         if opts.has_key(tmp[0]):
                 opts[tmp[0]].append(tmp[1])
         else:
@@ -40,14 +43,53 @@ def _parse_args(args):
 
 def showResults(wfile, tm, args):
     opts = _parse_args(args)
+    if not opts.has_key('tool'):
+        wfile.write('<h2>No tool given</h2>')
+        return
+
     tools = tm.getTools(map(int, opts['tool']))
     categories = set()
     for tool in tools:
         for r in tool.getResults():
             categories.add(r.block)
     cats = [x for x in categories]
+
+    def toolsGETList():
+        s = ''
+        for x in opts['tool']:
+            s += '&tool={0}'.format(x)
+        return s
+
     _render_template(wfile, 'results.html',
-                     {'tools':tools, 'categories' : cats})
+                     {'tools':tools, 'categories' : cats,
+                      'toolsGETList' : toolsGETList})
+
+def showCategoryResults(wfile, tm, args):
+    opts = _parse_args(args)
+    if not opts.has_key('tool'):
+        wfile.write('<h2>No tool given</h2>')
+        return
+
+    if not opts.has_key('cat'):
+        wfile.write('<h2>No category given</h2>')
+        return
+
+    tools = tm.getTools(map(int, opts['tool']))
+    results = DirectJoinedToolResults()
+    cat = opts['cat']
+    for t in tools:
+        print('Join', t)
+        for r in t.getResults():
+            print('    -> ', r.block, cat)
+            if r.block == cat[0]:
+                print('  Join', cat, r)
+                results.join(r)
+                # break the inner loop
+                break;
+
+    results.dump()
+    _render_template(wfile, 'category_results.html',
+                     {'tools':tools, 'results' : results})
 
 def sendStyle(wfile):
     f = open('html/style.css')
@@ -55,9 +97,10 @@ def sendStyle(wfile):
     f.close()
 
 handlers = {
-    'root'       : showRoot,
-    'results'    : showResults,
-    'style.css'  : None, # we handle this specially
+    'root'              : showRoot,
+    'results'           : showResults,
+    'category_results'  : showCategoryResults,
+    'style.css'         : None, # we handle this specially
 }
 
 # see http://www.acmesystems.it/python_httpd
@@ -94,7 +137,6 @@ class Handler(SimpleHTTPServer.SimpleHTTPRequestHandler):
 
     def do_GET(self):
         act, args = self._parsePath()
-        print(act, args)
 
         if act is None:
             self._send_headers()

@@ -20,6 +20,9 @@ option:hover {
        background-color: #e9ffe1;
 }
 
+a {
+	text-decoration: none; 
+}
 
 #header {
         text-align: center;
