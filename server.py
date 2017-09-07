@@ -2,10 +2,11 @@
 
 import sys
 if (sys.version_info > (3, 0)):
-    import http.server
+    import http.server as httpserver
+    import socketserver
 else:
-    import SimpleHTTPServer
-    import SocketServer
+    import SimpleHTTPServer as httpserver
+    import SocketServer as socketserver
 
 import os
 import socket
@@ -97,7 +98,7 @@ def showCategoryResults(wfile, tm, args):
                      {'tools':tools, 'results' : results})
 
 def sendStyle(wfile):
-    f = open('html/style.css')
+    f = open('html/style.css', 'rb')
     wfile.write(f.read())
     f.close()
 
@@ -109,7 +110,7 @@ handlers = {
 }
 
 # see http://www.acmesystems.it/python_httpd
-class Handler(SimpleHTTPServer.SimpleHTTPRequestHandler):
+class Handler(httpserver.SimpleHTTPRequestHandler):
     def _parsePath(self):
         args = []
 
@@ -163,7 +164,7 @@ class Handler(SimpleHTTPServer.SimpleHTTPRequestHandler):
 # redefine server_bind so that we do not have TIME_WAIT issue
 # after closing the connection
 # https://stackoverflow.com/questions/6380057/python-binding-socket-address-already-in-use
-class Server(SocketServer.TCPServer):
+class Server(socketserver.TCPServer):
     def server_bind(self):
         self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         self.socket.bind(self.server_address)
