@@ -1,10 +1,15 @@
 #!/usr/bin/python
 
-import SimpleHTTPServer
-import SocketServer
+import sys
+if (sys.version_info > (3, 0)):
+    import http.server
+else:
+    import SimpleHTTPServer
+    import SocketServer
+
+import os
 import socket
 
-import sys, os
 from result import RunInfo
 from tools import ToolResult, ToolsManager, DirectJoinedToolResults
 
