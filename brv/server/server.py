@@ -13,6 +13,7 @@ import socket
 
 from result import RunInfo
 from tools import ToolResult, ToolsManager, DirectJoinedToolResults
+from .. utils import dbg
 
 try:
     from quik import FileLoader
@@ -170,7 +171,7 @@ class BRVServer(socketserver.TCPServer):
 
     def establish(nm = "", port = 3000):
         httpd = BRVServer((nm, port), Handler)
-        print("Serving at port", port)
+        dbg("Serving at port {0}".format(port))
 
         try:
             httpd.serve_forever()
