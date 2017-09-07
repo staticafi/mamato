@@ -21,7 +21,6 @@ except ImportError:
     print('Run "pip install quik" or check "http://quik.readthedocs.io/en/latest/"')
     sys.exit(1)
 
-PORT = 3000
 tm = ToolsManager(sys.argv[1:])
 
 def _render_template(wfile, name, variables):
@@ -161,22 +160,23 @@ class Handler(httpserver.SimpleHTTPRequestHandler):
         self._send_headers()
         handlers[act](self.wfile, tm, args)
 
-# redefine server_bind so that we do not have TIME_WAIT issue
-# after closing the connection
-# https://stackoverflow.com/questions/6380057/python-binding-socket-address-already-in-use
-class Server(socketserver.TCPServer):
+class BRVServer(socketserver.TCPServer):
+    # redefine server_bind so that we do not have TIME_WAIT issue
+    # after closing the connection
+    # https://stackoverflow.com/questions/6380057/python-binding-socket-address-already-in-use
     def server_bind(self):
         self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         self.socket.bind(self.server_address)
 
-httpd = Server(("", PORT), Handler)
+    def establish(nm = "", port = 3000):
+        httpd = BRVServer((nm, port), Handler)
+        print("Serving at port", port)
 
-print("Serving at port", PORT)
-try:
-    httpd.serve_forever()
-except KeyboardInterrupt:
-    httpd.shutdown()
-    httpd.server_close()
-    # explicitly close the socket
-    httpd.socket.close()
-    print("Stopping...")
+        try:
+            httpd.serve_forever()
+        except KeyboardInterrupt:
+            httpd.shutdown()
+            httpd.server_close()
+            # explicitly close the socket
+            httpd.socket.close()
+            print("Stopping...")
