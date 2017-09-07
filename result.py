@@ -41,13 +41,13 @@ class RunInfo(object):
         raise NotImplemented
 
     def dump(self):
-	print(' -- Result --')
-	print('  {0} ({1})'.format(self.name(), self.fullname()))
-	print('  Result category: {0}'.format(self.resultcategory()))
-	print('  Property: {0}'.format(self.property()))
-	print('  Cpu (wall) time: {0} ({1})'.format(self.cputime(), self.walltime()))
-	print('  Memory usage: {0}'.format(self.memusage()))
-	print('  Exit code, return value: {0} {1}'.format(self.exitcode(), self.returnvalue()))
+        print(' -- Result --')
+        print('  {0} ({1})'.format(self.name(), self.fullname()))
+        print('  Result category: {0}'.format(self.resultcategory()))
+        print('  Property: {0}'.format(self.property()))
+        print('  Cpu (wall) time: {0} ({1})'.format(self.cputime(), self.walltime()))
+        print('  Memory usage: {0}'.format(self.memusage()))
+        print('  Exit code, return value: {0} {1}'.format(self.exitcode(), self.returnvalue()))
 
 class DirectRunInfo(RunInfo):
     """
