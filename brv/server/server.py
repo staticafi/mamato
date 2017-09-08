@@ -22,8 +22,6 @@ except ImportError:
     print('Run "pip install quik" or check "http://quik.readthedocs.io/en/latest/"')
     sys.exit(1)
 
-tm = ToolsManager(sys.argv[1:])
-
 def _render_template(wfile, name, variables):
     loader = FileLoader('html/templates/')
     template = loader.load_template(name)

@@ -13,6 +13,7 @@ class ToolResult(object):
         self.date = None
         self.options = None
         self.timelimit = None
+        self.memlimit = None
         self.block = None
         # list of results (RunInfo objects)
         self._results = []

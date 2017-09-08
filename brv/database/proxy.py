@@ -46,45 +46,23 @@ class DatabaseProxy(object):
         ver = self._db.query('SELECT VERSION()')[0][0]
         dbg('Connected to database: MySQL version {0}'.format(ver))
 
-    def connection(self):
-        return self._db
+    ## Shortcuts for convenience
+    def query_noresult(self, q):
+        return self._db.query_noresult(q)
+
+    def queryInt(self, q):
+        return self._db.queryInt(q)
+
+    def query(self, q):
+        return self._db.query(q)
 
     def commit(self):
         self._db.commit()
 
-    def getToolID(self, tool, version, tool_params, year_id):
+    def getToolID(self, name, version):
         q = """
-        SELECT id FROM tools
-        WHERE name = '{0}' and version = '{1}'
-              and params = '{2}' and year_id = '{3}';
-        """.format(tool, version, tool_params, year_id)
-        res = self._db.query(q)
-        if not res:
-            return None
+        SELECT id FROM tool
+        WHERE name = '{0}' AND version = '{1}';
+        """.format(name, version)
 
-        assert len(res) == 1
-        return res[0][0]
-
-    def getCategoryID(self, year_id, category_name):
-        q = """
-        SELECT id FROM categories
-        WHERE
-            year_id = '{0}' and name = '{1}';
-        """.format(year_id, category_name)
-        res = self._db.query(q)
-        if not res:
-            return None
-
-        return res[0][0]
-
-    def getTaskID(self, category_id, name):
-        q = """
-        SELECT id FROM tasks
-        WHERE name = '{0}' and category_id = '{1}';
-        """.format(basename(name), category_id)
-        res = self._db.query(q)
-        if not res:
-            return None
-
-        return res[0][0]
-
+        return self.queryInt(q)

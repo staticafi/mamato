@@ -17,6 +17,7 @@ CREATE TABLE `tool_run` (
   `options` text,
   `memlimit` varchar(100) DEFAULT NULL,
   `cpulimit` varchar(100) DEFAULT NULL,
+  `date` DATETIME DEFAULT NULL,
   PRIMARY KEY (`id`),
   FOREIGN KEY (`tool_id`) REFERENCES `tool` (`id`)
 );
@@ -25,7 +26,7 @@ CREATE TABLE `run` (
   `status` varchar(255) DEFAULT NULL,
   `cputime` float DEFAULT NULL,
   `walltime` float DEFAULT NULL,
-  `memusage` int(11) DEFAULT NULL,
+  `memusage` int(64) DEFAULT NULL,
   `classification` varchar(50) DEFAULT NULL,
   `exitcode` int(11) DEFAULT NULL,
   `exitsignal` int(11) DEFAULT NULL,
@@ -33,8 +34,8 @@ CREATE TABLE `run` (
   `tool_run_id` int(11) NOT NULL,
   `benchmarks_set_id` int(11) NOT NULL,
   `property` varchar(100) DEFAULT NULL,
-  `options` text COLLATE,
-  `file` text COLLATE,
+  `options` text,
+  `file` text,
   FOREIGN KEY (`tool_run_id`) REFERENCES `tool_run` (`id`),
   FOREIGN KEY (`benchmarks_set_id`) REFERENCES `benchmarks_set` (`id`)
 );

@@ -29,6 +29,7 @@ class RunInfo(object):
 
     def resultcategory(self):
         " Was this result in category correct/incorrect/error or unknown?"
+        # FIXME: in database it is called 'classification'
         raise NotImplemented
 
     def exitcode(self):
