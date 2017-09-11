@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from result import RunInfo, DirectRunInfo
+from brv.runinfo import DirectRunInfo
 from tools import ToolResult
 
 import sys

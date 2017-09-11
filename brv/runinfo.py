@@ -8,10 +8,10 @@ class RunInfo(object):
     of a tool on a given benchmark.
     """
 
-    # children must override these methods
     def name(self):
-        raise NotImplemented
+        return basename(self.fullname())
 
+    # children must override these methods
     def fullname(self):
         raise NotImplemented
 
@@ -29,7 +29,6 @@ class RunInfo(object):
 
     def classification(self):
         " Was this result in category correct/incorrect/error or unknown?"
-        # FIXME: in database it is called 'classification'
         raise NotImplemented
 
     def exitcode(self):
@@ -49,6 +48,53 @@ class RunInfo(object):
         print('  Cpu (wall) time: {0} ({1})'.format(self.cputime(), self.walltime()))
         print('  Memory usage: {0}'.format(self.memusage()))
         print('  Exit code, return value: {0} {1}'.format(self.exitcode(), self.returnvalue()))
+
+class DBRunInfo(RunInfo):
+    """
+    This class represents one instance of a run
+    of a tool on a given benchmark. It keeps the information
+    in a result of a database query and retrieves the information
+    using the getters
+    """
+
+    def __init__(self, res):
+        self._query_result = res
+
+    # the data in the query result are supposed to be
+    # indexed as follows:
+    # 0 -> status
+    # 1 -> cputime
+    # 2 -> walltime
+    # 3 -> memusage
+    # 4 -> classification
+    # 5 -> exitcode
+    # 6 -> property
+    # 7 -> file name
+
+    def status(self):
+        return self._query_result[0]
+
+    def cputime(self):
+        return self._query_result[1]
+
+    def walltime(self):
+        return self._query_result[2]
+
+    def memusage(self):
+        return self._query_result[3]
+
+    def classification(self):
+        return self._query_result[4]
+
+    def exitcode(self):
+        return self._query_result[5]
+
+    def property(self):
+        return self._query_result[6]
+
+    def fullname(self):
+        return self._query_result[7]
+
 
 class DirectRunInfo(RunInfo):
     """
