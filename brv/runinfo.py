@@ -27,7 +27,7 @@ class RunInfo(object):
     def memusage(self):
         raise NotImplemented
 
-    def resultcategory(self):
+    def classification(self):
         " Was this result in category correct/incorrect/error or unknown?"
         # FIXME: in database it is called 'classification'
         raise NotImplemented
@@ -44,7 +44,7 @@ class RunInfo(object):
     def dump(self):
         print(' -- Result --')
         print('  {0} ({1})'.format(self.name(), self.fullname()))
-        print('  Result category: {0}'.format(self.resultcategory()))
+        print('  Result category: {0}'.format(self.classification()))
         print('  Property: {0}'.format(self.property()))
         print('  Cpu (wall) time: {0} ({1})'.format(self.cputime(), self.walltime()))
         print('  Memory usage: {0}'.format(self.memusage()))
@@ -65,7 +65,7 @@ class DirectRunInfo(RunInfo):
         self._cputime = None
         self._walltime = None
         self._memusage = None
-        self._resultcategory = None
+        self._classification = None
         self._property = None
         self._exitcode = None
         self._returnvalue = None
@@ -90,8 +90,8 @@ class DirectRunInfo(RunInfo):
     def memusage(self):
         return self._memusage
 
-    def resultcategory(self):
-        return self._resultcategory
+    def classification(self):
+        return self._classification
 
     def exitcode(self):
         return self._exitcode
