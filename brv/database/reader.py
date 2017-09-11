@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #
-# Copyright (c) 2015, 2017 Marek Chalupa
-# E-mail: statica@fi.muni.cz, mchalupa@mail.muni.cz
+# (c) 2017 Marek Chalupa
+# E-mail(s): statica@fi.muni.cz, mchalupa@mail.muni.cz
 #
 # Permission to use, copy, modify, distribute, and sell this software and its
 # documentation for any purpose is hereby granted without fee, provided that
@@ -21,41 +21,35 @@
 # TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE
 # OF THIS SOFTWARE.
 
+from . proxy import DatabaseProxy
+from brv.toolruninfo import ToolRunInfo
 
-from os.path import basename
-from .. utils import err, dbg
+class DatabaseReader(DatabaseProxy):
+    """
+    DatabaseProxy specialized for updating the database
+    """
 
-from . connection import DatabaseConnection
-
-def None2Zero(x):
-    if x is None:
-        return 0
-    return x
-
-def Empty2Null(x):
-    if x == '':
-        return 'NULL'
-
-    return '\'{0}\''.format(x.strip())
-
-class DatabaseProxy(object):
     def __init__(self, conffile = None):
-        self._db = DatabaseConnection(conffile)
+        DatabaseProxy.__init__(self, conffile)
 
-        # self check
-        ver = self._db.query('SELECT VERSION()')[0][0]
-        dbg('Connected to database: MySQL version {0}'.format(ver))
+    def getToolRuns(self):
+        q = """
+        SELECT tool.id, tool.name, tool.version, date, options, cpulimit, memlimit
+        FROM tool JOIN tool_run ON tool.id = tool_id;
+        """
+        res = self.query(q)
 
-    ## Shortcuts for convenience
-    def query_noresult(self, q):
-        return self._db.query_noresult(q)
+        ret = []
+        for r in res:
+            info = ToolRunInfo()
+            info.id = r[0]
+            info.tool = r[1]
+            info.tool_version = r[2]
+            info.date = r[3]
+            info.options = r[4]
+            info.timelimit = r[5]
+            info.memlimit = r[6]
 
-    def queryInt(self, q):
-        return self._db.queryInt(q)
+            ret.append(info)
 
-    def query(self, q):
-        return self._db.query(q)
-
-    def commit(self):
-        self._db.commit()
-
+        return ret

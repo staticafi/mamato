@@ -16,17 +16,19 @@
 
 #include("../header.html")
 <div id="content">
-<h3>Select tools:</h3>
+<h2>Tools:</h2>
 
-<form action="/results">
-  <select name="tool" multiple="multiple" style="width:50%;">
-  #set @idx = 0:
+<form action="/results" style="margin-left: 1em">
   #for @tool in @tools:
-    <option value=@idx>@tool.tool</option>
-    #set @idx = @idx + 1:
-  #end
-  </select>
+    <h3>@tool.name:</h3>
+    #for @run in @tool.getRuns():
+    <!--<select name="run" multiple="multiple" style="width:50%;">-->
+    <select name="run" multiple="multiple">
+      <option value=@run.id>[@run.date] @run.tool @run.tool_version</option>
+    </select>
+    #end
   <br/>
+  #end
   <input type="submit" value="Show!">
 </form>
 

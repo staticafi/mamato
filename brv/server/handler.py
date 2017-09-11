@@ -6,8 +6,7 @@ if (sys.version_info > (3, 0)):
 else:
     from SimpleHTTPServer import SimpleHTTPRequestHandler
 
-from brv.runinfo import RunInfo
-from tools import ToolResult, ToolsManager, DirectJoinedToolResults
+from brv.datamanager import DataManager
 from .. utils import dbg
 
 try:
@@ -17,14 +16,19 @@ except ImportError:
     print('Run "pip install quik" or check "http://quik.readthedocs.io/en/latest/"')
     sys.exit(1)
 
+# the tools manager object -- it must be globals,
+# since handler is created for each request and we do
+# not want to create it again and again
+datamanager = DataManager('database.conf')
+
 def _render_template(wfile, name, variables):
     loader = FileLoader('html/templates/')
     template = loader.load_template(name)
     wfile.write(template.render(variables,
                                 loader=loader).encode('utf-8'))
 
-def showRoot(wfile, tm, args):
-    _render_template(wfile, 'index.html', {'tools' : tm.getTools()})
+def showRoot(wfile, args):
+    _render_template(wfile, 'index.html', {'tools' : datamanager.getTools()})
 
 def _parse_args(args):
     opts = {}
@@ -33,20 +37,21 @@ def _parse_args(args):
         if len(tmp) != 2:
             print('ERROR: unhandled GET arg: {0}'.format(a))
             continue
-        if opts.has_key(tmp[0]):
+        if tmp[0] in opts:
                 opts[tmp[0]].append(tmp[1])
         else:
                 opts[tmp[0]] = [tmp[1]]
 
     return opts
 
-def showResults(wfile, tm, args):
+def showResults(wfile, args):
     opts = _parse_args(args)
-    if not opts.has_key('tool'):
-        wfile.write('<h2>No tool given</h2>')
+    if not 'run' in opts:
+        wfile.write('<h2>No runs of tools given</h2>')
         return
 
-    tools = tm.getTools(map(int, opts['tool']))
+    dbg('Showing runs: ' + ' '.join(opts['run']))
+    tools = datamanager.getToolRuns(map(int, opts['run']))
     categories = set()
     for tool in tools:
         for r in tool.getResults():
@@ -55,38 +60,24 @@ def showResults(wfile, tm, args):
 
     def toolsGETList():
         s = ''
-        for x in opts['tool']:
-            s += '&tool={0}'.format(x)
+        for x in opts['run']:
+            s += '&run={0}'.format(x)
         return s
 
     _render_template(wfile, 'results.html',
                      {'tools':tools, 'categories' : cats,
                       'toolsGETList' : toolsGETList})
 
-def showCategoryResults(wfile, tm, args):
+def showCategoryResults(wfile, args):
     opts = _parse_args(args)
-    if not opts.has_key('tool'):
-        wfile.write('<h2>No tool given</h2>')
+    if not 'run' in opts:
+        wfile.write('<h2>No runs of tools given</h2>')
         return
 
-    if not opts.has_key('cat'):
+    if not 'cat' in opts:
         wfile.write('<h2>No category given</h2>')
         return
 
-    tools = tm.getTools(map(int, opts['tool']))
-    results = DirectJoinedToolResults()
-    cat = opts['cat']
-    for t in tools:
-        print('Join', t)
-        for r in t.getResults():
-            print('    -> ', r.block, cat)
-            if r.block == cat[0]:
-                print('  Join', cat, r)
-                results.join(r)
-                # break the inner loop
-                break;
-
-    results.dump()
     _render_template(wfile, 'category_results.html',
                      {'tools':tools, 'results' : results})
 
@@ -148,9 +139,8 @@ class Handler(SimpleHTTPRequestHandler):
             return
 
         global handlers
-        global tm
         assert act in handlers.keys()
 
         self._send_headers()
-        handlers[act](self.wfile, tm, args)
+        handlers[act](self.wfile, args)
 

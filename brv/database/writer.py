@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# (c) 2015, 2017 Marek Chalupa
+# (c) 2017 Marek Chalupa
 # E-mail(s): statica@fi.muni.cz, mchalupa@mail.muni.cz
 #
 # Permission to use, copy, modify, distribute, and sell this software and its
@@ -22,9 +22,6 @@
 # OF THIS SOFTWARE.
 
 
-from os.path import basename
-from .. utils import err, dbg
-
 from . proxy import DatabaseProxy
 
 class DatabaseWriter(DatabaseProxy):
@@ -35,12 +32,21 @@ class DatabaseWriter(DatabaseProxy):
     def __init__(self, conffile = None):
         DatabaseProxy.__init__(self, conffile)
 
+
+    def _getToolID(self, name, version):
+        q = """
+        SELECT id FROM tool
+        WHERE name = '{0}' AND version = '{1}';
+        """.format(name, version)
+
+        return self.queryInt(q)
+
     def getOrCreateToolInfoID(self, toolinfo):
         """
         Add a new tool_run into database, return its ID
         """
 
-        tool_id = self.getToolID(toolinfo.tool, toolinfo.tool_version)
+        tool_id = self._getToolID(toolinfo.tool, toolinfo.tool_version)
         if tool_id is None:
             # update the 'tool' table if needed
             q = """
@@ -100,7 +106,7 @@ class DatabaseWriter(DatabaseProxy):
         VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}', '{8}', '{9}',
         '{10}', '{11}', '{12}');
         """.format(runinfo.status(), runinfo.cputime(), runinfo.walltime(),
-                   runinfo.memusage(), runinfo.resultcategory(), runinfo.exitcode(),
+                   runinfo.memusage(), runinfo.classification(), runinfo.exitcode(),
                    0, 0, #FIXME
                    tool_run_id, benchmarks_set_id,
                    runinfo.property(), None, #FIXME
