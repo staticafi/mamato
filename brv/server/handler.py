@@ -50,9 +50,9 @@ def showResults(wfile, args):
         wfile.write('<h2>No runs of tools given</h2>')
         return
 
-    dbg('Show runs: ' + ' '.join(opts['run']))
     # list of ToolRunInfo objects
-    tools = datamanager.getToolRuns(map(int, opts['run']))
+    run_ids = map(int, opts['run'])
+    tools = datamanager.getToolRuns(run_ids)
     categories = set()
     for tool in tools:
         tool._stats = datamanager.getToolInfoStats(tool.getID())
