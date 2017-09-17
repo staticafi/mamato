@@ -20,6 +20,7 @@ class DataManager(object):
             tool_runs = self._db.getToolRuns()
             for run in tool_runs:
                 self.toolsmanager.add(run)
+                self._db.getToolInfoStats(run.getID())
 
         if xmls:
             # XXX: NOT SUPPORTED YET. load the xml into database first
@@ -30,5 +31,8 @@ class DataManager(object):
 
     def getToolRuns(self, which = []):
         return self.toolsmanager.getToolRuns(which)
+
+    def getToolInfoStats(self, which):
+        return self._db.getToolInfoStats(which)
 
 

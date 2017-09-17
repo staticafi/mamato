@@ -50,12 +50,15 @@ def showResults(wfile, args):
         wfile.write('<h2>No runs of tools given</h2>')
         return
 
-    dbg('Showing runs: ' + ' '.join(opts['run']))
+    dbg('Show runs: ' + ' '.join(opts['run']))
+    # list of ToolRunInfo objects
     tools = datamanager.getToolRuns(map(int, opts['run']))
     categories = set()
     for tool in tools:
-        for r in tool.getResults():
-            categories.add(r.block)
+        tool._stats = datamanager.getToolInfoStats(tool.getID())
+        for cat in tool._stats.getBenchmarksSets():
+            categories.add(cat)
+
     cats = [x for x in categories]
 
     def toolsGETList():
@@ -64,9 +67,21 @@ def showResults(wfile, args):
             s += '&run={0}'.format(x)
         return s
 
+    def formatStats(run, cat):
+        assert not run is None
+        assert not cat is None
+
+        stats = run.getStats().getStats(cat).getStats()
+        s = ''
+        for (classification, cnt) in stats.items():
+            s += '{0}: {1}</br>\n'.format(classification, cnt)
+
+        return s
+
     _render_template(wfile, 'results.html',
-                     {'tools':tools, 'categories' : cats,
-                      'toolsGETList' : toolsGETList})
+                     {'runs':tools, 'categories' : cats,
+                      'toolsGETList' : toolsGETList,
+                      'formatStats' : formatStats})
 
 def showCategoryResults(wfile, args):
     opts = _parse_args(args)

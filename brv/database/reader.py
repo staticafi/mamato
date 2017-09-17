@@ -22,7 +22,8 @@
 # OF THIS SOFTWARE.
 
 from . proxy import DatabaseProxy
-from brv.toolruninfo import ToolRunInfo
+from brv.toolruninfo import DBToolRunInfo, ToolRunInfoStats, RunsStats
+from brv.runinfo import DBRunInfo
 
 class DatabaseReader(DatabaseProxy):
     """
@@ -34,22 +35,63 @@ class DatabaseReader(DatabaseProxy):
 
     def getToolRuns(self):
         q = """
-        SELECT tool.id, tool.name, tool.version, date, options, cpulimit, memlimit
+        SELECT tool_run.id, tool.name, tool.version, date, options, cpulimit, memlimit
         FROM tool JOIN tool_run ON tool.id = tool_id;
         """
         res = self.query(q)
 
         ret = []
         for r in res:
-            info = ToolRunInfo()
-            info.id = r[0]
-            info.tool = r[1]
-            info.tool_version = r[2]
-            info.date = r[3]
-            info.options = r[4]
-            info.timelimit = r[5]
-            info.memlimit = r[6]
+            info = DBToolRunInfo(r[0])
+            # FIXME -- do not set private attributes
+            info._tool = r[1]
+            info._tool_version = r[2]
+            info._date = r[3]
+            info._options = r[4]
+            info._timelimit = r[5]
+            info._memlimit = r[6]
 
             ret.append(info)
 
         return ret
+
+    def getRunInfos(self, tool_run_id):
+        q = """
+        SELECT *
+        FROM run WHERE tool_run_id = '{0}'; 
+        """.format(tool_run_id);
+        print(q)
+        res = self.query(q)
+        print(res);
+        ret = []
+        for r in res:
+            # FIXME: do this lazily -- return an object with this query
+            # and return DBRunInfo when iterating over this object
+            ret.append(DBRunInfo(r))
+
+        return ret
+
+    def getToolInfoStats(self, tool_run_id):
+        q = """
+         SELECT name, count(classification), classification
+         FROM run JOIN benchmarks_set WHERE tool_run_id='{0}'
+         GROUP BY name, classification;
+         """.format(tool_run_id)
+        res = self.query(q)
+
+        ret = ToolRunInfoStats()
+        for r in res:
+            cat = r[0]
+            cnt = r[1]
+            classif = r[2]
+
+            if cat in ret._catToSum:
+                stats = ret._catToSum[cat]
+            else:
+                stats  = RunsStats()
+                ret._catToSum[cat] = stats
+
+            stats.addStat(classif, cnt)
+
+        return ret
+

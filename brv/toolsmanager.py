@@ -33,14 +33,14 @@ class ToolsManager(object):
     def _add_tool(self, toolrun):
         found = None
         for tool in self._tools:
-            if tool.version == toolrun.tool_version and tool.name == toolrun.tool:
+            if tool.version == toolrun.tool_version() and tool.name == toolrun.tool():
                 found = tool
                 break
 
         if found:
-            found._runs.append(toolrun)
+            found._runs.addRun(toolrun)
         else:
-            t = self.Tool(toolrun.tool, toolrun.tool_version)
+            t = self.Tool(toolrun.tool(), toolrun.tool_version())
             self._tools.append(t)
             t._runs.append(toolrun)
 
@@ -55,4 +55,4 @@ class ToolsManager(object):
         if not which:
             return self._tool_runs
         else:
-            return [run for run in self._tool_runs if run.id in which]
+            return [run for run in self._tool_runs if run.getID() in which]

@@ -40,25 +40,19 @@ function toggleRolling(div) {
 #include("../header.html")
 
 <div id="content">
-  <table style="margin-top: 15px">
+  <table style="margin-top: 15px;">
   <tr>
-    <th></th>
-  #for @tool in @tools:
-    <th>@tool.tool</th>
+    <th>Category</th>
+  #for @run in @runs:
+    <th>@run.tool()<span style="font-size: 10px">[@run.date()]</span></th>
   #end
   </tr>
 
   #for @cat in @categories:
-  <!--<tr onclick="window.document.location.href.replace(/results/category_results/);">-->
-    <td><a href="/category_results?cat=@{cat}@toolsGETList()">@cat</a></td>
-    #for @tool in @tools:
-      #set @sum = @tool.getResultsSummaryForCat(@cat):
-      <td align="center">
-        <span style="color: green">@sum.correct</span>/
-        <span style="color: red">@sum.incorrect</span>/
-        <span style="color: gray">@sum.unknown</span>/
-        <span style="color: blue">@sum.errors</span>
-      </td>
+  <tr><td>@cat</td>
+    <!--<td><a href="/category_results?cat=@{cat}@toolsGETList()">@cat</a></td>-->
+    #for @run in @runs:
+    <td>@formatStats(@run, @cat)</td>
     #end
   </tr>
   #end
