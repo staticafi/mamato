@@ -80,6 +80,24 @@ def showResults(wfile, args):
             s += '&run={0}'.format(x)
         return s
 
+    def _formatClassification(classification):
+        color = None
+        if classification == 'correct-unconfirmed':
+            color = 'orange'
+        elif classification.startswith('correct'):
+            color = 'green'
+        elif classification.startswith('incorrect'):
+            color = 'red'
+        elif classification.startswith('error'):
+            color = 'purple'
+        elif classification.startswith('unknown'):
+            color = 'gray'
+
+        if color is None:
+            return classification
+        else:
+            return '<span style="color: {0}">{1}</span>'.format(color, classification)
+
     def _formatStats(run, bset_id):
         assert not run is None
         assert not bset_id is None
@@ -87,7 +105,7 @@ def showResults(wfile, args):
         stats = run.getStats().getStatsByID(bset_id).getStats()
         s = ''
         for (classification, cnt) in stats.items():
-            s += '{0}: {1}</br>\n'.format(classification, cnt)
+            s +='{0}: {1}</br>\n'.format(_formatClassification(classification), cnt)
 
         return s
 

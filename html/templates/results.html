@@ -2,7 +2,7 @@
 <html lang="en">
 <!--
    index.html template
-   
+
    Author: Marek Chalupa <xchalup4@fi.muni.cz>, 2017
 -->
 
@@ -28,9 +28,23 @@ function toggleRolling(div) {
       # border-spacing: 5px;
     }
 
+    .row {
+      background-color: #fefffe;
+    }
+
+    .header_row {
+      background-color: #889988;
+      color: white;
+    }
+
     tr:hover {
       background-color: #f3fff3;
     }
+
+    tr.header_row:hover {
+      background-color: #889988;
+    }
+
 </style>
 <title>Benchexec results viewer</title>
 </head>
@@ -41,7 +55,7 @@ function toggleRolling(div) {
 
 <div id="content">
   <table style="margin-top: 15px;">
-  <tr>
+  <tr class="header_row">
     <th>Category</th>
   #for @run in @runs:
     <th>@run.tool() <span style="font-size: 10px">[@run.date()]</span></th>
@@ -49,7 +63,8 @@ function toggleRolling(div) {
   </tr>
 
   #for @bset in @benchmarks_sets:
-  <tr><td><a href="/benchmarks_results?benchmarks=@{bset.id}@toolsGETList()">@bset.name</a></td>
+  <tr class="row">
+    <td><a href="/benchmarks_results?benchmarks=@{bset.id}@toolsGETList()">@bset.name</a></td>
     #for @run in @runs:
     <td>@formatStats(@run, @bset.id)</td>
     #end
