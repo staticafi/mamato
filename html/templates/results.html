@@ -44,15 +44,14 @@ function toggleRolling(div) {
   <tr>
     <th>Category</th>
   #for @run in @runs:
-    <th>@run.tool()<span style="font-size: 10px">[@run.date()]</span></th>
+    <th>@run.tool() <span style="font-size: 10px">[@run.date()]</span></th>
   #end
   </tr>
 
-  #for @cat in @categories:
-  <tr><td>@cat</td>
-    <!--<td><a href="/category_results?cat=@{cat}@toolsGETList()">@cat</a></td>-->
+  #for @bset in @benchmarks_sets:
+  <tr><td><a href="/benchmarks_results?benchmarks=@{bset.id}@toolsGETList()">@bset.name</a></td>
     #for @run in @runs:
-    <td>@formatStats(@run, @cat)</td>
+    <td>@formatStats(@run, @bset.id)</td>
     #end
   </tr>
   #end

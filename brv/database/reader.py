@@ -73,7 +73,7 @@ class DatabaseReader(DatabaseProxy):
 
     def getToolInfoStats(self, tool_run_id):
         q = """
-         SELECT name, count(classification), classification
+         SELECT name, benchmarks_set.id, count(classification), classification
          FROM run JOIN benchmarks_set WHERE tool_run_id='{0}'
          GROUP BY name, classification;
          """.format(tool_run_id)
@@ -82,15 +82,11 @@ class DatabaseReader(DatabaseProxy):
         ret = ToolRunInfoStats()
         for r in res:
             cat = r[0]
-            cnt = r[1]
-            classif = r[2]
+            bset_id = r[1]
+            stats = ret.getOrCreateStats(bset_id, cat)
 
-            if cat in ret._catToSum:
-                stats = ret._catToSum[cat]
-            else:
-                stats  = RunsStats()
-                ret._catToSum[cat] = stats
-
+            cnt = r[2]
+            classif = r[3]
             stats.addStat(classif, cnt)
 
         return ret

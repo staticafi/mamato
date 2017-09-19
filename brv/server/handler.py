@@ -50,28 +50,41 @@ def showResults(wfile, args):
         wfile.write('<h2>No runs of tools given</h2>')
         return
 
+    class BSet(object):
+        def __init__(self, name, bid):
+            self.name = name
+            self.id = bid
+
+        def __hash__(self):
+            return self.id
+
+        def __eq__(self, oth):
+            return self.id == oth.id
+
     # list of ToolRunInfo objects
     run_ids = map(int, opts['run'])
     tools = datamanager.getToolRuns(run_ids)
     categories = set()
     for tool in tools:
         tool._stats = datamanager.getToolInfoStats(tool.getID())
-        for cat in tool._stats.getBenchmarksSets():
-            categories.add(cat)
+        for stats in tool._stats.getAllStats().values():
+            # a pair (name, id)
+            categories.add(BSet(stats.getBenchmarksName(), stats.getBenchmarksID()))
 
+    # give it some fixed order
     cats = [x for x in categories]
 
-    def toolsGETList():
+    def _toolsGETList():
         s = ''
         for x in opts['run']:
             s += '&run={0}'.format(x)
         return s
 
-    def formatStats(run, cat):
+    def _formatStats(run, bset_id):
         assert not run is None
-        assert not cat is None
+        assert not bset_id is None
 
-        stats = run.getStats().getStats(cat).getStats()
+        stats = run.getStats().getStatsByID(bset_id).getStats()
         s = ''
         for (classification, cnt) in stats.items():
             s += '{0}: {1}</br>\n'.format(classification, cnt)
@@ -79,9 +92,9 @@ def showResults(wfile, args):
         return s
 
     _render_template(wfile, 'results.html',
-                     {'runs':tools, 'categories' : cats,
-                      'toolsGETList' : toolsGETList,
-                      'formatStats' : formatStats})
+                     {'runs':tools, 'benchmarks_sets' : cats,
+                      'toolsGETList' : _toolsGETList,
+                      'formatStats' : _formatStats })
 
 def showCategoryResults(wfile, args):
     opts = _parse_args(args)
@@ -93,8 +106,8 @@ def showCategoryResults(wfile, args):
         wfile.write('<h2>No category given</h2>')
         return
 
-    _render_template(wfile, 'category_results.html',
-                     {'tools':tools, 'results' : results})
+    #_render_template(wfile, 'benchmarks_results.html',
+    #                 {'tools':tools, 'results' : results})
 
 def sendStyle(wfile):
     f = open('html/style.css', 'rb')

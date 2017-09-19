@@ -84,9 +84,11 @@ class DBToolRunInfo(ToolRunInfo):
 
 
 class RunsStats(object):
-    def __init__(self):
+    def __init__(self, cat, bset_id):
         # 'classification' -> count
         self._stats = {}
+        self._benchmarks_name = cat
+        self._benchmarks_id = bset_id
 
     def addStat(self, classification, cnt):
         # XXX: can python do it in one step? Find out
@@ -98,13 +100,52 @@ class RunsStats(object):
     def getStats(self):
         return self._stats
 
+    def getBenchmarksName(self):
+        return self._benchmarks_name
+
+    def getBenchmarksID(self):
+        return self._benchmarks_id
+
 class ToolRunInfoStats(object):
     def __init__(self):
-        self._catToSum = {}
+        self._stats = {}
+        # mapping of names of categories to id's
+        # of the benchmark sets
+        self._name_to_id = {}
 
-    def getStats(self, cat):
-        return self._catToSum[cat]
+    def getAllStats(self):
+        return self._stats
+
+   #def getStatsByName(self, cat):
+   # FIXME: there can be more ids
+   #    n = self._name_to_id[cat]
+   #    return self._stats[n]
+
+    def getStatsByID(self, bset_id):
+        return self._stats[bset_id]
+
+    def _addNameToIDMapping(self, cat, bset_id):
+        if cat in self._name_to_id:
+            self._name_to_id[cat].add(bset_id)
+        else:
+            self._name_to_id[cat] = set([bset_id])
+
+    def getOrCreateStats(self, bset_id, cat):
+        if bset_id in self._stats:
+            stats = self._stats[bset_id]
+        else:
+            stats = RunsStats(cat, bset_id)
+            self._stats[bset_id] = stats
+            self._addNameToIDMapping(cat, bset_id)
+
+        return stats
+
+    def getBenchmarksSetsNames(self):
+        return self._name_to_id.keys()
 
     def getBenchmarksSets(self):
-        return self._catToSum.keys()
+        return self._stats.keys()
+
+
+
 
