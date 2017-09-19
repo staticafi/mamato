@@ -63,9 +63,9 @@ def showResults(wfile, args):
 
     # list of ToolRunInfo objects
     run_ids = map(int, opts['run'])
-    tools = datamanager.getToolRuns(run_ids)
+    runs = datamanager.getToolRuns(run_ids)
     categories = set()
-    for tool in tools:
+    for tool in runs:
         tool._stats = datamanager.getToolInfoStats(tool.getID())
         for stats in tool._stats.getAllStats().values():
             # a pair (name, id)
@@ -98,21 +98,24 @@ def showResults(wfile, args):
         else:
             return '<span style="color: {0}">{1}</span>'.format(color, classification)
 
-    def _formatStats(run, bset_id):
+    def _getStats(run, bset_id):
         assert not run is None
         assert not bset_id is None
 
-        stats = run.getStats().getStatsByID(bset_id).getStats()
-        s = ''
-        for (classification, cnt) in stats.items():
-            s +='{0}: {1}</br>\n'.format(_formatClassification(classification), cnt)
+        return run.getStats().getStatsByID(bset_id).getStats()
 
-        return s
+    def _getStatsList(run, bset_id):
+        return list(_getStats(run, bset_id).items())
+
+    def _get(p, idx):
+        return p[idx]
 
     _render_template(wfile, 'results.html',
-                     {'runs':tools, 'benchmarks_sets' : cats,
+                     {'runs':runs, 'benchmarks_sets' : cats,
                       'toolsGETList' : _toolsGETList,
-                      'formatStats' : _formatStats })
+                      'getStats' : _getStatsList,
+                      'get' : _get,
+                      'formatClassification' : _formatClassification })
 
 def showCategoryResults(wfile, args):
     opts = _parse_args(args)

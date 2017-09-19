@@ -22,12 +22,6 @@ function toggleRolling(div) {
 <meta charset="utf-8" />
 <link rel="stylesheet" type="text/css" href="../style.css">
 <style>
-    table, th, td {
-      border: 1px solid black;
-      #border-collapse: collapse;
-      # border-spacing: 5px;
-    }
-
     .row {
       background-color: #fefffe;
     }
@@ -37,6 +31,18 @@ function toggleRolling(div) {
       color: white;
     }
 
+    th {
+	    padding: 10px;
+    }
+
+    td {
+	    padding: 3px;
+    }
+
+    td.classif {
+	    padding: 0px;
+    }
+
     tr:hover {
       background-color: #f3fff3;
     }
@@ -44,6 +50,18 @@ function toggleRolling(div) {
     tr.header_row:hover {
       background-color: #889988;
     }
+
+    tr.stats {
+      border: 0;
+    }
+
+    .stats {
+      border: 0;
+      padding: 3px;
+    }
+
+
+
 
 </style>
 <title>Benchexec results viewer</title>
@@ -66,7 +84,15 @@ function toggleRolling(div) {
   <tr class="row">
     <td><a href="/benchmarks_results?benchmarks=@{bset.id}@toolsGETList()">@bset.name</a></td>
     #for @run in @runs:
-    <td>@formatStats(@run, @bset.id)</td>
+      <td>
+      <table class="stats">
+      #for @stats in @getStats(@run, @bset.id):
+	  <tr> <td class="classif" style="padding-right: 1em"> @formatClassification(@get(@stats, 0)) </td>
+	       <td class="classif">@get(@stats, 1)</td>
+	  </tr>
+      #end
+      </table>
+      </td>
     #end
   </tr>
   #end
