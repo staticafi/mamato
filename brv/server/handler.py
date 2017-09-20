@@ -65,14 +65,14 @@ def showResults(wfile, args):
             return self.id == oth.id
 
     # list of ToolRunInfo objects
-    run_ids = map(int, opts['run'])
+    run_ids = list(map(int, opts['run']))
     runs = datamanager.getToolRuns(run_ids)
     categories = set()
     # there's few of classifications usually, it will be faster in list
     classifications = []
-    for tool in runs:
-        tool._stats = datamanager.getToolInfoStats(tool.getID())
-        for stats in tool._stats.getAllStats().values():
+    for run in runs:
+        run._stats = datamanager.getToolInfoStats(run.getID())
+        for stats in run._stats.getAllStats().values():
             # a pair (name, id)
             categories.add(BSet(stats.getBenchmarksName(), stats.getBenchmarksID()))
             for c in stats.getClassifications():
