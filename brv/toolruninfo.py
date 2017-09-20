@@ -97,6 +97,16 @@ class RunsStats(object):
         else:
             self._stats[classification] = cnt
 
+    def get(self, classification):
+            return self._stats.get(classification)
+
+    def getCount(self, classification):
+        n = self._stats.get(classification)
+        if n is None:
+            return 0
+        else:
+            return n
+
     def getStats(self):
         return self._stats
 
@@ -105,6 +115,9 @@ class RunsStats(object):
 
     def getBenchmarksID(self):
         return self._benchmarks_id
+
+    def getClassifications(self):
+        return list(self._stats.keys())
 
 class ToolRunInfoStats(object):
     def __init__(self):
@@ -122,7 +135,7 @@ class ToolRunInfoStats(object):
    #    return self._stats[n]
 
     def getStatsByID(self, bset_id):
-        return self._stats[bset_id]
+        return self._stats.get(bset_id)
 
     def _addNameToIDMapping(self, cat, bset_id):
         if cat in self._name_to_id:
@@ -147,5 +160,45 @@ class ToolRunInfoStats(object):
         return self._stats.keys()
 
 
+class RunInfosTable(object):
+    """
+    Table of RunInfo objects:
 
+                 tool1  tool2  ...
+    benchmark1   ri11    ri12  ...
+    benchmark2   ri21    ri22  ...
+       ...       ...     ...
+    """
+
+    def __init__(self):
+        # benchmarks_name -> list of runinfos
+        self._benchmarks = {}
+        self._tools_num = 0
+
+    def add(self, runinfos):
+        """ add results from one tool run"""
+
+        for info in runinfos:
+            name = info.fullname()
+            infos = self._benchmarks.setdefault(name, [])
+
+            ## missing some tools? Fill in the gap
+            l = len(infos)
+            while l < self._tools_num:
+                infos.append(None)
+
+            assert len(infos) == self._tools_num
+
+            infos.append(info)
+
+        self._tools_num += 1
+
+    def getRunInfos(self, benchmark):
+        info = self._benchmarks[benchmark]
+        assert len(info) == self._tools_num
+
+        return info
+
+    def getRows(self):
+        return self._benchmarks
 

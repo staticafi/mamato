@@ -44,6 +44,9 @@ def _parse_args(args):
 
     return opts
 
+def _get(p, idx):
+    return p[idx]
+
 def showResults(wfile, args):
     opts = _parse_args(args)
     if not 'run' in opts:
@@ -65,11 +68,16 @@ def showResults(wfile, args):
     run_ids = map(int, opts['run'])
     runs = datamanager.getToolRuns(run_ids)
     categories = set()
+    # there's few of classifications usually, it will be faster in list
+    classifications = []
     for tool in runs:
         tool._stats = datamanager.getToolInfoStats(tool.getID())
         for stats in tool._stats.getAllStats().values():
             # a pair (name, id)
             categories.add(BSet(stats.getBenchmarksName(), stats.getBenchmarksID()))
+            for c in stats.getClassifications():
+                if c not in classifications:
+                    classifications.append(c)
 
     # give it some fixed order
     cats = [x for x in categories]
@@ -102,33 +110,47 @@ def showResults(wfile, args):
         assert not run is None
         assert not bset_id is None
 
-        return run.getStats().getStatsByID(bset_id).getStats()
+        return run.getStats().getStatsByID(bset_id)
 
-    def _getStatsList(run, bset_id):
-        return list(_getStats(run, bset_id).items())
-
-    def _get(p, idx):
-        return p[idx]
+    def _getCount(stats, classif):
+        if stats is None:
+            return 0
+        else:
+            return stats.getCount(classif)
 
     _render_template(wfile, 'results.html',
                      {'runs':runs, 'benchmarks_sets' : cats,
                       'toolsGETList' : _toolsGETList,
-                      'getStats' : _getStatsList,
+                      'getStats' : _getStats,
+                      'getCount' : _getCount,
                       'get' : _get,
+                      'classifications' : classifications,
                       'formatClassification' : _formatClassification })
 
-def showCategoryResults(wfile, args):
+def showBenchmarksResults(wfile, args):
     opts = _parse_args(args)
     if not 'run' in opts:
         wfile.write('<h2>No runs of tools given</h2>')
         return
 
-    if not 'cat' in opts:
-        wfile.write('<h2>No category given</h2>')
+    if not 'benchmarks' in opts:
+        wfile.write('<h2>No benchmarks to show given</h2>')
         return
 
-    #_render_template(wfile, 'benchmarks_results.html',
-    #                 {'tools':tools, 'results' : results})
+    run_ids = list(map(int, opts['run']))
+    runs = datamanager.getToolRuns(run_ids)
+
+    try:
+        bset_id = int(opts['benchmarks'][0])
+    except ValueError or KeyError:
+        wfile.write('<h2>Invalid benchmarks</h2>')
+        return
+        
+    results = list(datamanager.getRunInfos(bset_id, run_ids).getRows().items())
+    _render_template(wfile, 'benchmarks_results.html',
+                     {'runs' : runs,
+                      'get' : _get,
+                      'results': results})
 
 def sendStyle(wfile):
     f = open('html/style.css', 'rb')
@@ -138,7 +160,7 @@ def sendStyle(wfile):
 handlers = {
     'root'              : showRoot,
     'results'           : showResults,
-    'category_results'  : showCategoryResults,
+    'benchmarks_results': showBenchmarksResults,
     'style.css'         : None, # we handle this specially
 }
 

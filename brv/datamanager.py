@@ -1,6 +1,7 @@
 #!/usr/bin/python
 
 from brv.toolsmanager import ToolsManager
+from brv.toolruninfo import RunInfosTable
 
 class DataManager(object):
     """
@@ -20,7 +21,6 @@ class DataManager(object):
             tool_runs = self._db.getToolRuns()
             for run in tool_runs:
                 self.toolsmanager.add(run)
-                self._db.getToolInfoStats(run.getID())
 
         if xmls:
             # XXX: NOT SUPPORTED YET. load the xml into database first
@@ -34,5 +34,12 @@ class DataManager(object):
 
     def getToolInfoStats(self, which):
         return self._db.getToolInfoStats(which)
+
+    def getRunInfos(self, bset_id, toolruns_id):
+        table = RunInfosTable()
+        for tid in toolruns_id:
+            table.add(self._db.getRunInfos(bset_id, tid))
+
+        return table
 
 

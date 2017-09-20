@@ -86,9 +86,11 @@ function toggleRolling(div) {
     #for @run in @runs:
       <td>
       <table class="stats">
-      #for @stats in @getStats(@run, @bset.id):
-	  <tr> <td class="classif" style="padding-right: 1em"> @formatClassification(@get(@stats, 0)) </td>
-	       <td class="classif">@get(@stats, 1)</td>
+      #set @stats = @getStats(@run, @bset.id):
+      #for @classif in @classifications:
+	  <tr> <td class="classif"
+	           style="padding-right: 1.5em">@formatClassification(@classif) </td>
+	       <td class="classif">@getCount(@stats, @classif)</td>
 	  </tr>
       #end
       </table>

@@ -55,39 +55,47 @@ class DatabaseReader(DatabaseProxy):
 
         return ret
 
-    def getRunInfos(self, tool_run_id):
+    def getToolInfoStats(self, tool_run_id):
         q = """
-        SELECT *
-        FROM run WHERE tool_run_id = '{0}'; 
-        """.format(tool_run_id);
-        print(q)
+        SELECT name, classification, benchmarks_set_id, count(classification)
+        FROM run JOIN benchmarks_set ON benchmarks_set_id = benchmarks_set.id
+        WHERE tool_run_id='{0}' GROUP BY classification, benchmarks_set_id;
+         """.format(tool_run_id)
         res = self.query(q)
-        print(res);
+        ret = ToolRunInfoStats()
+        for r in res:
+            cat = r[0]
+            bset_id = r[2]
+            stats = ret.getOrCreateStats(bset_id, cat)
+
+            cnt = r[3]
+            classif = r[1]
+            stats.addStat(classif, cnt)
+
+        return ret
+
+    def getRunInfos(self, bset_id, tool_run_id):
+        # 0 -> status
+        # 1 -> cputime
+        # 2 -> walltime
+        # 3 -> memusage
+        # 4 -> classification
+        # 5 -> exitcode
+        # 6 -> property
+        # 7 -> file name
+
+        q = """
+        SELECT status, cputime, walltime, memusage, classification, exitcode, property, file
+        FROM run WHERE tool_run_id = '{0}' AND benchmarks_set_id = '{1}'; 
+        """.format(tool_run_id, bset_id);
+        print(q)
+        # FIXME: use fetchone
+        res = self.query(q)
         ret = []
         for r in res:
             # FIXME: do this lazily -- return an object with this query
             # and return DBRunInfo when iterating over this object
             ret.append(DBRunInfo(r))
-
-        return ret
-
-    def getToolInfoStats(self, tool_run_id):
-        q = """
-         SELECT name, benchmarks_set.id, count(classification), classification
-         FROM run JOIN benchmarks_set WHERE tool_run_id='{0}'
-         GROUP BY name, classification;
-         """.format(tool_run_id)
-        res = self.query(q)
-
-        ret = ToolRunInfoStats()
-        for r in res:
-            cat = r[0]
-            bset_id = r[1]
-            stats = ret.getOrCreateStats(bset_id, cat)
-
-            cnt = r[2]
-            classif = r[3]
-            stats.addStat(classif, cnt)
 
         return ret
 
