@@ -184,6 +184,8 @@ class RunInfosTable(object):
 
             ## missing some tools? Fill in the gap
             l = len(infos)
+            assert l <= self._tools_num
+
             while l < self._tools_num:
                 infos.append(None)
 
