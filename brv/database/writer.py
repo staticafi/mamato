@@ -114,3 +114,15 @@ class DatabaseWriter(DatabaseProxy):
                     #FIXME: what return value?
         self.query_noresult(q)
 
+    def deleteTool(self, tool_run_id):
+        q = """
+        DELETE FROM run
+        WHERE tool_run_id = '{0}';
+        """.format(tool_run_id)
+        self.query_noresult(q)
+
+        q = """
+        DELETE FROM tool_run
+        WHERE id = '{0}';
+        """.format(tool_run_id)
+        self.query_noresult(q)
