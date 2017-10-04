@@ -59,3 +59,11 @@ class DatabaseProxy(object):
     def commit(self):
         self._db.commit()
 
+    def getRunCount(self, tool_run_id, bset_id):
+        q = """
+        SELECT count(*) FROM run
+        WHERE tool_run_id = '{0}' AND benchmarks_set_id = '{1}';
+        """.format(tool_run_id, bset_id)
+
+        return self.queryInt(q)
+

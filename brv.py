@@ -15,5 +15,5 @@ if __name__ == "__main__":
         for xmlfile in sys.argv[1:]:
             print('Parsing: {0}'.format(xmlfile))
             parser.parseToDB(xmlfile)
-
-    BRVServer.establish()
+    else:
+        BRVServer.establish()
