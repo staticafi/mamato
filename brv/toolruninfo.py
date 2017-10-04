@@ -35,6 +35,9 @@ class ToolRunInfo(object):
     def getStats(self):
         return self._stats
 
+    def getLimits(self):
+        return timelimit() + ' ' + memlimit()
+
     def addRun(self, r):
         """
         Add a run result to this tool run

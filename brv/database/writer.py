@@ -59,10 +59,8 @@ class DatabaseWriter(DatabaseProxy):
 
         q = """
         SELECT id FROM tool_run WHERE
-          tool_id = '{0}' AND options = '{1}' AND
-          memlimit = '{2}' AND cpulimit = '{3}';
-        """.format(tool_id, toolinfo.timelimit + ' ' + toolinfo.memlimit,
-                   toolinfo.memlimit, toolinfo.timelimit)
+          tool_id = '{0}' AND memlimit = '{1}' AND cpulimit = '{2}';
+        """.format(tool_id, toolinfo.memlimit, toolinfo.timelimit)
         tool_run_id = self.queryInt(q)
 
         if tool_run_id is None:
