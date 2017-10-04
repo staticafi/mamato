@@ -113,7 +113,11 @@ class XMLParser(object):
         xmlfl = minidom.parse(filePath)
 
         tool_info = _createToolRunInfo(xmlfl)
-        tool_run_id = writer.getOrCreateToolInfoID(tool_info)
+        tool_run_id = writer.createToolInfoID(tool_info)
+        if tool_run_id is None:
+            print("Already have results for this xml file: {0}".format(filePath))
+            return
+
         benchmarks_set_id = writer.getOrCreateBenchmarksSetID(tool_info.block)
 
         assert tool_run_id is not None

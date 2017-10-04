@@ -41,9 +41,10 @@ class DatabaseWriter(DatabaseProxy):
 
         return self.queryInt(q)
 
-    def getOrCreateToolInfoID(self, toolinfo):
+    def createToolInfoID(self, toolinfo):
         """
-        Add a new tool_run into database, return its ID
+        Add a new tool_run into database, return its ID.
+        If such tool_run already exists, return None.
         """
 
         tool_id = self._getToolID(toolinfo.tool, toolinfo.tool_version)
@@ -63,22 +64,21 @@ class DatabaseWriter(DatabaseProxy):
           cpulimit = '{3}' AND date = '{4}';
         """.format(tool_id, toolinfo.options, toolinfo.memlimit,
                    toolinfo.timelimit, toolinfo.date)
-        self.query_noresult(q)
         tool_run_id = self.queryInt(q)
 
-        if tool_run_id is None:
-            # add a new tool_run record
-            q = """
-            INSERT INTO tool_run
-              (tool_id, options, memlimit, cpulimit, date)
-              VALUES ('{0}', '{1}', '{2}', '{3}', '{4}');
-            """.format(tool_id, toolinfo.options, toolinfo.memlimit,
-                       toolinfo.timelimit, toolinfo.date)
-            self.query_noresult(q)
+        if tool_run_id:
+            return None
 
-            tool_run_id = self.queryInt("SELECT LAST_INSERT_ID();")
+        # add a new tool_run record
+        q = """
+        INSERT INTO tool_run
+          (tool_id, options, memlimit, cpulimit, date)
+          VALUES ('{0}', '{1}', '{2}', '{3}', '{4}');
+        """.format(tool_id, toolinfo.options, toolinfo.memlimit,
+                   toolinfo.timelimit, toolinfo.date)
+        self.query_noresult(q)
 
-        return tool_run_id
+        return self.queryInt("SELECT LAST_INSERT_ID();")
 
     def getOrCreateBenchmarksSetID(self, name):
         q = """
