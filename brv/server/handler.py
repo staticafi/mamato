@@ -127,6 +127,25 @@ def showResults(wfile, args):
                       'classifications' : classifications,
                       'formatClassification' : _formatClassification })
 
+def deleteTools(wfile, args):
+    opts = _parse_args(args)
+    if not 'run' in opts:
+        _render_template(wfile, 'delete.html', {'tools' : datamanager.getTools()})
+        return
+
+    from .. database.writer import DatabaseWriter
+    writer = DatabaseWriter('database.conf')
+
+    run_ids = list(map(int, opts['run']))
+    runs = datamanager.getToolRuns(run_ids)
+
+    for run in runs:
+        writer.deleteTool(run.getID())
+
+    writer.commit()
+    _render_template(wfile, 'delete.html', {'tools' : datamanager.getTools()})
+
+
 def showBenchmarksResults(wfile, args):
     opts = _parse_args(args)
     if not 'run' in opts:
@@ -161,6 +180,7 @@ handlers = {
     'root'              : showRoot,
     'results'           : showResults,
     'benchmarks_results': showBenchmarksResults,
+    'delete'            : deleteTools,
     'style.css'         : None, # we handle this specially
 }
 

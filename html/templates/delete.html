@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<!--
+   delete.html template
+
+   Author: Marek Chalupa <xchalup4@fi.muni.cz>, 2017
+-->
+
+<head>
+<meta charset="utf-8" />
+<link rel="stylesheet" type="text/css" href="../style.css">
+<title>Benchexec results viewer</title>
+</head>
+
+<body>
+
+#include("../header.html")
+<div id="content">
+<h2>Tools:</h2>
+
+<form action="/delete" style="margin-left: 1em">
+  #for @tool in @tools:
+    <h3>@tool.name:</h3>
+    #for @run in @tool.getRuns():
+    <!--<select name="run" multiple="multiple" style="width:50%;">-->
+    <select name="run" multiple="multiple">
+      <option value=@run.getID()>[@run.date()] @run.tool() @run.tool_version()</option>
+    </select>
+    #end
+  <br/>
+  #end
+  <input type="submit" value="Delete">
+</form>
+
+</div> <!-- content -->
+</body>
+
+</html>
