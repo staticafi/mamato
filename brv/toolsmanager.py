@@ -38,7 +38,7 @@ class ToolsManager(object):
                 break
 
         if found:
-            found._runs.addRun(toolrun)
+            found._runs.append(toolrun)
         else:
             t = self.Tool(toolrun.tool(), toolrun.tool_version())
             self._tools.append(t)
