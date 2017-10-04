@@ -33,7 +33,7 @@ def _parse_run_elem(run):
             r._memusage = value
             n += 1
         elif title == 'category':
-            r._resultcategory = value
+            r._classification = value
             n += 1
         elif title == 'exitcode':
             r._exitcode = value
