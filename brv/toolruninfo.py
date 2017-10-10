@@ -186,24 +186,33 @@ class RunInfosTable(object):
             infos = self._benchmarks.setdefault(name, [])
 
             ## missing some tools? Fill in the gap
-            l = len(infos)
-            assert l <= self._tools_num
-
-            while l < self._tools_num:
-                infos.append(None)
-
-            assert len(infos) == self._tools_num
-
+            self._fill_blank(infos)
             infos.append(info)
 
         self._tools_num += 1
 
+    def _fill_blank(self, infos):
+        l = len(infos)
+        assert l <= self._tools_num
+
+        while l < self._tools_num:
+            infos.append(None)
+            l += 1
+
+        assert len(infos) == self._tools_num
+
+    def _fill_blank_all(self):
+        for infos in self._benchmarks.values():
+            self._fill_blank(infos)
+
     def getRunInfos(self, benchmark):
-        info = self._benchmarks[benchmark]
-        assert len(info) == self._tools_num
+        info = self._benchmarks.get(benchmark)
+        if info:
+            self._fill_blank(info)
 
         return info
 
     def getRows(self):
+        self._fill_blank_all()
         return self._benchmarks
 
