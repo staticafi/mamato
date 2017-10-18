@@ -24,6 +24,7 @@ function toggleRolling(div) {
 <style>
     table, th, td {
       border: 1px solid black;
+      padding: 3px 3px 3px 3px;
       #border-collapse: collapse;
       # border-spacing: 5px;
     }
@@ -45,6 +46,26 @@ function toggleRolling(div) {
       background-color: #889988;
     }
 
+    .status-correct {
+      color: green;
+    }
+
+    .status-incorrect {
+      color: red;
+    }
+
+    .status-error {
+      color: purple;
+    }
+
+    .status-unknown {
+      color: orange;
+    }
+
+    .status-correct-unconfirmed {
+      color: orange;
+    }
+
 </style>
 <title>Benchexec results viewer</title>
 </head>
@@ -58,7 +79,13 @@ function toggleRolling(div) {
   <tr class="header_row">
     <th>Benchmark</th>
     #for @run in @runs:
-    <th>@run.tool() <span style="font-size: 10px">[@run.date()]</span></th>
+    <th colspan="2">@run.tool() <span style="font-size: 10px">[@run.date()]</span></th>
+    #end
+  </tr>
+  <tr class="header_row_snd" style="font-size: 12px">
+    <th></th>
+    #for @run in @runs:
+    <th>status</th><th>CPU time [s]</th>
     #end
   </tr>
 
@@ -70,10 +97,9 @@ function toggleRolling(div) {
       @name
     </td>
     #for @runinfo in @get(@result, 1):
-     ##if @runinfo.cputime() > 0:
-     ##  <b>Yes</b>
-     ##end
-      <td>@runinfo.cputime()</td>
+      <td>
+      <span class="status-@runinfo.classification()"> @runinfo.status()</span>
+      </td><td>@runinfo.cputime()</td>
     #end
   </tr>
   #end
