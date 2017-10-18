@@ -73,6 +73,7 @@ def showResults(wfile, args):
     for run in runs:
         run._stats = datamanager.getToolInfoStats(run.getID())
         for stats in run._stats.getAllStats().values():
+            stats.prune()
             # a pair (name, id)
             categories.add(BSet(stats.getBenchmarksName(), stats.getBenchmarksID()))
             for c in stats.getClassifications():
@@ -87,24 +88,6 @@ def showResults(wfile, args):
         for x in opts['run']:
             s += '&run={0}'.format(x)
         return s
-
-    def _formatClassification(classification):
-        color = None
-        if classification == 'correct-unconfirmed':
-            color = 'orange'
-        elif classification.startswith('correct'):
-            color = 'green'
-        elif classification.startswith('incorrect'):
-            color = 'red'
-        elif classification.startswith('error'):
-            color = 'purple'
-        elif classification.startswith('unknown'):
-            color = 'gray'
-
-        if color is None:
-            return classification
-        else:
-            return '<span style="color: {0}">{1}</span>'.format(color, classification)
 
     def _getStats(run, bset_id):
         assert not run is None
@@ -124,8 +107,7 @@ def showResults(wfile, args):
                       'getStats' : _getStats,
                       'getCount' : _getCount,
                       'get' : _get,
-                      'classifications' : classifications,
-                      'formatClassification' : _formatClassification })
+                      'classifications' : classifications })
 
 def deleteTools(wfile, args):
     opts = _parse_args(args)

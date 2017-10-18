@@ -88,7 +88,7 @@ class DBToolRunInfo(ToolRunInfo):
 
 class RunsStats(object):
     def __init__(self, cat, bset_id):
-        # 'classification' -> count
+        # '(status, classification)' -> count
         self._stats = {}
         self._benchmarks_name = cat
         self._benchmarks_id = bset_id
@@ -122,6 +122,30 @@ class RunsStats(object):
     def getClassifications(self):
         return list(self._stats.keys())
 
+    def prune(self):
+        """
+        Merge all false(...) and timeouts and other results.
+        """
+        newstats = {}
+        for s in self._stats.items():
+            if s[0][0].startswith('false'):
+                cnt = newstats.setdefault(('false', s[0][1]), 0)
+                newstats[('false', s[0][1])] = cnt + s[1]
+            elif s[0][0].startswith('ERROR') or s[0][0].startswith('error'):
+                cnt = newstats.setdefault(('error', 'error'), 0)
+                newstats[('error', 'error')] = cnt + s[1]
+            elif s[0][0].startswith('TIMEOUT') or s[0][0].startswith('timeout'):
+                cnt = newstats.setdefault(('timeout', 'error'), 0)
+                newstats[('timeout', 'error')] = cnt + s[1]
+            elif s[0][0].startswith('unknown') or s[0][0].startswith('UNKNOWN'):
+                cnt = newstats.setdefault(('unknown', 'unknown'), 0)
+                newstats[('unknown', 'unknown')] = cnt + s[1]
+            else:
+                cnt = newstats.setdefault(('other', 'error'), 0)
+                newstats[('other', 'error')] = cnt + s[1]
+
+        self._stats = newstats
+
 class ToolRunInfoStats(object):
     def __init__(self):
         self._stats = {}
@@ -131,11 +155,6 @@ class ToolRunInfoStats(object):
 
     def getAllStats(self):
         return self._stats
-
-   #def getStatsByName(self, cat):
-   # FIXME: there can be more ids
-   #    n = self._name_to_id[cat]
-   #    return self._stats[n]
 
     def getStatsByID(self, bset_id):
         return self._stats.get(bset_id)

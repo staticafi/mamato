@@ -60,10 +60,27 @@ function toggleRolling(div) {
       padding: 3px;
     }
 
+    .status-correct {
+      color: green;
+    }
 
+    .status-incorrect {
+      color: red;
+    }
 
+    .status-error {
+      color: purple;
+    }
 
+    .status-unknown {
+      color: orange;
+    }
+
+    .status-correct-unconfirmed {
+      color: orange;
+    }
 </style>
+
 <title>Benchexec results viewer</title>
 </head>
 
@@ -88,8 +105,8 @@ function toggleRolling(div) {
       <table class="stats">
       #set @stats = @getStats(@run, @bset.id):
       #for @classif in @classifications:
-	  <tr> <td class="classif"
-	           style="padding-right: 1.5em">@formatClassification(@classif) </td>
+	  <tr> <td class="classif status-@get(@classif,1)"
+	           style="padding-right: 1.5em">@get(@classif,0)</td>
 	       <td class="classif">@getCount(@stats, @classif)</td>
 	  </tr>
       #end
