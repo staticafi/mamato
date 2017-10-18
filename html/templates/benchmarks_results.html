@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<!--
+   index.html template
+
+   Author: Marek Chalupa <xchalup4@fi.muni.cz>, 2017
+-->
+
+<script>
+function toggleRolling(div) {
+  var className = div.getAttribute("class");
+  if(className=="rolled") {
+    div.className = "unrolled";
+  }
+  else{
+    div.className = "rolled";
+  }
+}
+</script>
+
+<head>
+<meta charset="utf-8" />
+<link rel="stylesheet" type="text/css" href="../style.css">
+<style>
+    table, th, td {
+      border: 1px solid black;
+      #border-collapse: collapse;
+      # border-spacing: 5px;
+    }
+
+    .row {
+      background-color: #fefffe;
+    }
+
+    .header_row {
+      background-color: #889988;
+      color: white;
+    }
+
+    tr:hover {
+      background-color: #f3fff3;
+    }
+
+    tr.header_row:hover {
+      background-color: #889988;
+    }
+
+</style>
+<title>Benchexec results viewer</title>
+</head>
+
+<body>
+
+#include("../header.html")
+
+<div id="content">
+  <table style="margin-top: 15px;">
+  <tr class="header_row">
+    <th>Benchmark</th>
+    #for @run in @runs:
+    <th>@run.tool() <span style="font-size: 10px">[@run.date()]</span></th>
+    #end
+  </tr>
+
+  #for @result in @results:
+  <tr class="row">
+    #set @name = @get(@result, 0):
+    <td>
+      <!--<a href="/benchmarks_results?benchmarks=@{bset.id}@toolsGETList()">@bset.name</a>-->
+      @name
+    </td>
+    #for @runinfo in @get(@result, 1):
+     ##if @runinfo.cputime() > 0:
+     ##  <b>Yes</b>
+     ##end
+      <td>@runinfo.cputime()</td>
+    #end
+  </tr>
+  #end
+  </table>
+
+</div> <!-- content -->
+</body>
+
+</html>
