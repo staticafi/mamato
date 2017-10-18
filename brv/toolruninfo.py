@@ -131,6 +131,9 @@ class RunsStats(object):
             if s[0][0].startswith('false'):
                 cnt = newstats.setdefault(('false', s[0][1]), 0)
                 newstats[('false', s[0][1])] = cnt + s[1]
+            elif s[0][0].startswith('true') or s[0][0].startswith('TRUE'):
+                cnt = newstats.setdefault(('true', s[0][1]), 0)
+                newstats[('true', s[0][1])] = cnt + s[1]
             elif s[0][0].startswith('ERROR') or s[0][0].startswith('error'):
                 cnt = newstats.setdefault(('error', 'error'), 0)
                 newstats[('error', 'error')] = cnt + s[1]
