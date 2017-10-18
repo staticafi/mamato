@@ -66,6 +66,11 @@ function toggleRolling(div) {
       color: orange;
     }
 
+    a {
+	    text-decoration: none;
+	    color: black;
+    }
+
 </style>
 <title>Benchexec results viewer</title>
 </head>
@@ -93,8 +98,7 @@ function toggleRolling(div) {
   <tr class="row">
     #set @name = @get(@result, 0):
     <td>
-      <!--<a href="/benchmarks_results?benchmarks=@{bset.id}@toolsGETList()">@bset.name</a>-->
-      @name
+      <a href="@getBenchmarkURL(@name)">@getShortName(@name)</a>
     </td>
     #for @runinfo in @get(@result, 1):
       <td>

@@ -1,6 +1,8 @@
 #!/usr/bin/python
 
 import sys
+from os.path import basename
+
 if (sys.version_info > (3, 0)):
     from http.server import SimpleHTTPRequestHandler
 else:
@@ -146,11 +148,20 @@ def showBenchmarksResults(wfile, args):
     except ValueError or KeyError:
         wfile.write('<h2>Invalid benchmarks</h2>')
         return
+
+    def _getBenchmarkURL(name):
+        base='https://github.com/sosy-lab/sv-benchmarks/tree/master'
+        return base + name[name.index('/c/'):]
+
+    def _getShortName(name):
+        return basename(name)
         
     results = list(datamanager.getRunInfos(bset_id, run_ids).getRows().items())
     _render_template(wfile, 'benchmarks_results.html',
                      {'runs' : runs,
                       'get' : _get,
+                      'getBenchmarkURL' : _getBenchmarkURL,
+                      'getShortName' : _getShortName,
                       'results': results})
 
 def sendStyle(wfile):
