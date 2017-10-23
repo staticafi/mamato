@@ -53,7 +53,7 @@ def _get(p, idx):
 def showResults(wfile, args):
     opts = _parse_args(args)
     if not 'run' in opts:
-        wfile.write('<h2>No runs of tools given</h2>')
+        wfile.write(b'<h2>No runs of tools given</h2>')
         return
 
     class BSet(object):
@@ -163,11 +163,11 @@ def deleteTools(wfile, args):
 def showBenchmarksResults(wfile, args):
     opts = _parse_args(args)
     if not 'run' in opts:
-        wfile.write('<h2>No runs of tools given</h2>')
+        wfile.write(b'<h2>No runs of tools given</h2>')
         return
 
     if not 'benchmarks' in opts:
-        wfile.write('<h2>No benchmarks to show given</h2>')
+        wfile.write(b'<h2>No benchmarks to show given</h2>')
         return
 
     run_ids = list(map(int, opts['run']))
@@ -176,7 +176,7 @@ def showBenchmarksResults(wfile, args):
     try:
         bset_id = int(opts['benchmarks'][0])
     except ValueError or KeyError:
-        wfile.write('<h2>Invalid benchmarks</h2>')
+        wfile.write(b'<h2>Invalid benchmarks</h2>')
         return
 
     def _getBenchmarkURL(name):
