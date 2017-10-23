@@ -2,7 +2,7 @@
 
 import sys
 from os.path import basename
-from math import ceil
+from math import ceil, floor
 
 if (sys.version_info > (3, 0)):
     from http.server import SimpleHTTPRequestHandler
@@ -76,6 +76,7 @@ def showResults(wfile, args):
     for run in runs:
         run._stats = datamanager.getToolInfoStats(run.getID())
         for stats in run._stats.getAllStats().values():
+            stats.accumulateTime()
             stats.prune()
             # a pair (name, id)
             categories.add(BSet(stats.getBenchmarksName(), stats.getBenchmarksID()))
@@ -99,10 +100,33 @@ def showResults(wfile, args):
         return run.getStats().getStatsByID(bset_id)
 
     def _getCount(stats, classif):
-        return stats.getCount(classif)
+        if stats:
+            return stats.getCount(classif)
+        else:
+            return 0
 
     def _getTime(stats, classif):
-        return ceil(stats.getTime(classif))
+        if stats:
+            return ceil(stats.getTime(classif))
+        else:
+            return 0
+
+    def _formatTime(time):
+        "Transform time in seconds to hours, minutes and seconds"
+        ret = ''
+        time = ceil(time)
+        if time >= 3600:
+            hrs = time // 3600
+            time = time - hrs*3600
+            ret = '{0} h'.format(hrs)
+        if time >= 60 or ret != '':
+            mins = time // 60
+            time = time - mins*60
+            ret += ' {0} min'.format(mins)
+        if ret != 0:
+            return ret + ' {0} s'.format(time) 
+        else:
+            return ret + '{0} s'.format(time) 
 
     _showTimes = 'show_times' in opts
 
@@ -114,6 +138,7 @@ def showResults(wfile, args):
                       'getTime' : _getTime,
                       'get' : _get,
                       'showTimes' : _showTimes,
+                      'formatTime' : _formatTime,
                       'classifications' : classifications })
 
 def deleteTools(wfile, args):

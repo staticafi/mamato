@@ -95,9 +95,10 @@ class RunsStats(object):
         self._stats = {}
         self._benchmarks_name = cat
         self._benchmarks_id = bset_id
+        # aggregated time that it took to run on this bset
+        self._cpu_time = 0
 
     def addStat(self, classification, cnt, time):
-
         self._stats[classification]\
             = sum_elems(self._stats.setdefault(classification, (0,0)), (cnt, time))
 
@@ -110,6 +111,13 @@ class RunsStats(object):
             return (0,0)
         else:
             return n
+
+    def accumulateTime(self):
+        for (cnt, time) in self._stats.values():
+            self._cpu_time += time
+
+    def getAccTime(self):
+        return self._cpu_time
 
     def getCount(self, classification):
         return self.getStat(classification)[0]
@@ -140,7 +148,10 @@ class RunsStats(object):
             new_key =('other', 'error')
             for new_result in ['false', 'true', 'unknown', 'timeout', 'error']:
                 if key[0].lower().startswith(new_result):
-                    new_key = (new_result, key[1])
+                    if key[1] is None:
+                        new_key = (new_result, 'error')
+                    else:
+                        new_key = (new_result, key[1])
                     break
 
             newstats[new_key] =\

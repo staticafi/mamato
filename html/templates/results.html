@@ -123,12 +123,20 @@ function toggleRolling(div) {
 	       <td class="count">@getCount(@stats, @classif)</td>
 	       #if(@showTimes)
 	       <td class="time">
-	         <span style="font-size: 11px"> @getTime(@stats, @classif) s</span>
+	         <span style="font-size: 11px">@formatTime(@getTime(@stats, @classif))</span>
                </td>
                #end
 	  </tr>
       #end
       </table>
+      #if(@showTimes)
+      <hr/>
+      <table>
+      <tr>
+      <td> CPU time: </td><td> @formatTime(@stats.getAccTime())</td>
+      </tr>
+      </table>
+      #end
       </td>
     #end
   </tr>
