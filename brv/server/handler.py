@@ -67,6 +67,9 @@ def showResults(wfile, args):
         def __eq__(self, oth):
             return self.id == oth.id
 
+    _showTimes = 'show_times' in opts
+    _showTimesOnlySolved = 'show_times_only_solved' in opts
+
     # list of ToolRunInfo objects
     run_ids = list(map(int, opts['run']))
     runs = datamanager.getToolRuns(run_ids)
@@ -76,7 +79,7 @@ def showResults(wfile, args):
     for run in runs:
         run._stats = datamanager.getToolInfoStats(run.getID())
         for stats in run._stats.getAllStats().values():
-            stats.accumulateTime()
+            stats.accumulateTime(_showTimesOnlySolved)
             stats.prune()
             # a pair (name, id)
             categories.add(BSet(stats.getBenchmarksName(), stats.getBenchmarksID()))
@@ -113,6 +116,8 @@ def showResults(wfile, args):
 
     def _formatTime(time):
         "Transform time in seconds to hours, minutes and seconds"
+        if not time:
+            return '0 s'
         ret = ''
         time = ceil(time)
         if time >= 3600:
@@ -128,8 +133,6 @@ def showResults(wfile, args):
         else:
             return ret + '{0} s'.format(int(time))
 
-    _showTimes = 'show_times' in opts
-
     _render_template(wfile, 'results.html',
                      {'runs':runs, 'benchmarks_sets' : cats,
                       'toolsGETList' : _toolsGETList,
@@ -138,6 +141,7 @@ def showResults(wfile, args):
                       'getTime' : _getTime,
                       'get' : _get,
                       'showTimes' : _showTimes,
+                      'showTimesOnlySolved' : _showTimesOnlySolved,
                       'formatTime' : _formatTime,
                       'classifications' : classifications })
 

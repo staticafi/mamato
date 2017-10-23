@@ -140,7 +140,12 @@ function toggleRolling(div) {
 #if(@showTimes)
           checked="1"
 #end
-          onchange="toggleSettings(this)">show times<br>
+          onchange="toggleSettings(this)">show times
+    (<input type="checkbox" name="show_times_only_solved"
+#if(@showTimesOnlySolved)
+          checked="1"
+#end
+          onchange="toggleSettings(this)">solved only)<br>
   </form>
 
   <table style="margin-top: 15px;">

@@ -112,9 +112,15 @@ class RunsStats(object):
         else:
             return n
 
-    def accumulateTime(self):
-        for (cnt, time) in self._stats.values():
-            self._cpu_time += time
+    def accumulateTime(self, solved_only = False):
+        self._cpu_time = 0
+        if solved_only:
+            for (key, val) in self._stats.items():
+                if key[1] == 'correct' or key[1] == 'incorrect':
+                    self._cpu_time += val[1]
+        else:
+            for (cnt, time) in self._stats.values():
+                self._cpu_time += time
 
     def getAccTime(self):
         return self._cpu_time
