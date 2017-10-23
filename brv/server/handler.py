@@ -118,15 +118,15 @@ def showResults(wfile, args):
         if time >= 3600:
             hrs = time // 3600
             time = time - hrs*3600
-            ret = '{0} h'.format(hrs)
+            ret = '{0} h'.format(int(hrs))
         if time >= 60 or ret != '':
             mins = time // 60
             time = time - mins*60
-            ret += ' {0} min'.format(mins)
+            ret += ' {0} min'.format(int(mins))
         if ret != 0:
-            return ret + ' {0} s'.format(time) 
+            return ret + ' {0} s'.format(int(time))
         else:
-            return ret + '{0} s'.format(time) 
+            return ret + '{0} s'.format(int(time))
 
     _showTimes = 'show_times' in opts
 
