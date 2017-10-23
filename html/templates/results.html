@@ -100,8 +100,49 @@ function toggleRolling(div) {
 <body>
 
 #include("../header.html")
+<script type="text/javascript">
+    function toggleSettings(obj) {
+        var key = encodeURIComponent(obj.name);
+        var value = encodeURIComponent(obj.value);
+
+        var kvp = document.location.search.substr(1).split('&');
+        var new_search = "";
+        var found = false;
+
+        var i = kvp.length;
+        var new_search="";
+        while (i--) {
+            var x = kvp[i].split('=');
+            if (x == '') {
+                continue;
+            }
+            if (x[0] == key) {
+                // remove the key from url
+                found = true;
+                continue;
+            } else {
+                new_search += "&" + kvp[i];
+            }
+        }
+
+        if (!found) {
+            document.location.search += "&" + key + "=" + value;
+        } else {
+            document.location.search = new_search;
+        }
+    }
+
+</script>
 
 <div id="content">
+  <form name="settingsform" action="/res">
+   <input type="checkbox" name="show_times"
+#if(@showTimes)
+          checked="1"
+#end
+          onchange="toggleSettings(this)">show times<br>
+  </form>
+
   <table style="margin-top: 15px;">
   <tr class="header_row">
     <th>Category</th>
