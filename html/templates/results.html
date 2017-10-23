@@ -40,7 +40,20 @@ function toggleRolling(div) {
     }
 
     td.classif {
-	    padding: 0px;
+	    padding: 0 0 0 0;
+    }
+
+    td.count {
+#if(@showTimes)
+	    padding: 0 1em 0 0;
+#else
+	    padding: 0 0 0 0;
+#end
+    }
+    
+    td.time {
+	padding: 0 0 0 1em;
+ 	border-left: 1px dotted black;
     }
 
     tr:hover {
@@ -107,7 +120,12 @@ function toggleRolling(div) {
       #for @classif in @classifications:
 	  <tr> <td class="classif status-@get(@classif,1)"
 	           style="padding-right: 1.5em">@get(@classif,0)</td>
-	       <td class="classif">@getCount(@stats, @classif)</td>
+	       <td class="count">@getCount(@stats, @classif)</td>
+	       #if(@showTimes)
+	       <td class="time">
+	         <span style="font-size: 11px"> @getTime(@stats, @classif) s</span>
+               </td>
+               #end
 	  </tr>
       #end
       </table>

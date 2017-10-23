@@ -2,6 +2,7 @@
 
 import sys
 from os.path import basename
+from math import ceil
 
 if (sys.version_info > (3, 0)):
     from http.server import SimpleHTTPRequestHandler
@@ -98,17 +99,21 @@ def showResults(wfile, args):
         return run.getStats().getStatsByID(bset_id)
 
     def _getCount(stats, classif):
-        if stats is None:
-            return 0
-        else:
-            return stats.getCount(classif)
+        return stats.getCount(classif)
+
+    def _getTime(stats, classif):
+        return ceil(stats.getTime(classif))
+
+    _showTimes = 'show_times' in opts
 
     _render_template(wfile, 'results.html',
                      {'runs':runs, 'benchmarks_sets' : cats,
                       'toolsGETList' : _toolsGETList,
                       'getStats' : _getStats,
                       'getCount' : _getCount,
+                      'getTime' : _getTime,
                       'get' : _get,
+                      'showTimes' : _showTimes,
                       'classifications' : classifications })
 
 def deleteTools(wfile, args):

@@ -85,6 +85,9 @@ class DBToolRunInfo(ToolRunInfo):
     def getStats(self):
         return self._stats
 
+def sum_elems(lhs, rhs):
+    "Sum elements in tuples pair-wise"
+    return (lhs[0] + rhs[0], lhs[1] + rhs[1])
 
 class RunsStats(object):
     def __init__(self, cat, bset_id):
@@ -93,22 +96,26 @@ class RunsStats(object):
         self._benchmarks_name = cat
         self._benchmarks_id = bset_id
 
-    def addStat(self, classification, cnt):
-        # XXX: can python do it in one step? Find out
-        if classification in self._stats:
-            self._stats[classification] += cnt
-        else:
-            self._stats[classification] = cnt
+    def addStat(self, classification, cnt, time):
+
+        self._stats[classification]\
+            = sum_elems(self._stats.setdefault(classification, (0,0)), (cnt, time))
 
     def get(self, classification):
             return self._stats.get(classification)
 
-    def getCount(self, classification):
+    def getStat(self, classification):
         n = self._stats.get(classification)
         if n is None:
-            return 0
+            return (0,0)
         else:
             return n
+
+    def getCount(self, classification):
+        return self.getStat(classification)[0]
+
+    def getTime(self, classification):
+        return self.getStat(classification)[1]
 
     def getStats(self):
         return self._stats
@@ -127,25 +134,17 @@ class RunsStats(object):
         Merge all false(...) and timeouts and other results.
         """
         newstats = {}
-        for s in self._stats.items():
-            if s[0][0].startswith('false'):
-                cnt = newstats.setdefault(('false', s[0][1]), 0)
-                newstats[('false', s[0][1])] = cnt + s[1]
-            elif s[0][0].startswith('true') or s[0][0].startswith('TRUE'):
-                cnt = newstats.setdefault(('true', s[0][1]), 0)
-                newstats[('true', s[0][1])] = cnt + s[1]
-            elif s[0][0].startswith('ERROR') or s[0][0].startswith('error'):
-                cnt = newstats.setdefault(('error', 'error'), 0)
-                newstats[('error', 'error')] = cnt + s[1]
-            elif s[0][0].startswith('TIMEOUT') or s[0][0].startswith('timeout'):
-                cnt = newstats.setdefault(('timeout', 'error'), 0)
-                newstats[('timeout', 'error')] = cnt + s[1]
-            elif s[0][0].startswith('unknown') or s[0][0].startswith('UNKNOWN'):
-                cnt = newstats.setdefault(('unknown', 'unknown'), 0)
-                newstats[('unknown', 'unknown')] = cnt + s[1]
-            else:
-                cnt = newstats.setdefault(('other', 'error'), 0)
-                newstats[('other', 'error')] = cnt + s[1]
+        for (key, stats) in self._stats.items():
+            # key is a pair (status, classification)
+            # value is a pair (count, consumed time)
+            new_key =('other', 'error')
+            for new_result in ['false', 'true', 'unknown', 'timeout', 'error']:
+                if key[0].lower().startswith(new_result):
+                    new_key = (new_result, key[1])
+                    break
+
+            newstats[new_key] =\
+                sum_elems(newstats.setdefault(new_key, (0,0)), stats)
 
         self._stats = newstats
 
