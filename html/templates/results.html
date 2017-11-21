@@ -81,12 +81,16 @@ function toggleRolling(div) {
       color: red;
     }
 
+    .status-wrong {
+      color: red;
+    }
+
     .status-error {
       color: purple;
     }
 
     .status-unknown {
-      color: orange;
+      color: gray;
     }
 
     .status-correct-unconfirmed {
@@ -152,7 +156,8 @@ function toggleRolling(div) {
   <tr class="header_row">
     <th>Category</th>
   #for @run in @runs:
-    <th>@run.tool() <span style="font-size: 10px">[@run.date()]</span></th>
+    <th>@run.tool()<br> @descr(@run)
+        <!--<span style="font-size: 10px">[@run.date()]</span>--></th>
   #end
   </tr>
 

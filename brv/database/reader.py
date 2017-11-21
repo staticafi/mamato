@@ -35,7 +35,8 @@ class DatabaseReader(DatabaseProxy):
 
     def getToolRuns(self):
         q = """
-        SELECT tool_run.id, tool.name, tool.version, date, options, cpulimit, memlimit
+        SELECT tool_run.id, tool.name, tool.version, date,
+               options, cpulimit, memlimit, tool_run.description
         FROM tool JOIN tool_run ON tool.id = tool_id;
         """
         res = self.query(q)
@@ -50,6 +51,7 @@ class DatabaseReader(DatabaseProxy):
             info._options = r[4]
             info._timelimit = r[5]
             info._memlimit = r[6]
+            info._run_description = r[7]
 
             ret.append(info)
 
@@ -86,7 +88,8 @@ class DatabaseReader(DatabaseProxy):
         # 7 -> file name
 
         q = """
-        SELECT status, cputime, walltime, memusage, classification, exitcode, property, file
+        SELECT status, cputime, walltime, memusage,
+               classification, exitcode, property, file
         FROM run WHERE tool_run_id = '{0}' AND benchmarks_set_id = '{1}'; 
         """.format(tool_run_id, bset_id);
         print(q)

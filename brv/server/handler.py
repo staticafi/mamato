@@ -30,8 +30,17 @@ def _render_template(wfile, name, variables):
     wfile.write(template.render(variables,
                                 loader=loader).encode('utf-8'))
 
+def getDescriptionOrVersion(toolr):
+    descr = toolr.run_description()
+    if descr is None:
+        return toolr.tool_version()
+    else:
+        return descr
+
 def showRoot(wfile, args):
-    _render_template(wfile, 'index.html', {'tools' : datamanager.getTools()})
+    _render_template(wfile, 'index.html',
+                     {'tools' : datamanager.getTools(),
+                      'descr' : getDescriptionOrVersion})
 
 def _parse_args(args):
     opts = {}
@@ -80,7 +89,7 @@ def showResults(wfile, args):
         run._stats = datamanager.getToolInfoStats(run.getID())
         for stats in run._stats.getAllStats().values():
             stats.accumulateTime(_showTimesOnlySolved)
-            stats.prune()
+            #stats.prune()
             # a pair (name, id)
             categories.add(BSet(stats.getBenchmarksName(), stats.getBenchmarksID()))
             for c in stats.getClassifications():
@@ -143,6 +152,7 @@ def showResults(wfile, args):
                       'showTimes' : _showTimes,
                       'showTimesOnlySolved' : _showTimesOnlySolved,
                       'formatTime' : _formatTime,
+                      'descr' : getDescriptionOrVersion,
                       'classifications' : classifications })
 
 def deleteTools(wfile, args):
@@ -185,7 +195,10 @@ def showBenchmarksResults(wfile, args):
 
     def _getBenchmarkURL(name):
         base='https://github.com/sosy-lab/sv-benchmarks/tree/master'
-        return base + name[name.index('/c/'):]
+        try:
+            return base + name[name.index('/c/'):]
+        except ValueError:
+            return None
 
     def _getShortName(name):
         return basename(name)

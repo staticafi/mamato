@@ -17,6 +17,9 @@ class ToolRunInfo(object):
     def tool_version(self):
         raise NotImplemented
 
+    def run_description(self):
+        raise NotImplemented
+
     def date(self):
         raise NotImplemented
 
@@ -46,7 +49,7 @@ class ToolRunInfo(object):
 
 class DBToolRunInfo(ToolRunInfo):
     def __init__(self, idtf, tool = None, vers = None, date = None,
-                 opts = None, tlimit = None, mlimit = None):
+                 opts = None, tlimit = None, mlimit = None, descr = None):
         ToolRunInfo.__init__(self, idtf)
 
         # a descriptor of this run
@@ -60,6 +63,7 @@ class DBToolRunInfo(ToolRunInfo):
         # list of results (RunInfo objects)
         self._stats = None
         self._runs = []
+        self._run_description = descr
 
     def tool(self):
         return self._tool
@@ -84,6 +88,9 @@ class DBToolRunInfo(ToolRunInfo):
 
     def getStats(self):
         return self._stats
+
+    def run_description(self):
+        return self._run_description
 
 def sum_elems(lhs, rhs):
     "Sum elements in tuples pair-wise"
@@ -221,7 +228,9 @@ class RunInfosTable(object):
 
         for info in runinfos:
             name = info.fullname()
+            assert name
             infos = self._benchmarks.setdefault(name, [])
+            assert len(infos) <= self._tools_num
 
             ## missing some tools? Fill in the gap
             self._fill_blank(infos)

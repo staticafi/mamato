@@ -59,6 +59,7 @@ class DBRunInfo(RunInfo):
 
     def __init__(self, res):
         self._query_result = res
+        assert self.fullname() != ''
 
     # the data in the query result are supposed to be
     # indexed as follows:

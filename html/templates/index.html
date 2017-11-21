@@ -24,7 +24,7 @@
     #for @run in @tool.getRuns():
     <!--<select name="run" multiple="multiple" style="width:50%;">-->
     <select name="run" multiple="multiple">
-      <option value=@run.getID()>[@run.date()] @run.tool() @run.tool_version()</option>
+      <option value=@run.getID()>[@run.date()] @run.tool() @descr(@run)</option>
     </select>
     #end
   <br/>
