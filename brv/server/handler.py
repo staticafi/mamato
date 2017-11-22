@@ -37,11 +37,6 @@ def getDescriptionOrVersion(toolr):
     else:
         return descr
 
-def showRoot(wfile, args):
-    _render_template(wfile, 'index.html',
-                     {'tools' : datamanager.getTools(),
-                      'descr' : getDescriptionOrVersion})
-
 def _parse_args(args):
     opts = {}
     for a in args:
@@ -58,6 +53,19 @@ def _parse_args(args):
 
 def _get(p, idx):
     return p[idx]
+
+def showRoot(wfile, args):
+    tools = datamanager.getTools()
+    tools_sorted = {}
+    for t in tools:
+        # Each tool in database is a name+version.
+        # We want to divide them according to names only.
+        tools_sorted.setdefault(t.name, []).append(t)
+    _render_template(wfile, 'index.html',
+                     {'tools' : list(tools_sorted.items()),
+                      'get' : _get,
+                      'descr' : getDescriptionOrVersion})
+
 
 def showResults(wfile, args):
     opts = _parse_args(args)
@@ -202,13 +210,52 @@ def showBenchmarksResults(wfile, args):
 
     def _getShortName(name):
         return basename(name)
+
+    _showDifferent = 'different_only' in opts
+    _filter = opts.setdefault('filter', [])
+
+    results = datamanager.getRunInfos(bset_id, run_ids).getRows().items()
+    if _showDifferent:
+        def some_different(x):
+            L = x[1]
+            status = L[0].status()
+            for r in L:
+                if r.status() != status:
+                    return True
+
+            return False
+
+        results = list(filter(some_different, results))
+    else:
+        results = list(results)
+
+    if _filter:
+        from re import compile
+        filters = []
+        for f in _filter:
+            rf = compile(f)
+            filters.append(lambda x : rf.search(x))
+
+        for f in filters:
+            def match(x):
+                L = x[1]
+                for r in L:
+                    if f(r.status()):
+                        return True
+                return False
+
+            results = filter(match, results)
+
+        results = list(results)
         
-    results = list(datamanager.getRunInfos(bset_id, run_ids).getRows().items())
     _render_template(wfile, 'benchmarks_results.html',
                      {'runs' : runs,
                       'get' : _get,
                       'getBenchmarkURL' : _getBenchmarkURL,
                       'getShortName' : _getShortName,
+                      'showDifferent' : _showDifferent,
+                      'descr' : getDescriptionOrVersion,
+                      'filters' : _filter,
                       'results': results})
 
 def sendStyle(wfile):
