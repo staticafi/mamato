@@ -193,6 +193,7 @@ def showBenchmarksResults(wfile, args):
         return
 
     run_ids = list(map(int, opts['run']))
+    run_ids.sort()
     runs = datamanager.getToolRuns(run_ids)
 
     try:
@@ -236,9 +237,9 @@ def showBenchmarksResults(wfile, args):
             except Exception as e:
                 print('ERROR: Invalid regular expression given in filter: ' + str(e))
                 continue
-            filters.append(lambda x : rf.search(x))
+            filters.append((f, lambda x : rf.search(x)))
 
-        for f in filters:
+        for (pattern, f) in filters:
             def match(x):
                 L = x[1]
                 for r in L:
@@ -246,10 +247,12 @@ def showBenchmarksResults(wfile, args):
                         return True
                 return False
 
+            print('Applying {0}'.format(pattern))
             results = filter(match, results)
 
-    results = list(results)
+    #results = list(results)
 
+    assert len(runs) == len(results[0][1])
     _render_template(wfile, 'benchmarks_results.html',
                      {'runs' : runs,
                       'get' : _get,
