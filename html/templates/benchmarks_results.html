@@ -160,6 +160,31 @@ function toggleRolling(div) {
 	}
     }
 
+    function hideTool(tool_id) {
+        var kvp = document.location.search.substr(1).split('&');
+        var new_search = "";
+        var i = kvp.length;
+
+        while (i--) {
+            var x = kvp[i].split('=');
+            if (x == '') {
+                continue;
+            }
+            if (x[0] == 'run' && x[1] == tool_id) {
+                continue;
+            } else {
+                new_search += "&" + kvp[i];
+            }
+        }
+
+        document.location.search = new_search;
+
+	// do not continue in following the link
+    	return false;
+    }
+
+
+
 </script>
 
 
@@ -190,7 +215,9 @@ function toggleRolling(div) {
   <tr class="header_row">
     <th>Benchmark</th>
     #for @run in @runs:
-    <th colspan="2">@descr(@run) <span style="font-size: 10px">[@run.date()]</span></th>
+    <th colspan="2">@descr(@run) <span style="font-size: 10px">[@run.date()]</span>
+    <a href="" style="font-size: 10px" onclick="return hideTool(@run.getID());">[X]</a>
+    </th>
     #end
   </tr>
   <tr class="header_row_snd" style="font-size: 12px">
