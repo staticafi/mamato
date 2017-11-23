@@ -219,9 +219,16 @@ def showBenchmarksResults(wfile, args):
     if _showDifferent:
         def some_different(x):
             L = x[1]
-            status = L[0].status()
+            if L[0] is None:
+                status = None
+            else:
+                status = L[0].status()
+
             for r in L:
-                if r.status() != status:
+                if r is None:
+                    if status is not None:
+                        return True
+                elif r.status() != status:
                     return True
 
             return False
@@ -243,7 +250,7 @@ def showBenchmarksResults(wfile, args):
             def match(x):
                 L = x[1]
                 for r in L:
-                    if f(r.status()):
+                    if r and f(r.status()):
                         return True
                 return False
 

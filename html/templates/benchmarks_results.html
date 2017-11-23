@@ -233,8 +233,20 @@ function toggleRolling(div) {
     </td>
     #for @runinfo in @get(@result, 1):
       <td>
-      <span class="status-@runinfo.classification()"> @runinfo.status()</span>
-      </td><td class="cpu_time">@runinfo.cputime()</td>
+      <span class="status-@runinfo.classification()">
+      #if(@runinfo)
+      @runinfo.status()
+      #else
+      --
+      #end
+      </span>
+      </td><td class="cpu_time">
+      #if(@runinfo)
+      @runinfo.cputime()
+      #else
+      --
+      #end
+      </td>
     #end
   </tr>
   #end
