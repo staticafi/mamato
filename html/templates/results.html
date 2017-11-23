@@ -110,9 +110,7 @@ function toggleRolling(div) {
         var value = encodeURIComponent(obj.value);
 
         var kvp = document.location.search.substr(1).split('&');
-        var new_search = "";
         var found = false;
-
         var i = kvp.length;
         var new_search="";
         while (i--) {
@@ -136,6 +134,29 @@ function toggleRolling(div) {
         }
     }
 
+    function hideTool(tool_id) {
+        var kvp = document.location.search.substr(1).split('&');
+        var new_search = "";
+        var i = kvp.length;
+
+        while (i--) {
+            var x = kvp[i].split('=');
+            if (x == '') {
+                continue;
+            }
+            if (x[0] == 'run' && x[1] == tool_id) {
+                continue;
+            } else {
+                new_search += "&" + kvp[i];
+            }
+        }
+
+        document.location.search = new_search;
+
+	// do not continue in following the link
+    	return false;
+    }
+
 </script>
 
 <div id="content">
@@ -157,9 +178,11 @@ function toggleRolling(div) {
     <th>Category</th>
   #for @run in @runs:
     <th>@run.tool()<br> @descr(@run)
+	<a href="" style="font-size: 10px" onclick="return hideTool(@run.getID());">[X]</a>
         <!--<span style="font-size: 10px">[@run.date()]</span>--></th>
   #end
   </tr>
+
 
   #for @bset in @benchmarks_sets:
   <tr class="row">
@@ -193,7 +216,6 @@ function toggleRolling(div) {
   </tr>
   #end
   </table>
-
 </div> <!-- content -->
 </body>
 

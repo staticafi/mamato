@@ -225,15 +225,17 @@ def showBenchmarksResults(wfile, args):
 
             return False
 
-        results = list(filter(some_different, results))
-    else:
-        results = list(results)
+        results = filter(some_different, results)
 
     if _filter:
         from re import compile
         filters = []
         for f in _filter:
-            rf = compile(f)
+            try:
+                rf = compile(f)
+            except Exception as e:
+                print('ERROR: Invalid regular expression given in filter: ' + str(e))
+                continue
             filters.append(lambda x : rf.search(x))
 
         for f in filters:
@@ -246,8 +248,8 @@ def showBenchmarksResults(wfile, args):
 
             results = filter(match, results)
 
-        results = list(results)
-        
+    results = list(results)
+
     _render_template(wfile, 'benchmarks_results.html',
                      {'runs' : runs,
                       'get' : _get,

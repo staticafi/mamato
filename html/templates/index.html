@@ -21,14 +21,15 @@
 <form action="/results" style="margin-left: 1em">
   #for @tool in @tools:
     <h3>@get(@tool, 0):</h3>
-    #for @tool_version in @get(@tool, 1):
-      #for @run in @tool_version.getRuns():
-      <!--<select name="run" multiple="multiple" style="width:50%;">-->
-      <select name="run" multiple="multiple">
-        <option value=@run.getID()>[@run.date()] @run.tool() @descr(@run)</option>
-      </select>
+      <select name="run" multiple="multiple" size="10" style="display: inline-block; overflow-y: auto;">
+      #for @tool_version in @get(@tool, 1):
+        <option disabled role=separator/>@tool_version.version</option>
+        #for @run in @tool_version.getRuns():
+        <!--<select name="run" multiple="multiple" style="width:50%;">-->
+          <option value=@run.getID()>&nbsp;&nbsp;&nbsp;&nbsp;[@run.date()] @run.tool() @descr(@run)</option>
+        #end
       #end
-    #end
+      </select>
   <br/>
   #end
   <input type="submit" value="Show!">
