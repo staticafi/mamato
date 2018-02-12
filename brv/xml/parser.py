@@ -81,6 +81,7 @@ def _createToolRunInfo(xmlfl):
     tr.memlimit = root.getAttribute('memlimit')
     tr.name = root.getAttribute('name')
     tr.block = root.getAttribute('block')
+    tr.benchmarkname = root.getAttribute('benchmarkname')
 
     return tr
 
@@ -119,16 +120,19 @@ class XMLParser(object):
         rcnt = writer.getRunCount(tool_run_id, benchmarks_set_id)
         if rcnt and rcnt > 0:
             print("Already have results for this xml file: {0}".format(filePath))
-            return
+            return 0
 
         assert tool_run_id is not None
         assert benchmarks_set_id is not None
 
+        cnt = 0;
         for run in xmlfl.getElementsByTagName('run'):
             r = _parse_run_elem(run)
             writer.writeRunInfo(tool_run_id, benchmarks_set_id, r)
+            cnt += 1
 
         writer.commit()
+        return cnt
 
 
 if __name__ == "__main__":

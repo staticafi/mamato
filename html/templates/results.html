@@ -1,9 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <!--
-   index.html template
-
-   Author: Marek Chalupa <xchalup4@fi.muni.cz>, 2017
+   Author: Marek Chalupa <xchalup4@fi.muni.cz>, 2017 - 2018
 -->
 
 <script>
@@ -16,6 +14,15 @@ function toggleRolling(div) {
     div.className = "rolled";
   }
 }
+
+function toggleRollingByName(name) {
+  // XXX: name has been deprecated in HTML5
+  var elems = document.getElementsByName(name);
+  for (i = 0; i < elems.length; i++) {
+  	toggleRolling(elems[i]);
+  }
+}
+
 </script>
 
 <head>
@@ -175,11 +182,23 @@ function toggleRolling(div) {
 
   <table style="margin-top: 15px;">
   <tr class="header_row">
-    <th>Category</th>
+  <th>Category</th>
   #for @run in @runs:
-    <th>@run.tool()<br> @descr(@run)
-	<a href="" style="font-size: 10px" onclick="return hideTool(@run.getID());">[X]</a>
-        <!--<span style="font-size: 10px">[@run.date()]</span>--></th>
+    <th>@run.tool() </br>
+    <div onclick="toggleRollingByName('version')"
+         class="rolled" name="version"
+         style="font-size=10px; font-weight: normal; padding-top:10px; color: #0066ff">
+      @run.tool_version()</br></br>
+      @run.options()</br>
+    </div>
+    #if(@run.run_description())
+      </br>
+      @run.run_description()
+    #else
+      <i>(no descr)</i>
+    #end
+    <a href="" style="font-size: 10px; color: red;" onclick="return hideTool(@run.getID());">[X]</a>
+    <!--<span style="font-size: 10px">[@run.date()]</span>--></th>
   #end
   </tr>
 

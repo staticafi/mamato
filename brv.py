@@ -14,9 +14,15 @@ if __name__ == "__main__":
         from brv.xml.parser import XMLParser
 
         parser = XMLParser('database.conf')
+        total = 0
         for xmlfile in sys.argv[1:]:
             print('Parsing: {0}'.format(xmlfile))
-            parser.parseToDB(xmlfile)
+            cnt = parser.parseToDB(xmlfile)
+            print('Got {0} results from {1}'.format(cnt, xmlfile))
+            total += cnt
+
+        print('Added {0} results in total'.format(total))
+
     else:
         if version_info < (3, 0):
             createServer()

@@ -58,11 +58,17 @@ def showRoot(wfile, args):
     tools = datamanager.getTools()
     tools_sorted = {}
     for t in tools:
-        # Each tool in database is a name+version.
-        # We want to divide them according to names only.
-        tools_sorted.setdefault(t.name, []).append(t)
+        # tools is a list of tool runs where each of the
+        # tools has a unique name+version+options attributes
+        # We want to divide them to groups according to names
+        # and versions. So we have a mapping name -> version -> tools
+        nkey = tools_sorted.setdefault(t.name, {})
+        nkey.setdefault(t.version, []).append(t)
+    tools_final = []
+    for t in tools_sorted.items():
+        tools_final.append((t[0], list(t[1].items())))
     _render_template(wfile, 'index.html',
-                     {'tools' : list(tools_sorted.items()),
+                     {'tools' : tools_final,
                       'get' : _get,
                       'descr' : getDescriptionOrVersion})
 

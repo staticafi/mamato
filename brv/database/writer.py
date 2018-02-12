@@ -59,19 +59,24 @@ class DatabaseWriter(DatabaseProxy):
 
         q = """
         SELECT id FROM tool_run WHERE
-          tool_id = '{0}' AND memlimit = '{1}' AND cpulimit = '{2}';
-        """.format(tool_id, toolinfo.memlimit, toolinfo.timelimit)
+          tool_id = '{0}' AND
+          memlimit = '{1}' AND
+          cpulimit = '{2}' AND
+          options = '{3}';
+        """.format(tool_id, toolinfo.memlimit, toolinfo.timelimit,
+                   toolinfo.options)
         tool_run_id = self.queryInt(q)
 
         if tool_run_id is None:
             # add a new tool_run record
             q = """
             INSERT INTO tool_run
-              (tool_id, options, memlimit, cpulimit, date)
-              VALUES ('{0}', '{1}', '{2}', '{3}', '{4}');
+              (tool_id, options, memlimit, cpulimit, date, description)
+              VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}:{6}');
             """.format(tool_id, toolinfo.options,
                        toolinfo.memlimit, toolinfo.timelimit,
-                       toolinfo.date)
+                       toolinfo.date, toolinfo.benchmarkname,
+                       toolinfo.name)
             self.query_noresult(q)
             tool_run_id = self.queryInt("SELECT LAST_INSERT_ID();")
 

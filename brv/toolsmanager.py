@@ -6,20 +6,29 @@ class ToolsManager(object):
     """
 
     class Tool(object):
-        def __init__(self, nm, ver):
+        def __init__(self, nm, ver, opts):
             self.name = nm
             self.version = ver
+            self.options = opts
 
             self._runs = []
 
         def getRuns(self):
+            """ Return the list of results for this tool """
             return self._runs
 
+        def equalsToolRun(self, oth):
+            return self.version == oth.tool_version() and\
+                   self.name == oth.tool() and\
+                   self.options == oth.options()
+
         def equals(self, oth):
-            return self.version == oth.version and self.name == oth.name 
+            return self.version == oth.version and\
+                   self.name == oth.name and\
+                   self.options == oth.options
 
     def __init__(self, db_conf = None, xmls = []):
-        # list of tools (tool name + version and mapping to single runs)
+        # list of tools (tool name + version + options and mapping to single runs)
         self._tools = []
 
         # list of runs of tools (run of a tool in a given settings)
@@ -33,14 +42,16 @@ class ToolsManager(object):
     def _add_tool(self, toolrun):
         found = None
         for tool in self._tools:
-            if tool.version == toolrun.tool_version() and tool.name == toolrun.tool():
+            if tool.equalsToolRun(toolrun):
                 found = tool
                 break
 
         if found:
             found._runs.append(toolrun)
         else:
-            t = self.Tool(toolrun.tool(), toolrun.tool_version())
+            t = self.Tool(toolrun.tool(),
+                          toolrun.tool_version(),
+                          toolrun.options())
             self._tools.append(t)
             t._runs.append(toolrun)
 
