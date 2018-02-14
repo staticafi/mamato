@@ -41,7 +41,7 @@ function renameToolRun(old_name) {
 	#for @tool_with_options in @get(@tool_run, 1):
           #for @run in @tool_with_options.getRuns():
           #if(@tool_with_options.options)
-          <option disabled role=separator/>@tool_with_options.options</option>
+          <option disabled role=separator/>@tool_with_options.options()</option>
           #end
           <!--<select name="run" multiple="multiple" style="width:50%;">-->
             <option ondblclick="renameToolRun(@descr(@run))" value="@run.getID()">

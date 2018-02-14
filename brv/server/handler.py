@@ -62,8 +62,8 @@ def showRoot(wfile, args):
         # tools has a unique name+version+options attributes
         # We want to divide them to groups according to names
         # and versions. So we have a mapping name -> version -> tools
-        nkey = tools_sorted.setdefault(t.name, {})
-        nkey.setdefault(t.version, []).append(t)
+        nkey = tools_sorted.setdefault(t.name(), {})
+        nkey.setdefault(t.version(), []).append(t)
     tools_final = []
     for t in tools_sorted.items():
         tools_final.append((t[0], list(t[1].items())))

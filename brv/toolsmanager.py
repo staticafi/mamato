@@ -6,26 +6,32 @@ class ToolsManager(object):
     """
 
     class Tool(object):
-        def __init__(self, nm, ver, opts):
-            self.name = nm
-            self.version = ver
-            self.options = opts
-
+        def __init__(self, toolrun):
+            self._tool_run = toolrun
             self._runs = []
+
+        def version(self):
+            return self._tool_run.tool_version()
+
+        def name(self):
+            return self._tool_run.tool()
+
+        def options(self):
+            return self._tool_run.options()
 
         def getRuns(self):
             """ Return the list of results for this tool """
             return self._runs
 
-        def equalsToolRun(self, oth):
-            return self.version == oth.tool_version() and\
-                   self.name == oth.tool() and\
-                   self.options == oth.options()
+        def equalsToolRun(self, tr):
+            return self.version() == tr.tool_version() and\
+                   self.name() == tr.tool() and\
+                   self.options() == tr.options()
 
-        def equals(self, oth):
-            return self.version == oth.version and\
-                   self.name == oth.name and\
-                   self.options == oth.options
+       #def equals(self, oth):
+       #    return self.version() == oth.version() and\
+       #           self.name() == oth.name() and\
+       #           self.options() == oth.options()
 
     def __init__(self, db_conf = None, xmls = []):
         # list of tools (tool name + version + options and mapping to single runs)
@@ -49,9 +55,7 @@ class ToolsManager(object):
         if found:
             found._runs.append(toolrun)
         else:
-            t = self.Tool(toolrun.tool(),
-                          toolrun.tool_version(),
-                          toolrun.options())
+            t = self.Tool(toolrun)
             self._tools.append(t)
             t._runs.append(toolrun)
 
