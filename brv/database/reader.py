@@ -27,7 +27,7 @@ from brv.runinfo import DBRunInfo
 
 class DatabaseReader(DatabaseProxy):
     """
-    DatabaseProxy specialized for updating the database
+    DatabaseProxy specialized for reading the database
     """
 
     def __init__(self, conffile = None):
