@@ -20,6 +20,15 @@ option:hover {
        background-color: #e9ffe1;
 }
 
+option:disabled {
+       background-color: #f9f9f9;
+}
+
+
+option:disabled:hover {
+       background-color: #f9f9f9;
+}
+
 a {
 	text-decoration: none; 
 }
