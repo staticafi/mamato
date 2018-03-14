@@ -4,26 +4,7 @@
    Author: Marek Chalupa <xchalup4@fi.muni.cz>, 2017 - 2018
 -->
 
-<script>
-function toggleRolling(div) {
-  var className = div.getAttribute("class");
-  if(className=="rolled") {
-    div.className = "unrolled";
-  }
-  else{
-    div.className = "rolled";
-  }
-}
-
-function toggleRollingByName(name) {
-  // XXX: name has been deprecated in HTML5
-  var elems = document.getElementsByName(name);
-  for (i = 0; i < elems.length; i++) {
-  	toggleRolling(elems[i]);
-  }
-}
-
-</script>
+<script src="../js/brv.js"></script>
 
 <head>
 <meta charset="utf-8" />
@@ -111,60 +92,6 @@ function toggleRollingByName(name) {
 <body>
 
 #include("../header.html")
-<script type="text/javascript">
-    function toggleSettings(obj) {
-        var key = encodeURIComponent(obj.name);
-        var value = encodeURIComponent(obj.value);
-
-        var kvp = document.location.search.substr(1).split('&');
-        var found = false;
-        var i = kvp.length;
-        var new_search="";
-        while (i--) {
-            var x = kvp[i].split('=');
-            if (x == '') {
-                continue;
-            }
-            if (x[0] == key) {
-                // remove the key from url
-                found = true;
-                continue;
-            } else {
-                new_search += "&" + kvp[i];
-            }
-        }
-
-        if (!found) {
-            document.location.search += "&" + key + "=" + value;
-        } else {
-            document.location.search = new_search;
-        }
-    }
-
-    function hideTool(tool_id) {
-        var kvp = document.location.search.substr(1).split('&');
-        var new_search = "";
-        var i = kvp.length;
-
-        while (i--) {
-            var x = kvp[i].split('=');
-            if (x == '') {
-                continue;
-            }
-            if (x[0] == 'run' && x[1] == tool_id) {
-                continue;
-            } else {
-                new_search += "&" + kvp[i];
-            }
-        }
-
-        document.location.search = new_search;
-
-	// do not continue in following the link
-    	return false;
-    }
-
-</script>
 
 <div id="content">
   <form name="settingsform" action="/res">
