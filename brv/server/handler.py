@@ -187,8 +187,7 @@ def deleteTools(wfile, args):
     writer.commit()
     _render_template(wfile, 'delete.html', {'tools' : datamanager.getTools()})
 
-
-def showBenchmarksResults(wfile, args):
+def showFiles(wfile, args):
     opts = _parse_args(args)
     if not 'run' in opts:
         wfile.write(b'<h2>No runs of tools given</h2>')
@@ -265,7 +264,7 @@ def showBenchmarksResults(wfile, args):
 
     results = list(results)
     assert len(runs) == len(results[0][1])
-    _render_template(wfile, 'benchmarks_results.html',
+    _render_template(wfile, 'files.html',
                      {'runs' : runs,
                       'get' : _get,
                       'getBenchmarkURL' : _getBenchmarkURL,
@@ -283,7 +282,7 @@ def sendStyle(wfile):
 handlers = {
     'root'              : showRoot,
     'results'           : showResults,
-    'benchmarks_results': showBenchmarksResults,
+    'files'             : showFiles,
     'delete'            : deleteTools,
     'style.css'         : None, # we handle this specially
 }

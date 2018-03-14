@@ -132,7 +132,7 @@
 
   #for @bset in @benchmarks_sets:
   <tr class="row">
-    <td><a href="/benchmarks_results?benchmarks=@{bset.id}@toolsGETList()">@bset.name</a></td>
+    <td><a href="/files?benchmarks=@{bset.id}@toolsGETList()">@bset.name</a></td>
     #for @run in @runs:
       <td>
       <table class="stats">
