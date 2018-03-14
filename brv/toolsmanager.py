@@ -28,22 +28,12 @@ class ToolsManager(object):
                    self.name() == tr.tool() and\
                    self.options() == tr.options()
 
-       #def equals(self, oth):
-       #    return self.version() == oth.version() and\
-       #           self.name() == oth.name() and\
-       #           self.options() == oth.options()
-
     def __init__(self):
         # list of tools (tool name + version + options and mapping to single runs)
         self._tools = []
 
         # list of runs of tools (run of a tool in a given settings)
         self._tool_runs = []
-
-        # mapping from tool's identifier -> index in _tool_runs
-        # The index in tools uniquely identifies the tool
-        # in this object and on the HTML pages (can be passed to GET)
-        #self._identifier_to_run = {}
 
     def reset(self):
         if self._tools:
@@ -82,6 +72,10 @@ class ToolsManager(object):
 
     def getTools(self):
         return self._tools
+
+    def updateToolRun(self, newrun):
+        self._tool_runs =\
+         [newrun if newrun.getID() == run.getID() else run for run in self._tool_runs]
 
     def getToolRuns(self, which = []):
         if not which:

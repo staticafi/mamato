@@ -7,30 +7,99 @@
 <script src="../js/brv.js"></script>
 <script>
 // source: https://stackoverflow.com/questions/247483/http-get-request-in-javascript
-function httpGet(theUrl)
+
+function httpGetAsync(theUrl, callback = null)
 {
     var xmlHttp = new XMLHttpRequest();
-    xmlHttp.open( "GET", theUrl, false ); // false for synchronous request
-    xmlHttp.send( null );
-    return xmlHttp.responseText;
+    if (callback) {
+   	xmlHttp.onreadystatechange = function() {
+   	    if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
+   	        callback(xmlHttp.responseText);
+   	}
+    }
+    xmlHttp.open("GET", theUrl, true); // true for asynchronous 
+    xmlHttp.send(null);
 }
 
-function deleteTool(tid) {
+function showStatusBar(text, in_progress = true) {
+	var bar = document.getElementById("status-bar");
+	bar.innerHTML = "<p>";
+	if (in_progress) {
+		// XXX: put some running gif here
+		bar.innerHTML += "<img alt=\"In Progress... \" src=\"../img/loader.gif\" height=\"24\">";
+	}
+	bar.innerHTML += text+"</p>";
+	bar.setAttribute("class", "status-bar");
+}
+
+function hideStatusBar() {
+	var bar = document.getElementById("status-bar");
+	bar.innerHTML = "";
+	bar.setAttribute("class", "status-bar-hidden");
+}
+
+function deleteTool(tid, delElem) {
 	if (!confirm("Do you really want to delete tool run id " + tid + "?")) {
 		return false;
 	}
 
-	var req = httpGet('delete?run='+tid);
-	// reload the page from beginning
-    	//document.location.search = "manage";
-	location.reload();
+	httpGetAsync('delete?run='+tid, function (resp) {
+			hideStatusBar();
+			delElem.parentNode.removeChild(delElem);
+			//location.reload();
+			});
+
+	showStatusBar("Deleting tool " + tid);
 	return false;
 }
+
+function renameTool(obj, tid, descr) {
+	httpGetAsync('set?run='+tid+'&description='+descr, function (resp) {
+			hideStatusBar();
+			// no reload needed, the entry is updated
+			});
+	showStatusBar("Renaming tool " + tid);
+	return false;
+}
+
+function enableEntry(obj, tid) {
+	obj.removeAttribute("readonly");
+	obj.onkeypress = function(e) {
+		if (e.keyCode == 13) { //enter
+			renameTool(obj, tid, obj.value);
+			obj.setAttribute("readonly", "true");
+			return false;
+		} else if (e.keyCode == 27) { //escape
+			obj.setAttribute("readonly", "true");
+			return false;
+		}
+		return true;
+	}
+	return false;
+}
+
+function enableEntryOnClick(obj, tid) {
+	var tr = obj.parentElement.parentElement;
+	var ent = tr.getElementsByClassName("description-entry")[0];
+	return enableEntry(ent, tid);
+}
+
 </script>
 
 <head>
 <meta charset="utf-8" />
 <link rel="stylesheet" type="text/css" href="../style.css">
+<style>
+    .status-bar-hidden {
+	    display: none;
+    }
+
+    .status-bar {
+	    padding: 10px;
+	    background-color: #99ccff;
+    }
+</style>
+
 <title>Benchexec results viewer</title>
 </head>
 
@@ -38,7 +107,10 @@ function deleteTool(tid) {
 
 #include("../header.html")
 <div id="content">
-<h3>DELETE</h3>
+<!-- fixme: make this modal box -->
+<div id="status-bar" class="status-bar-hidden">
+Status bar
+</div>
 <h2>Tools:</h2>
 
 <form action="/manage" style="margin-left: 1em">
@@ -49,14 +121,16 @@ function deleteTool(tid) {
 	#for @tool_with_options in @get(@tool_run, 1):
           #for @run in @tool_with_options.getRuns():
 	     <tr>
-	     <td>
+	     <td class="description">
 	     [@run.date()] [@run.getID()]
-             <input readonly="true" ondblclick="" value="@descr(@run)" />
-	     <td>
-	     <td>tags: <input value="@getTags(@run)"/></td>
-	     <td>rename</td>
-	     <td><a href="javascript:void(0)"
-                    onclick="deleteTool(@run.getID());"> delete</a> </td>
+             <input class="description-entry" readonly="true"
+                    ondblclick="enableEntry(this, @run.getID())" value="@descr(@run)" />
+	     <td/>
+	     <td class="tags">tags: <input value="@getTags(@run)"/></td>
+	     <td class="rename"><a href="javascript:void(0)"
+                    onclick="enableEntryOnClick(this, @run.getID());" >rename</a> </td>
+	     <td class="delete"><a href="javascript:void(0)"
+                    onclick="deleteTool(@run.getID(), this.parentElement.parentElement);">delete</a> </td>
              </tr>
           #end
         #end

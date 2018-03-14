@@ -7,6 +7,8 @@ class ToolRunInfo(object):
     """
     def __init__(self, _id = None):
         self._id = _id
+        self._runs = []
+        self._stats = None
 
     def getID(self):
         return self._id
@@ -48,49 +50,30 @@ class ToolRunInfo(object):
         self._runs.append(r)
 
 class DBToolRunInfo(ToolRunInfo):
-    def __init__(self, idtf, tool = None, vers = None, date = None,
-                 opts = None, tlimit = None, mlimit = None, descr = None):
-        ToolRunInfo.__init__(self, idtf)
-
-        # a descriptor of this run
-        # FIXME: store only the query and use the query
-        self._tool = tool
-        self._tool_version = vers
-        self._date = date
-        self._options = opts
-        self._timelimit = tlimit
-        self._memlimit = mlimit
-        # list of results (RunInfo objects)
-        self._stats = None
-        self._runs = []
-        self._run_description = descr
+    def __init__(self, qr):
+        ToolRunInfo.__init__(self, qr[0])
+        self._query_result = qr
 
     def tool(self):
-        return self._tool
+        return self._query_result[1]
 
     def tool_version(self):
-        return self._tool_version
+        return self._query_result[2]
 
     def date(self):
-        return self._date
+        return self._query_result[3]
 
     def options(self):
-        return self._options
+        return self._query_result[4]
 
     def timelimit(self):
-        return self._timelimit
+        return self._query_result[5]
 
     def memlimit(self):
-        return self._memlimit
-
-    def getRuns(self):
-        return self._runs
-
-    def getStats(self):
-        return self._stats
+        return self._query_result[6]
 
     def run_description(self):
-        return self._run_description
+        return self._query_result[7]
 
 def sum_elems(lhs, rhs):
     "Sum elements in tuples pair-wise"

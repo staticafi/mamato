@@ -1,7 +1,7 @@
 #!/usr/bin/python
 
 import sys
-from os.path import basename
+from os.path import basename, join, isfile
 from math import ceil, floor
 
 if (sys.version_info > (3, 0)):
@@ -192,44 +192,26 @@ def performDelete(wfile, args):
     opts = _parse_args(args)
 
     # XXX: this should be done in datamanager
-    from .. database.writer import DatabaseWriter
-    writer = DatabaseWriter('database.conf')
 
     run_ids = list(map(int, opts['run']))
     runs = datamanager.getToolRuns(run_ids)
 
-    for run in runs:
-        print("Deleting tool run '{0}'".format(run.getID()))
-        writer.deleteTool(run.getID())
-        # adjust data locally
-        datamanager.toolsmanager.remove(run)
-
-    print("Commiting changes")
-    writer.commit()
+    print("Deleting tool runs '{0}'".format(str(runs)))
+    datamanager.deleteToolRuns(runs)
 
 def setToolsAttr(wfile, args):
     opts = _parse_args(args)
 
-    # XXX: this should be done in datamanager
-    from .. database.writer import DatabaseWriter
-    writer = DatabaseWriter('database.conf')
+    if len(opts['run']) != 1:
+        print('Incorrect number of tools')
+        return
 
-    run_ids = list(map(int, opts['run']))
-    runs = datamanager.getToolRuns(run_ids)
+    run_id = int(opts['run'][0])
 
-    for run in runs:
-        print("Deleting tool run '{0}'".format(run.getID()))
-        writer.deleteTool(run.getID())
-        # adjust data locally
-        datamanager.toolsmanager.remove(run)
+    assert len(opts['description']) == 1
+    descr = opts['description'][0]
 
-    print("Commiting changes")
-    writer.commit()
-
-    # XXX: show again
-    manageTools(wfile, [])
-
-
+    datamanager.setToolRunDescription(run_id, descr)
 
 def showFiles(wfile, args):
     opts = _parse_args(args)
@@ -318,8 +300,8 @@ def showFiles(wfile, args):
                       'filters' : _filter,
                       'results': results})
 
-def sendFile(wfile):
-    f = open('html/style.css', 'rb')
+def sendFile(wfile, path):
+    f = open(path, 'rb')
     wfile.write(f.read())
     f.close()
 
@@ -330,8 +312,6 @@ handlers = {
     'manage'            : manageTools,
     'delete'            : performDelete,
     'set'               : setToolsAttr,
-    'style.css'         : None, # we handle this specially
-    'js/brv.js'         : None, # we handle this specially
 }
 
 # see http://www.acmesystems.it/python_httpd
@@ -355,37 +335,50 @@ class Handler(SimpleHTTPRequestHandler):
         else:
             path = path[1:]
 
-        global handlers
-        if path in handlers.keys():
-            return (path, args)
-        else:
-            return (None, [])
+        return (path, args)
 
     def _send_headers(self, mimetype = 'text/html'):
         self.send_response(200)
         self.send_header('Content-type', mimetype)
         self.end_headers()
 
+    def _get_handler(self, path):
+        global handlers
+        return handlers.get(path)
+
+    def _handle_files(self, path):
+        if path == 'style.css':
+            self._send_headers('text/css')
+            sendFile(self.wfile, 'html/style.css')
+            return True
+        elif path == 'js/brv.js':
+            self._send_headers('text/javascript')
+            sendFile(self.wfile, 'html/js/brv.js')
+            return True
+        elif path.endswith('.gif'):
+            epath = join('html/', path)
+            if isfile(epath):
+                self._send_headers('image/gif')
+                sendFile(self.wfile, epath)
+                return True
+            return False
+
+        return False
+
     def do_GET(self):
         act, args = self._parsePath()
+        handler = self._get_handler(act)
 
-        if act is None:
+        if handler is None:
+            if self._handle_files(act):
+                # it was a file, we're fine
+                return
+
             self._send_headers()
             self.send_error(404, 'Unhandled request')
             print(self.path)
             return
-        elif act == 'style.css':
-            self._send_headers('text/css')
-            sendFile(self.wfile)
-            return
-        elif act == 'js/brv.js':
-            self._send_headers('text/javascript')
-            sendFile(self.wfile)
-            return
-
-        global handlers
-        assert act in handlers.keys()
 
         self._send_headers()
-        handlers[act](self.wfile, args)
+        handler(self.wfile, args)
 

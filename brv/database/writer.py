@@ -117,6 +117,14 @@ class DatabaseWriter(DatabaseProxy):
         self.query_noresult(q)
 
 
+    def setToolRunDescr(self, tool_run_id, descr):
+        q = """
+        UPDATE tool_run
+        SET description='{0}'
+        WHERE id='{1}'
+        """.format(descr, tool_run_id)
+        self.query_noresult(q)
+
     def deleteTool(self, tool_run_id):
         q = """
         DELETE FROM run
@@ -124,8 +132,35 @@ class DatabaseWriter(DatabaseProxy):
         """.format(tool_run_id)
         self.query_noresult(q)
 
+        # get tool id so that we can remove it if this was the last tool run
+        q = """
+        SELECT tool_id FROM tool_run
+        WHERE id='{0}'
+        """.format(tool_run_id)
+        tool_id = self.queryInt(q)
+
         q = """
         DELETE FROM tool_run
         WHERE id = '{0}';
         """.format(tool_run_id)
         self.query_noresult(q)
+
+        #delete the tool if it has no tool runs
+        q = """
+        SELECT count(*) FROM tool_run
+        WHERE tool_id='{0}'
+        """.format(tool_id)
+        count = self.queryInt(q)
+        if count == 0:
+            q = """
+            DELETE FROM tool
+            WHERE id = '{0}';
+            """.format(tool_id)
+            self.query_noresult(q)
+
+
+
+
+
+
+

@@ -43,19 +43,21 @@ class DatabaseReader(DatabaseProxy):
 
         ret = []
         for r in res:
-            info = DBToolRunInfo(r[0])
-            # FIXME -- do not set private attributes
-            info._tool = r[1]
-            info._tool_version = r[2]
-            info._date = r[3]
-            info._options = r[4]
-            info._timelimit = r[5]
-            info._memlimit = r[6]
-            info._run_description = r[7]
-
-            ret.append(info)
+            ret.append(DBToolRunInfo(r))
 
         return ret
+
+    def getToolRun(self, rid):
+        q = """
+        SELECT tool_run.id, tool.name, tool.version, date,
+               options, cpulimit, memlimit, tool_run.description
+        FROM tool JOIN tool_run ON tool.id = tool_id
+        WHERE tool_run.id = {0};
+        """.format(rid)
+        res = self.query(q)
+        assert len(res) == 1
+        return DBToolRunInfo(res[0])
+
 
     def getToolInfoStats(self, tool_run_id):
         q = """

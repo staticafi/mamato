@@ -12,10 +12,17 @@ class DataManager(object):
 
     def __init__(self, db_conf = None, xmls = []):
         self.toolsmanager = ToolsManager()
-        self._db = None
+        self._db_reader = None
         self._db_config = db_conf
 
         if db_conf:
+            from brv.database.connection import DatabaseConnection
+            from brv.database.reader import DatabaseReader
+            from brv.database.writer import DatabaseWriter
+            conn = DatabaseConnection(db_conf)
+            self._db_reader = DatabaseReader(conn)
+            self._db_writer = DatabaseWriter(conn)
+
             self.reloadData()
 
         if xmls:
@@ -26,13 +33,10 @@ class DataManager(object):
         """
         Relad data from database
         """
-        if self._db is None:
-            from brv.database.reader import DatabaseReader
-            self._db = DatabaseReader(self._db_config)
-
-        assert self._db
+        assert self._db_reader
         print('Reloading data from DB')
-        tool_runs = self._db.getToolRuns()
+
+        tool_runs = self._db_reader.getToolRuns()
         self.toolsmanager.reset()
         for run in tool_runs:
             self.toolsmanager.add(run)
@@ -44,13 +48,27 @@ class DataManager(object):
         return self.toolsmanager.getToolRuns(which)
 
     def getToolInfoStats(self, which):
-        return self._db.getToolInfoStats(which)
+        return self._db_reader.getToolInfoStats(which)
 
     def getRunInfos(self, bset_id, toolruns_id):
         table = RunInfosTable()
         for tid in toolruns_id:
-            table.add(self._db.getRunInfos(bset_id, tid))
+            table.add(self._db_reader.getRunInfos(bset_id, tid))
 
         return table
 
+    def deleteToolRuns(self, runs):
+        for run in runs:
+            self._db_writer.deleteTool(run.getID())
+            self.toolsmanager.remove(run)
+        self._db_writer.commit()
 
+    def setToolRunDescription(self, run_id, descr):
+        self._db_writer.setToolRunDescr(run_id, descr)
+        self._db_writer.commit()
+        # get the updated tool run (we could change it just loacally,
+        # but until it is some efficiency issue, this is better for debugging
+        newrun = self._db_reader.getToolRun(run_id)
+        print('run descr')
+        print(newrun.run_description())
+        self.toolsmanager.updateToolRun(newrun)

@@ -39,12 +39,17 @@ def Empty2Null(x):
     return '\'{0}\''.format(x.strip())
 
 class DatabaseProxy(object):
-    def __init__(self, conffile = None):
-        self._db = DatabaseConnection(conffile)
+    def __init__(self, conffile_or_conn):
+        assert not conffile_or_conn is None
+        if type(conffile_or_conn) is str:
+            self._db = DatabaseConnection(conffile_or_conn)
 
-        # self check
-        ver = self._db.query('SELECT VERSION()')[0][0]
-        dbg('Connected to database: MySQL version {0}'.format(ver))
+            # self check
+            ver = self._db.query('SELECT VERSION()')[0][0]
+            dbg('Connected to database: MySQL version {0}'.format(ver))
+        else:
+            assert type(conffile_or_conn) is DatabaseConnection
+            self._db = conffile_or_conn
 
     ## Shortcuts for convenience
     def query_noresult(self, q):
