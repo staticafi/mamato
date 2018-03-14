@@ -188,7 +188,7 @@ function toggleRollingByName(name) {
     <div onclick="toggleRollingByName('version')"
          class="rolled" name="version"
          style="font-size=10px; font-weight: normal; padding-top:10px; color: #0066ff">
-      @run.tool_version()</br></br>
+      [@run.getID()] @run.tool_version()</br></br>
       @run.options()</br>
     </div>
     #if(@run.run_description())

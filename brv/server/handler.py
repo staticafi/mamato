@@ -103,7 +103,7 @@ def showResults(wfile, args):
         run._stats = datamanager.getToolInfoStats(run.getID())
         for stats in run._stats.getAllStats().values():
             stats.accumulateTime(_showTimesOnlySolved)
-            #stats.prune()
+            stats.prune()
             # a pair (name, id)
             categories.add(BSet(stats.getBenchmarksName(), stats.getBenchmarksID()))
             for c in stats.getClassifications():
@@ -263,8 +263,7 @@ def showBenchmarksResults(wfile, args):
             print('Applying {0}'.format(pattern))
             results = filter(match, results)
 
-    #results = list(results)
-
+    results = list(results)
     assert len(runs) == len(results[0][1])
     _render_template(wfile, 'benchmarks_results.html',
                      {'runs' : runs,
