@@ -33,7 +33,7 @@ class ToolsManager(object):
        #           self.name() == oth.name() and\
        #           self.options() == oth.options()
 
-    def __init__(self, db_conf = None, xmls = []):
+    def __init__(self):
         # list of tools (tool name + version + options and mapping to single runs)
         self._tools = []
 
@@ -45,12 +45,29 @@ class ToolsManager(object):
         # in this object and on the HTML pages (can be passed to GET)
         #self._identifier_to_run = {}
 
-    def _add_tool(self, toolrun):
-        found = None
+    def reset(self):
+        if self._tools:
+            self._tools = []
+        if self._tool_runs:
+            self._tool_runs = []
+
+    def remove(self, t):
+        self._tool_runs.remove(t)
+        tool = self._find_tool(t)
+        assert tool
+        tool._runs.remove(t)
+        if not tool._runs:
+            self._tools.remove(tool)
+        
+    def _find_tool(self, toolrun):
         for tool in self._tools:
             if tool.equalsToolRun(toolrun):
-                found = tool
-                break
+                return tool
+
+        return None
+
+    def _add_tool(self, toolrun):
+        found = self._find_tool(toolrun)
 
         if found:
             found._runs.append(toolrun)

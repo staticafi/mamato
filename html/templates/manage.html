@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<!--
+   Author: Marek Chalupa <xchalup4@fi.muni.cz>, 2017 - 2018
+-->
+
+<script src="../js/brv.js"></script>
+<script>
+// source: https://stackoverflow.com/questions/247483/http-get-request-in-javascript
+function httpGet(theUrl)
+{
+    var xmlHttp = new XMLHttpRequest();
+    xmlHttp.open( "GET", theUrl, false ); // false for synchronous request
+    xmlHttp.send( null );
+    return xmlHttp.responseText;
+}
+
+function deleteTool(tid) {
+	if (!confirm("Do you really want to delete tool run id " + tid + "?")) {
+		return false;
+	}
+
+	var req = httpGet('delete?run='+tid);
+	// reload the page from beginning
+    	//document.location.search = "manage";
+	location.reload();
+	return false;
+}
+</script>
+
+<head>
+<meta charset="utf-8" />
+<link rel="stylesheet" type="text/css" href="../style.css">
+<title>Benchexec results viewer</title>
+</head>
+
+<body>
+
+#include("../header.html")
+<div id="content">
+<h3>DELETE</h3>
+<h2>Tools:</h2>
+
+<form action="/manage" style="margin-left: 1em">
+  #for @tool in @tools:
+    <h3>@get(@tool, 0):</h3>
+      <table>
+      #for @tool_run in @get(@tool, 1):
+	#for @tool_with_options in @get(@tool_run, 1):
+          #for @run in @tool_with_options.getRuns():
+	     <tr>
+	     <td>
+	     [@run.date()] [@run.getID()]
+             <input readonly="true" ondblclick="" value="@descr(@run)" />
+	     <td>
+	     <td>tags: <input value="@getTags(@run)"/></td>
+	     <td>rename</td>
+	     <td><a href="javascript:void(0)"
+                    onclick="deleteTool(@run.getID());"> delete</a> </td>
+             </tr>
+          #end
+        #end
+      #end
+      </table>
+  <br/>
+  #end
+  <input type="submit" value="Delete!">
+</form>
+
+</div> <!-- content -->
+</body>
+
+</html>

@@ -113,4 +113,3 @@ function hideTool(tool_id) {
 	return false;
 }
 
-

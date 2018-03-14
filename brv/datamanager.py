@@ -13,18 +13,29 @@ class DataManager(object):
     def __init__(self, db_conf = None, xmls = []):
         self.toolsmanager = ToolsManager()
         self._db = None
+        self._db_config = db_conf
 
         if db_conf:
-            from brv.database.reader import DatabaseReader
-            self._db = DatabaseReader(db_conf)
-
-            tool_runs = self._db.getToolRuns()
-            for run in tool_runs:
-                self.toolsmanager.add(run)
+            self.reloadData()
 
         if xmls:
             # XXX: NOT SUPPORTED YET. load the xml into database first
             pass
+
+    def reloadData(self):
+        """
+        Relad data from database
+        """
+        if self._db is None:
+            from brv.database.reader import DatabaseReader
+            self._db = DatabaseReader(self._db_config)
+
+        assert self._db
+        print('Reloading data from DB')
+        tool_runs = self._db.getToolRuns()
+        self.toolsmanager.reset()
+        for run in tool_runs:
+            self.toolsmanager.add(run)
 
     def getTools(self):
         return self.toolsmanager.getTools()

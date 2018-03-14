@@ -169,12 +169,29 @@ def showResults(wfile, args):
                       'descr' : getDescriptionOrVersion,
                       'classifications' : classifications })
 
-def deleteTools(wfile, args):
-    opts = _parse_args(args)
-    if not 'run' in opts:
-        _render_template(wfile, 'delete.html', {'tools' : datamanager.getTools()})
-        return
 
+def manageTools(wfile, args):
+    tools = datamanager.getTools()
+    tools_sorted = {}
+    for t in tools:
+        # tools is a list of tool runs where each of the
+        # tools has a unique name+version+options attributes
+        # We want to divide them to groups according to names
+        # and versions. So we have a mapping name -> version -> tools
+        nkey = tools_sorted.setdefault(t.name(), {})
+        nkey.setdefault(t.version(), []).append(t)
+    tools_final = []
+    for t in tools_sorted.items():
+        tools_final.append((t[0], list(t[1].items())))
+    _render_template(wfile, 'manage.html',
+                     {'tools' : tools_final,
+                      'get' : _get,
+                      'descr' : getDescriptionOrVersion})
+
+def performDelete(wfile, args):
+    opts = _parse_args(args)
+
+    # XXX: this should be done in datamanager
     from .. database.writer import DatabaseWriter
     writer = DatabaseWriter('database.conf')
 
@@ -182,10 +199,37 @@ def deleteTools(wfile, args):
     runs = datamanager.getToolRuns(run_ids)
 
     for run in runs:
+        print("Deleting tool run '{0}'".format(run.getID()))
         writer.deleteTool(run.getID())
+        # adjust data locally
+        datamanager.toolsmanager.remove(run)
 
+    print("Commiting changes")
     writer.commit()
-    _render_template(wfile, 'delete.html', {'tools' : datamanager.getTools()})
+
+def setToolsAttr(wfile, args):
+    opts = _parse_args(args)
+
+    # XXX: this should be done in datamanager
+    from .. database.writer import DatabaseWriter
+    writer = DatabaseWriter('database.conf')
+
+    run_ids = list(map(int, opts['run']))
+    runs = datamanager.getToolRuns(run_ids)
+
+    for run in runs:
+        print("Deleting tool run '{0}'".format(run.getID()))
+        writer.deleteTool(run.getID())
+        # adjust data locally
+        datamanager.toolsmanager.remove(run)
+
+    print("Commiting changes")
+    writer.commit()
+
+    # XXX: show again
+    manageTools(wfile, [])
+
+
 
 def showFiles(wfile, args):
     opts = _parse_args(args)
@@ -274,7 +318,7 @@ def showFiles(wfile, args):
                       'filters' : _filter,
                       'results': results})
 
-def sendStyle(wfile):
+def sendFile(wfile):
     f = open('html/style.css', 'rb')
     wfile.write(f.read())
     f.close()
@@ -283,8 +327,11 @@ handlers = {
     'root'              : showRoot,
     'results'           : showResults,
     'files'             : showFiles,
-    'delete'            : deleteTools,
+    'manage'            : manageTools,
+    'delete'            : performDelete,
+    'set'               : setToolsAttr,
     'style.css'         : None, # we handle this specially
+    'js/brv.js'         : None, # we handle this specially
 }
 
 # see http://www.acmesystems.it/python_httpd
@@ -329,7 +376,11 @@ class Handler(SimpleHTTPRequestHandler):
             return
         elif act == 'style.css':
             self._send_headers('text/css')
-            sendStyle(self.wfile)
+            sendFile(self.wfile)
+            return
+        elif act == 'js/brv.js':
+            self._send_headers('text/javascript')
+            sendFile(self.wfile)
             return
 
         global handlers
