@@ -114,6 +114,10 @@
   <th>Classifications</th>
   #for @run in @runs:
     <th>@run.tool() </br>
+    #if(@run.date())
+    @run.date()
+    </br>
+    #end
     <div onclick="toggleRollingByName('version')"
          class="rolled" name="version"
          style="font-size=10px; font-weight: normal; padding-top:10px; color: #0066ff">
