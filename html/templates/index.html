@@ -32,7 +32,6 @@ function renameToolRun(old_name) {
       <select name="run" multiple="multiple" @setSize(@get(@tool, 1))
               style="display: inline-block; overflow-y: auto;">
       #for @tool_run in @get(@tool, 1):
-        <option disabled><hr/></option>
         <option disabled role=separator/ style="color: #0066ff;">
 	  #set @vers = @get(@tool_run, 0):
           #if(@vers)
@@ -44,24 +43,15 @@ function renameToolRun(old_name) {
 
 	#for @tool_with_options in @get(@tool_run, 1):
           #for @run in @tool_with_options.getRuns():
-             #if(@run.options())
-             <option disabled role=separator/>
-	     @run.options(),
-	     @run.timelimit(),
-	     @run.memlimit() MB
-	     </option>
-	     #else
-             <option disabled role=separator/>
-	     @run.timelimit(),
-	     @run.memlimit() MB
-	     </option>
-             #end
-             <!--<select name="run" multiple="multiple" style="width:50%;">-->
-             <option ondblclick="renameToolRun(@descr(@run))" value="@run.getID()">
-             &nbsp;&nbsp;&nbsp;&nbsp;[@run.date()] @descr(@run)
+                          <!--<select name="run" multiple="multiple" style="width:50%;">-->
+             <option ondblclick="renameToolRun(@descr(@run))" value="@run.getID()" title="@run_details(@run)">
+             &nbsp;&nbsp;&nbsp;&nbsp;[@run.date()]
+	     @descr(@run)
+	     <option class="hidden" disabled>&nbsp;&nbsp;&nbsp;&nbsp;@run_details(@run)</option>
              </option>
           #end
         #end
+        <option disabled><hr/></option>
       #end
       </select>
   <br/>

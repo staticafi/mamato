@@ -75,10 +75,19 @@ def showRoot(wfile, args):
             sz += len(tr)
         return "size=15" if sz > 10 else "size=10" if sz > 5 else ""
 
+    def _run_details(run):
+        d = ''
+        if run.options():
+            d += run.options()
+
+        d += ' ; {0}, {1:2} GB'.format(run.timelimit(), int(run.memlimit())/(10**9))
+        return d
+
     _render_template(wfile, 'index.html',
                      {'tools' : tools_final,
                       'get' : _get,
                       'setSize' : _setSize,
+                      'run_details' : _run_details,
                       'descr' : getDescriptionOrVersion})
 
 
