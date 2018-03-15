@@ -155,6 +155,11 @@ def showResults(wfile, args):
         else:
             return 0
 
+    def _getTotalStats(run):
+        assert not run is None
+
+        return run.getStats().getSummary()
+
     def _formatTime(time):
         "Transform time in seconds to hours, minutes and seconds"
         if not time:
@@ -178,6 +183,7 @@ def showResults(wfile, args):
                      {'runs':runs, 'benchmarks_sets' : cats,
                       'toolsGETList' : _toolsGETList,
                       'getStats' : _getStats,
+                      'getTotalStats' : _getTotalStats,
                       'getCount' : _getCount,
                       'getTime' : _getTime,
                       'get' : _get,
