@@ -6,7 +6,9 @@ from math import ceil, floor
 
 if (sys.version_info > (3, 0)):
     from http.server import SimpleHTTPRequestHandler
+    from urllib.parse import unquote
 else:
+    from urllib import unquote
     from SimpleHTTPServer import SimpleHTTPRequestHandler
 
 from brv.datamanager import DataManager
@@ -44,10 +46,9 @@ def _parse_args(args):
         if len(tmp) != 2:
             print('ERROR: unhandled GET arg: {0}'.format(a))
             continue
-        if tmp[0] in opts:
-                opts[tmp[0]].append(tmp[1])
-        else:
-                opts[tmp[0]] = [tmp[1]]
+
+        arg = unquote(tmp[1])
+        opts.setdefault(tmp[0], []).append(arg)
 
     return opts
 

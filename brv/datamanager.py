@@ -69,6 +69,4 @@ class DataManager(object):
         # get the updated tool run (we could change it just loacally,
         # but until it is some efficiency issue, this is better for debugging
         newrun = self._db_reader.getToolRun(run_id)
-        print('run descr')
-        print(newrun.run_description())
         self.toolsmanager.updateToolRun(newrun)

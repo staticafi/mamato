@@ -1,5 +1,19 @@
 #!/usr/bin/env python
 
+
+def _replace_run_in_list(lst, newrun):
+    new_list = []
+    found = False
+    for run in lst:
+        if newrun.getID() == run.getID():
+            new_list.append(newrun)
+            found = True
+        else:
+            new_list.append(run)
+
+    assert found
+    return new_list
+
 class ToolsManager(object):
     """
     Manages a set of tools that are available for comparing/browsing.
@@ -74,8 +88,11 @@ class ToolsManager(object):
         return self._tools
 
     def updateToolRun(self, newrun):
-        self._tool_runs =\
-         [newrun if newrun.getID() == run.getID() else run for run in self._tool_runs]
+        self._tool_runs = _replace_run_in_list(self._tool_runs, newrun)
+        # update the run also in the tool
+        tool = self._find_tool(newrun)
+        assert tool
+        tool._runs = _replace_run_in_list(tool._runs, newrun)
 
     def getToolRuns(self, which = []):
         if not which:
