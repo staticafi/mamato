@@ -72,7 +72,7 @@ class DataManager(object):
 
     def _updateToolRun(self, newrun):
         self.toolsmanager.updateToolRun(newrun)
-        self.tagsmanager.resetToolRunTags(newrun)
+        self.tagsmanager.setToolRunTags(newrun)
 
     def setToolRunDescription(self, run_id, descr):
         self._db_writer.setToolRunDescr(run_id, descr)

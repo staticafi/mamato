@@ -49,8 +49,9 @@ class TagsManager(object):
         for tag in toolrun.tags().split(';'):
             self.addToolRunTag(toolrun, tag)
 
-    def resetToolRunTags(self, toolrun):
-        self.remove(toolrun)
+    def setToolRunTags(self, toolrun):
+        if self._mapping.get(toolrun.getID()):
+            self.remove(toolrun)
 
         if toolrun.tags() is None:
             return

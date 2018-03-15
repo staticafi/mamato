@@ -6,6 +6,16 @@
    Author: Marek Chalupa <xchalup4@fi.muni.cz>, 2017 - 2018
 -->
 
+<script>
+function toggleCheck(td) {
+	input = td.getElementsByTagName("input")[0];
+	if (input.checked == true) {
+		input.checked = false;
+	} else {
+		input.checked = true;
+	}
+}
+</script>
 <head>
 <meta charset="utf-8" />
 <link rel="stylesheet" type="text/css" href="../style.css">
@@ -18,38 +28,39 @@
 #include("../header.html")
 <div id="content">
 <h2>Tools:</h2>
-
 <form action="/results" style="margin-left: 1em">
   #for @tool in @tools:
     <h3>@get(@tool, 0):</h3>
-      <select name="run" multiple="multiple" @setSize(@get(@tool, 1))
+    <table id="tools-select">
+      <!--<select name="run" multiple="multiple" @setSize(@get(@tool, 1))
               style="display: inline-block; overflow-y: auto;">
+	      -->
       #for @tool_run in @get(@tool, 1):
-        <option disabled role=separator/ style="color: #0066ff; font-size: 0.8em;">
-	  #set @vers = @get(@tool_run, 0):
-          #if(@vers)
-	      @vers
-	  #else
-	      <i>(no version)</i>
-          #end
-	</option>
+	#set @vers = @get(@tool_run, 0):
+        #if(!@vers)
+	    #set @vers="<i>(no version)</i>":
+        #end
+	 <tr class="version"><td colspan=1>@vers</td></tr>
 
 	#for @tool_with_options in @get(@tool_run, 1):
           #for @run in @tool_with_options.getRuns():
-                          <!--<select name="run" multiple="multiple" style="width:50%;">-->
-             <option value="@run.getID()" title="@run_details(@run)">
+	  <tr>
+	     <td title="@run_details(@run)" onclick="toggleCheck(this)">
+	     <input type="checkbox" name="run" value="@run.getID()">
              &nbsp;&nbsp;&nbsp;&nbsp;[@run.date()]
 	     @descr(@run)
+             </td>
+
+	     <td class="tag-box">
 	     #for @tag in @getTags(@run):
-	       &lt;@tag.getName()&gt;
+	        <a href="#" class="tag" style="@tag.getCSS()">@tag.getName()</a>
 	     #end
-	     <option class="hidden" disabled>&nbsp;&nbsp;&nbsp;&nbsp;@run_details(@run)</option>
-             </option>
+	     </td>
+	  <tr/>
           #end
         #end
-        <option disabled><hr/></option>
       #end
-      </select>
+      </table>
   <br/>
   #end
   <input type="submit" value="Show!">
