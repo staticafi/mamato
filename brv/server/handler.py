@@ -83,10 +83,14 @@ def showRoot(wfile, args):
         d += ' ; {0}, {1:2} GB'.format(run.timelimit(), int(run.memlimit())/(10**9))
         return d
 
+    def _getTags(run):
+        return datamanager.getToolRunTags(run)
+
     _render_template(wfile, 'index.html',
                      {'tools' : tools_final,
                       'get' : _get,
                       'setSize' : _setSize,
+                      'getTags' : _getTags,
                       'run_details' : _run_details,
                       'descr' : getDescriptionOrVersion})
 
@@ -179,6 +183,8 @@ def showResults(wfile, args):
         else:
             return ret + '{0} s'.format(int(time))
 
+    #def _tagsToCSS(tags):
+
     _render_template(wfile, 'results.html',
                      {'runs':runs, 'benchmarks_sets' : cats,
                       'toolsGETList' : _toolsGETList,
@@ -207,8 +213,13 @@ def manageTools(wfile, args):
     tools_final = []
     for t in tools_sorted.items():
         tools_final.append((t[0], list(t[1].items())))
+
+    def _none2Empty(x):
+        return x if x else ''
+
     _render_template(wfile, 'manage.html',
                      {'tools' : tools_final,
+                      'None2Empty': _none2Empty,
                       'get' : _get,
                       'descr' : getDescriptionOrVersion})
 
@@ -223,7 +234,7 @@ def performDelete(wfile, args):
     print("Deleting tool runs '{0}'".format(str(runs)))
     datamanager.deleteToolRuns(runs)
 
-def setToolsAttr(wfile, args):
+def setToolRunAttr(wfile, args):
     opts = _parse_args(args)
 
     if len(opts['run']) != 1:
@@ -232,10 +243,16 @@ def setToolsAttr(wfile, args):
 
     run_id = int(opts['run'][0])
 
-    assert len(opts['description']) == 1
-    descr = opts['description'][0]
-
-    datamanager.setToolRunDescription(run_id, descr)
+    _descr = 'description' in opts
+    _tags = 'tags' in opts
+    if _descr:
+        assert len(opts['description']) == 1
+        descr = opts['description'][0]
+        datamanager.setToolRunDescription(run_id, descr)
+    if _tags:
+        assert len(opts['tags']) == 1
+        tags = opts['tags'][0]
+        datamanager.setToolRunTags(run_id, tags)
 
 def showFiles(wfile, args):
     opts = _parse_args(args)
@@ -335,7 +352,7 @@ handlers = {
     'files'             : showFiles,
     'manage'            : manageTools,
     'delete'            : performDelete,
-    'set'               : setToolsAttr,
+    'set'               : setToolRunAttr,
 }
 
 # see http://www.acmesystems.it/python_httpd

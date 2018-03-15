@@ -34,6 +34,9 @@ class ToolRunInfo(object):
     def memlimit(self):
         raise NotImplemented
 
+    def tags(self):
+        raise NotImplemented
+
     def getResults(self):
         return self._runs
 
@@ -74,6 +77,10 @@ class DBToolRunInfo(ToolRunInfo):
 
     def run_description(self):
         return self._query_result[7]
+
+    def tags(self):
+        return self._query_result[8]
+
 
 def sum_elems(lhs, rhs):
     "Sum elements in tuples pair-wise"

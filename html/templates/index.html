@@ -6,17 +6,10 @@
    Author: Marek Chalupa <xchalup4@fi.muni.cz>, 2017 - 2018
 -->
 
-<script>
-function renameToolRun(old_name) {
-    var new_name = prompt("Enter new name", old_name);
-    if (new_name != null || new_name != "") {
-    }
-}
-</script>
-
 <head>
 <meta charset="utf-8" />
 <link rel="stylesheet" type="text/css" href="../style.css">
+
 <title>Benchexec results viewer</title>
 </head>
 
@@ -44,9 +37,12 @@ function renameToolRun(old_name) {
 	#for @tool_with_options in @get(@tool_run, 1):
           #for @run in @tool_with_options.getRuns():
                           <!--<select name="run" multiple="multiple" style="width:50%;">-->
-             <option ondblclick="renameToolRun(@descr(@run))" value="@run.getID()" title="@run_details(@run)">
+             <option value="@run.getID()" title="@run_details(@run)">
              &nbsp;&nbsp;&nbsp;&nbsp;[@run.date()]
 	     @descr(@run)
+	     #for @tag in @getTags(@run):
+	       &lt;@tag.getName()&gt;
+	     #end
 	     <option class="hidden" disabled>&nbsp;&nbsp;&nbsp;&nbsp;@run_details(@run)</option>
              </option>
           #end

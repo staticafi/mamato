@@ -36,7 +36,8 @@ class DatabaseReader(DatabaseProxy):
     def getToolRuns(self):
         q = """
         SELECT tool_run.id, tool.name, tool.version, date,
-               options, cpulimit, memlimit, tool_run.description
+               options, cpulimit, memlimit,
+               tool_run.description, tool_run.tags
         FROM tool JOIN tool_run ON tool.id = tool_id;
         """
         res = self.query(q)
@@ -50,7 +51,8 @@ class DatabaseReader(DatabaseProxy):
     def getToolRun(self, rid):
         q = """
         SELECT tool_run.id, tool.name, tool.version, date,
-               options, cpulimit, memlimit, tool_run.description
+               options, cpulimit, memlimit,
+               tool_run.description, tool_run.tags
         FROM tool JOIN tool_run ON tool.id = tool_id
         WHERE tool_run.id = {0};
         """.format(rid)
@@ -58,6 +60,14 @@ class DatabaseReader(DatabaseProxy):
         assert len(res) == 1
         return DBToolRunInfo(res[0])
 
+    def getToolRunTags(self, trid):
+        q = """
+        SELECT tags FROM tool_run
+        WHERE id = {0};
+        """.format(rid)
+        res = self.query(q)
+        assert len(res) == 1
+        return res[0]
 
     def getToolInfoStats(self, tool_run_id):
         q = """

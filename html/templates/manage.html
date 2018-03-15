@@ -84,6 +84,22 @@ function enableEntryOnClick(obj, tid) {
 	return enableEntry(ent, tid);
 }
 
+function setTags(tid, tags) {
+	httpGetAsync('set?run='+tid+'&tags='+tags, function (resp) {
+			hideStatusBar();
+			// no reload needed, the entry is updated
+			});
+	showStatusBar("Setting tags to tool " + tid);
+	return false;
+}
+
+function updateTags(e, rid, obj) {
+	if (e.keyCode == 13) { //enter
+		return setTags(rid, obj.value);
+	}
+	return true;
+}
+
 </script>
 
 <head>
@@ -126,7 +142,10 @@ Status bar
              <input class="description-entry" readonly="true"
                     ondblclick="enableEntry(this, @run.getID())" value="@descr(@run)" />
 	     <td/>
-	     <td class="tags">tags: <input value="@getTags(@run)"/></td>
+	     <td class="tags">tags:
+	     	<input value="@None2Empty(@run.tags())"
+			onkeypress="updateTags(event, @run.getID(), this)"/>
+	     </td>
 	     <td class="rename"><a href="javascript:void(0)"
                     onclick="enableEntryOnClick(this, @run.getID());" >rename</a> </td>
 	     <td class="delete"><a href="javascript:void(0)"
@@ -138,7 +157,6 @@ Status bar
       </table>
   <br/>
   #end
-  <input type="submit" value="Delete!">
 </form>
 
 </div> <!-- content -->

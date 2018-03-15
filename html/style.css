@@ -61,3 +61,8 @@ a {
 .hidden {
 	display: none;
 }
+
+.tag {
+	border: 1pt black solid;
+	color: green;
+}

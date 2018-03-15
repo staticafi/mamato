@@ -116,7 +116,6 @@ class DatabaseWriter(DatabaseProxy):
                     #FIXME: what return value?
         self.query_noresult(q)
 
-
     def setToolRunDescr(self, tool_run_id, descr):
         q = """
         UPDATE tool_run
@@ -124,6 +123,14 @@ class DatabaseWriter(DatabaseProxy):
         WHERE id='{1}'
         """.format(descr, tool_run_id)
         self.query_noresult(q)
+
+    def setToolRunTags(self, trid, tags):
+        q = """
+        UPDATE tool_run
+        SET tags='{0}'
+        WHERE id = {1};
+        """.format(tags, trid)
+        res = self.query_noresult(q)
 
     def deleteTool(self, tool_run_id):
         q = """

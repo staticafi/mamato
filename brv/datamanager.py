@@ -1,6 +1,7 @@
 #!/usr/bin/python
 
 from brv.toolsmanager import ToolsManager
+from brv.tagsmanager import TagsManager
 from brv.toolruninfo import RunInfosTable
 
 class DataManager(object):
@@ -12,6 +13,7 @@ class DataManager(object):
 
     def __init__(self, db_conf = None, xmls = []):
         self.toolsmanager = ToolsManager()
+        self.tagsmanager = TagsManager()
         self._db_reader = None
         self._db_config = db_conf
 
@@ -40,6 +42,7 @@ class DataManager(object):
         self.toolsmanager.reset()
         for run in tool_runs:
             self.toolsmanager.add(run)
+            self.tagsmanager.addToolRunTags(run)
 
     def getTools(self):
         return self.toolsmanager.getTools()
@@ -57,11 +60,19 @@ class DataManager(object):
 
         return table
 
+    def getToolRunTags(self, run):
+        return self.tagsmanager.getToolRunTags(run)
+
     def deleteToolRuns(self, runs):
         for run in runs:
             self._db_writer.deleteTool(run.getID())
             self.toolsmanager.remove(run)
+            self.tagsmanager.remove(run)
         self._db_writer.commit()
+
+    def _updateToolRun(self, newrun):
+        self.toolsmanager.updateToolRun(newrun)
+        self.tagsmanager.resetToolRunTags(newrun)
 
     def setToolRunDescription(self, run_id, descr):
         self._db_writer.setToolRunDescr(run_id, descr)
@@ -69,4 +80,13 @@ class DataManager(object):
         # get the updated tool run (we could change it just loacally,
         # but until it is some efficiency issue, this is better for debugging
         newrun = self._db_reader.getToolRun(run_id)
-        self.toolsmanager.updateToolRun(newrun)
+        self._updateToolRun(newrun)
+
+    def setToolRunTags(self, run_id, tags):
+        self._db_writer.setToolRunTags(run_id, tags)
+        self._db_writer.commit()
+
+        newrun = self._db_reader.getToolRun(run_id)
+        self._updateToolRun(newrun)
+
+
