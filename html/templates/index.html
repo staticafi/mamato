@@ -32,7 +32,7 @@ function renameToolRun(old_name) {
       <select name="run" multiple="multiple" @setSize(@get(@tool, 1))
               style="display: inline-block; overflow-y: auto;">
       #for @tool_run in @get(@tool, 1):
-        <option disabled role=separator/ style="color: #0066ff;">
+        <option disabled role=separator/ style="color: #0066ff; font-size: 0.8em;">
 	  #set @vers = @get(@tool_run, 0):
           #if(@vers)
 	      @vers
