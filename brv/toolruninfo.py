@@ -184,6 +184,20 @@ class ToolRunInfoStats(object):
 
         return stats
 
+    def getSummary(self):
+        stats = RunsStats('Overall', -1)
+
+        for bset in self._stats.keys():
+            bset_stats = self.getStatsByID(bset)
+            for classif in  bset_stats.getClassifications():
+                cnt = bset_stats.getCount(classif)
+                time = bset_stats.getTime(classif)
+                stats.addStat(classif, cnt, time)
+
+        stats.accumulateTime()
+
+        return stats
+
     def getBenchmarksSetsNames(self):
         return self._name_to_id.keys()
 
