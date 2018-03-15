@@ -142,7 +142,9 @@
     <td>
       <table class="stats">
         #for @classif in @classifications:
-        <tr><td class="classif status-@get(@classif,1)">@get(@classif,0)</td></tr>
+          #if(@hasAnswers(@runs, @bset.id, @classif))
+            <tr><td class="classif status-@get(@classif,1)">@get(@classif,0)</td></tr>
+          #end
         #end
       </table>
         #if(@showTimes)
@@ -157,15 +159,17 @@
       <table class="stats">
       #set @stats = @getStats(@run, @bset.id):
       #for @classif in @classifications:
-	  <tr> <!--<td class="classif status-@get(@classif,1)"
-      style="padding-right: 1.5em">@get(@classif,0)</td>-->
+        #if(@hasAnswers(@runs, @bset.id, @classif))
+	    <tr> <!--<td class="classif status-@get(@classif,1)"
+        style="padding-right: 1.5em">@get(@classif,0)</td>-->
 	       <td class="count"><span class="status-@get(@classif,1)">@getCount(@stats, @classif)</span></td>
 	       #if(@showTimes)
            <td class="time">
              <span style="font-size: 11px">@formatTime(@getTime(@stats, @classif))</span>
            </td>
            #end
-	  </tr>
+	    </tr>
+        #end
       #end
       </table>
       #if(@showTimes)
@@ -185,7 +189,9 @@
     <td>
       <table class="stats">
         #for @classif in @classifications:
-        <tr><td class="classif status-@get(@classif,1)">@get(@classif,0)</td></tr>
+          #if(@hasAnswers(@runs, -1, @classif))
+            <tr><td class="classif status-@get(@classif,1)">@get(@classif,0)</td></tr>
+          #end
         #end
       </table>
         #if(@showTimes)
@@ -200,7 +206,8 @@
       <table class="stats">
       #set @stats = @getTotalStats(@run):
       #for @classif in @classifications:
-	  <tr> <!--<td class="classif status-@get(@classif,1)"
+        #if(@hasAnswers(@runs, -1, @classif))
+	    <tr> <!--<td class="classif status-@get(@classif,1)"
       style="padding-right: 1.5em">@get(@classif,0)</td>-->
 	       <td class="count"><span class="status-@get(@classif,1)">@getCount(@stats, @classif)</span></td>
 	       #if(@showTimes)
@@ -208,7 +215,8 @@
              <span style="font-size: 11px">@formatTime(@getTime(@stats, @classif))</span>
            </td>
            #end
-	  </tr>
+	    </tr>
+        #end
       #end
       </table>
       #if(@showTimes)
