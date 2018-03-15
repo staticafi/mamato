@@ -29,7 +29,7 @@ function renameToolRun(old_name) {
 <form action="/results" style="margin-left: 1em">
   #for @tool in @tools:
     <h3>@get(@tool, 0):</h3>
-      <select name="run" multiple="multiple" size="15"
+      <select name="run" multiple="multiple" @setSize(@get(@tool, 1))
               style="display: inline-block; overflow-y: auto;">
       #for @tool_run in @get(@tool, 1):
         <option disabled><hr/></option>

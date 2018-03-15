@@ -68,9 +68,17 @@ def showRoot(wfile, args):
     tools_final = []
     for t in tools_sorted.items():
         tools_final.append((t[0], list(t[1].items())))
+
+    def _setSize(lst):
+        sz = 0
+        for (x, tr) in lst:
+            sz += len(tr)
+        return "size=15" if sz > 10 else "size=10" if sz > 5 else ""
+
     _render_template(wfile, 'index.html',
                      {'tools' : tools_final,
                       'get' : _get,
+                      'setSize' : _setSize,
                       'descr' : getDescriptionOrVersion})
 
 
