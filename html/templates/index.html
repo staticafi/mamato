@@ -58,7 +58,7 @@ function renameToolRun(old_name) {
              #end
              <!--<select name="run" multiple="multiple" style="width:50%;">-->
              <option ondblclick="renameToolRun(@descr(@run))" value="@run.getID()">
-             &nbsp;&nbsp;&nbsp;&nbsp;[@run.date()] @run.tool() @descr(@run)
+             &nbsp;&nbsp;&nbsp;&nbsp;[@run.date()] @descr(@run)
              </option>
           #end
         #end
