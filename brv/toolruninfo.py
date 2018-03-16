@@ -191,7 +191,7 @@ class ToolRunInfoStats(object):
 
         return stats
 
-    def getSummary(self):
+    def getSummary(self, solved_only):
         stats = RunsStats('Overall', -1)
 
         for bset in self._stats.keys():
@@ -201,7 +201,7 @@ class ToolRunInfoStats(object):
                 time = bset_stats.getTime(classif)
                 stats.addStat(classif, cnt, time)
 
-        stats.accumulateTime()
+        stats.accumulateTime(solved_only)
 
         return stats
 

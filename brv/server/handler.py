@@ -162,7 +162,7 @@ def showResults(wfile, args):
     def _getTotalStats(run):
         assert not run is None
 
-        return run.getStats().getSummary()
+        return run.getStats().getSummary(_showTimesOnlySolved)
 
     def _hasAnswers(runs, bset_id, classif):
         assert not runs is None
@@ -174,7 +174,7 @@ def showResults(wfile, args):
                 stats = run.getStats().getStatsByID(bset_id)
             else:
                 # get the overall stats
-                stats = run.getStats().getSummary()
+                stats = run.getStats().getSummary(_showTimesOnlySolved)
             if not stats is None and stats.getCount(classif) != 0:
                 return True
 
