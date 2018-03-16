@@ -12,11 +12,17 @@
 <style>
     .row {
       background-color: #fefffe;
+      border: 3px solid #eeeeee;
     }
 
     .header_row {
       background-color: #889988;
       color: white;
+      border: 3px solid #eeeeee;
+    }
+
+    table {
+        border-collapse: collapse;
     }
 
     th {
@@ -38,10 +44,14 @@
 	    padding: 0 0 0 0;
 #end
     }
-    
+
+    td.stats {
+      border: 3px solid #eeeeee;
+    }
+
     td.time {
-	padding: 0 0 0 1em;
- 	border-left: 1px dotted black;
+      padding: 0 0 0 1em;
+      border-left: 1px dotted black;
     }
 
     tr:hover {
@@ -54,6 +64,10 @@
 
     tr.stats {
       border: 0;
+    }
+
+    .overall {
+        border-top: 10px solid #eeeeee;
     }
 
     .stats {
@@ -120,7 +134,7 @@
     #end
     <div onclick="toggleRollingByName('version')"
          class="rolled" name="version"
-         style="font-size=10px; font-weight: normal; padding-top:10px; color: #0052cc">
+         style="font-size=10px; font-weight: normal; padding-top:10px; color: #263A26">
       [@run.getID()] @run.tool_version()</br></br>
       @run.options()</br>
     </div>
@@ -139,10 +153,12 @@
   #for @bset in @benchmarks_sets:
   <tr class="row">
     <td><a href="/files?benchmarks=@{bset.id}@toolsGETList()">@bset.name</a></td>
-    <td>
+    <td class="stats">
       <table class="stats">
         #for @classif in @classifications:
-        <tr><td class="classif status-@get(@classif,1)">@get(@classif,0)</td></tr>
+          #if(@hasAnswers(@runs, @bset.id, @classif))
+            <tr><td class="classif status-@get(@classif,1)">@get(@classif,0)</td></tr>
+          #end
         #end
       </table>
         #if(@showTimes)
@@ -153,19 +169,21 @@
         #end
     </td>
     #for @run in @runs:
-      <td>
+      <td class="stats">
       <table class="stats">
       #set @stats = @getStats(@run, @bset.id):
       #for @classif in @classifications:
-	  <tr> <!--<td class="classif status-@get(@classif,1)"
-      style="padding-right: 1.5em">@get(@classif,0)</td>-->
+        #if(@hasAnswers(@runs, @bset.id, @classif))
+	    <tr> <!--<td class="classif status-@get(@classif,1)"
+        style="padding-right: 1.5em">@get(@classif,0)</td>-->
 	       <td class="count"><span class="status-@get(@classif,1)">@getCount(@stats, @classif)</span></td>
 	       #if(@showTimes)
            <td class="time">
              <span style="font-size: 11px">@formatTime(@getTime(@stats, @classif))</span>
            </td>
            #end
-	  </tr>
+	    </tr>
+        #end
       #end
       </table>
       #if(@showTimes)
@@ -180,12 +198,14 @@
     #end
   </tr>
   #end
-  <tr class="row">
+  <tr class="row overall">
     <td>Overall</td>
-    <td>
+    <td class="stats">
       <table class="stats">
         #for @classif in @classifications:
-        <tr><td class="classif status-@get(@classif,1)">@get(@classif,0)</td></tr>
+          #if(@hasAnswers(@runs, -1, @classif))
+            <tr><td class="classif status-@get(@classif,1)">@get(@classif,0)</td></tr>
+          #end
         #end
       </table>
         #if(@showTimes)
@@ -196,11 +216,12 @@
         #end
     </td>
     #for @run in @runs:
-      <td>
+      <td class="stats">
       <table class="stats">
       #set @stats = @getTotalStats(@run):
       #for @classif in @classifications:
-	  <tr> <!--<td class="classif status-@get(@classif,1)"
+        #if(@hasAnswers(@runs, -1, @classif))
+	    <tr> <!--<td class="classif status-@get(@classif,1)"
       style="padding-right: 1.5em">@get(@classif,0)</td>-->
 	       <td class="count"><span class="status-@get(@classif,1)">@getCount(@stats, @classif)</span></td>
 	       #if(@showTimes)
@@ -208,7 +229,8 @@
              <span style="font-size: 11px">@formatTime(@getTime(@stats, @classif))</span>
            </td>
            #end
-	  </tr>
+	    </tr>
+        #end
       #end
       </table>
       #if(@showTimes)

@@ -164,6 +164,22 @@ def showResults(wfile, args):
 
         return run.getStats().getSummary()
 
+    def _hasAnswers(runs, bset_id, classif):
+        assert not runs is None
+        assert not bset_id is None
+
+        for run in runs:
+            if bset_id != -1:
+                # get stats for one of the categories
+                stats = run.getStats().getStatsByID(bset_id)
+            else:
+                # get the overall stats
+                stats = run.getStats().getSummary()
+            if not stats is None and stats.getCount(classif) != 0:
+                return True
+
+        return False
+
     def _formatTime(time):
         "Transform time in seconds to hours, minutes and seconds"
         if not time:
@@ -190,6 +206,7 @@ def showResults(wfile, args):
                       'toolsGETList' : _toolsGETList,
                       'getStats' : _getStats,
                       'getTotalStats' : _getTotalStats,
+                      'hasAnswers': _hasAnswers,
                       'getCount' : _getCount,
                       'getTime' : _getTime,
                       'get' : _get,
