@@ -159,6 +159,7 @@ def showResults(wfile, args):
 
     _showTimes = 'show_times' in opts
     _showTimesOnlySolved = 'show_times_only_solved' in opts
+    _compactNumbers = 'compact_numbers' in opts
 
     # list of ToolRun objects
     run_ids = list(map(int, opts['run']))
@@ -166,6 +167,7 @@ def showResults(wfile, args):
     categories = set()
     # there's few of classifications usually, it will be faster in list
     classifications = []
+    classifications_types = []
     for run in runs:
         run._stats = datamanager.getToolInfoStats(run.getID())
         for stats in run._stats.getAllStats().values():
@@ -176,6 +178,9 @@ def showResults(wfile, args):
             for c in stats.getClassifications():
                 if c not in classifications:
                     classifications.append(c)
+                    if c[0] not in classifications_types:
+                        classifications_types.append(c[0])
+
 
     # give it some fixed order
     cats = [x for x in categories]
@@ -257,9 +262,11 @@ def showResults(wfile, args):
                       'get' : _get,
                       'showTimes' : _showTimes,
                       'showTimesOnlySolved' : _showTimesOnlySolved,
+                      'compactNumbers': _compactNumbers,
                       'formatTime' : _formatTime,
                       'descr' : getDescriptionOrVersion,
-                      'classifications' : classifications })
+                      'classifications' : classifications,
+                      'classifications_types': classifications_types })
 
 
 def manageTools(wfile, args):

@@ -73,7 +73,7 @@
     .stats {
       border: 0;
       padding: 3px;
-      min-width: 14em;
+      min-width: 23em;
     }
 
     .status-correct {
@@ -115,6 +115,11 @@
           checked="1"
 #end
           onchange="toggleSettings(this)">show times
+          <input type="checkbox" name="compact_numbers"
+#if(@compactNumbers)
+          checked="1"
+#end
+          onchange="toggleSettings(this)">compact numbers
     (<input type="checkbox" name="show_times_only_solved"
 #if(@showTimesOnlySolved)
           checked="1"
@@ -155,9 +160,21 @@
     <td><a href="/files?benchmarks=@{bset.id}@toolsGETList()">@bset.name</a></td>
     <td class="stats">
       <table class="stats">
-        #for @classif in @classifications:
-          #if(@hasAnswers(@runs, @bset.id, @classif))
-            <tr><td class="classif status-@get(@classif,1)">@get(@classif,0)</td></tr>
+        #if(@compactNumbers)
+          #for @ct in @classifications_types:
+            <tr><td class="classif status-@ct">@ct
+              #for @c in @classifications:
+                #if (@get(@c,0) == @ct)
+                <span class="classif status-@get(@c, 1)">@get(@c,1)</span> /
+                #end
+              #end
+              </td></tr>
+          #end
+        #else
+          #for @classif in @classifications:
+            #if(@hasAnswers(@runs, @bset.id, @classif))
+              <tr><td class="classif status-@get(@classif,1)">@get(@classif,0)</td></tr>
+            #end
           #end
         #end
       </table>
@@ -172,17 +189,29 @@
       <td class="stats">
       <table class="stats">
       #set @stats = @getStats(@run, @bset.id):
-      #for @classif in @classifications:
-        #if(@hasAnswers(@runs, @bset.id, @classif))
-	    <tr> <!--<td class="classif status-@get(@classif,1)"
-        style="padding-right: 1.5em">@get(@classif,0)</td>-->
-	       <td class="count"><span class="status-@get(@classif,1)"><abbr title="@get(@classif,0)-@get(@classif,1)">@getCount(@stats, @classif)</abbr></span></td>
-	       #if(@showTimes)
-           <td class="time">
-             <span style="font-size: 11px">@formatTime(@getTime(@stats, @classif))</span>
-           </td>
-           #end
-	    </tr>
+      #if(@compactNumbers)
+        #for @ct in @classifications_types:
+          <tr><td class="classif status-@ct">
+            #for @c in @classifications:
+              #if (@get(@c,0) == @ct)
+              <span class="classif status-@get(@c, 1)"><abbr title="@get(@c,0)-@get(@c,1)">@getCount(@stats,@c)</abbr></span>/
+              #end
+            #end
+            </td></tr>
+        #end
+      #else
+        #for @classif in @classifications:
+          #if(@hasAnswers(@runs, @bset.id, @classif))
+          <tr> <!--<td class="classif status-@get(@classif,1)"
+          style="padding-right: 1.5em">@get(@classif,0)</td>-->
+             <td class="count"><span class="status-@get(@classif,1)"><abbr title="@get(@classif,0)-@get(@classif,1)">@getCount(@stats, @classif)</abbr></span></td>
+             #if(@showTimes)
+             <td class="time">
+               <span style="font-size: 11px">@formatTime(@getTime(@stats, @classif))</span>
+             </td>
+             #end
+          </tr>
+          #end
         #end
       #end
       </table>
