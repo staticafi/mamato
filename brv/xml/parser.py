@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 from brv.runinfo import DirectRunInfo
-from brv.toolruninfo import ToolRunInfo
+from brv.toolrun import ToolRun
 from brv.utils import err
 
 import sys
@@ -62,7 +62,7 @@ def _parse_run_elem(run):
 
     return r
 
-def _createToolRunInfo(xmlfl):
+def _createToolRun(xmlfl):
     """
     Parse xml attributes that contain the information
     about tool, property and so on
@@ -72,7 +72,7 @@ def _createToolRunInfo(xmlfl):
     assert len(roots) == 1
     root = roots[0]
 
-    tr = ToolRunInfo()
+    tr = ToolRun()
     tr.tool = root.getAttribute('tool')
     tr.tool_version = root.getAttribute('version')
     tr.date = root.getAttribute('date')[:19]
@@ -100,7 +100,7 @@ class XMLParser(object):
         """
 
         xmlfl = minidom.parse(filePath)
-        ret = _createToolRunInfo(xmlfl)
+        ret = _createToolRun(xmlfl)
 
         for run in xmlfl.getElementsByTagName('run'):
             r = _parse_run_elem(run)
@@ -113,7 +113,7 @@ class XMLParser(object):
         writer = DatabaseWriter(self._db_config)
         xmlfl = minidom.parse(filePath)
 
-        tool_info = _createToolRunInfo(xmlfl)
+        tool_info = _createToolRun(xmlfl)
         tool_run_id = writer.getOrCreateToolInfoID(tool_info)
         benchmarks_set_id = writer.getOrCreateBenchmarksSetID(tool_info.block)
 

@@ -22,7 +22,7 @@
 # OF THIS SOFTWARE.
 
 from . proxy import DatabaseProxy
-from brv.toolruninfo import DBToolRunInfo, ToolRunInfoStats, RunsStats
+from brv.toolrun import DBToolRun, ToolRunStats, RunsStats
 from brv.runinfo import DBRunInfo
 
 class DatabaseReader(DatabaseProxy):
@@ -44,7 +44,7 @@ class DatabaseReader(DatabaseProxy):
 
         ret = []
         for r in res:
-            ret.append(DBToolRunInfo(r))
+            ret.append(DBToolRun(r))
 
         return ret
 
@@ -58,7 +58,7 @@ class DatabaseReader(DatabaseProxy):
         """.format(rid)
         res = self.query(q)
         assert len(res) == 1
-        return DBToolRunInfo(res[0])
+        return DBToolRun(res[0])
 
     def getToolRunTags(self, trid):
         q = """
@@ -76,7 +76,7 @@ class DatabaseReader(DatabaseProxy):
         WHERE tool_run_id='{0}' GROUP BY classification, status, benchmarks_set_id;
          """.format(tool_run_id)
         res = self.query(q)
-        ret = ToolRunInfoStats()
+        ret = ToolRunStats()
         for r in res:
             cat = r[0]
             bset_id = r[3]

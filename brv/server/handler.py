@@ -115,7 +115,7 @@ def showResults(wfile, args):
     _showTimes = 'show_times' in opts
     _showTimesOnlySolved = 'show_times_only_solved' in opts
 
-    # list of ToolRunInfo objects
+    # list of ToolRun objects
     run_ids = list(map(int, opts['run']))
     runs = datamanager.getToolRuns(run_ids)
     categories = set()

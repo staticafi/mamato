@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-class ToolRunInfo(object):
+class ToolRun(object):
     """
     Represents one tool in a given version with provided settings and environment
     (like CPAchecker of version XX ran with these params on this data)
@@ -52,9 +52,9 @@ class ToolRunInfo(object):
         """
         self._runs.append(r)
 
-class DBToolRunInfo(ToolRunInfo):
+class DBToolRun(ToolRun):
     def __init__(self, qr):
-        ToolRunInfo.__init__(self, qr[0])
+        ToolRun.__init__(self, qr[0])
         self._query_result = qr
 
     def tool(self):
@@ -162,7 +162,7 @@ class RunsStats(object):
 
         self._stats = newstats
 
-class ToolRunInfoStats(object):
+class ToolRunStats(object):
     def __init__(self):
         self._stats = {}
         # mapping of names of categories to id's
