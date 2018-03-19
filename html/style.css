@@ -55,8 +55,26 @@ a {
 }
 
 #content {
+  width: 100%;
   padding: 10px;
   padding-left: 20px;
+}
+
+#content-left {
+  width: 67%;
+  float: left;
+  text-align: left;
+}
+
+#content-right {
+  width: 30%;
+  text-align: left;
+  float: left;
+}
+
+#content-bottom {
+  width: 100%;
+  clear: both;
 }
 
 .rolled {

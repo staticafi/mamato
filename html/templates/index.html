@@ -6,6 +6,7 @@
    Author: Marek Chalupa <xchalup4@fi.muni.cz>, 2017 - 2018
 -->
 
+<script src="../js/brv.js"></script>
 <script>
 function toggleCheck(td) {
 	input = td.getElementsByTagName("input")[0];
@@ -27,6 +28,7 @@ function toggleCheck(td) {
 
 #include("../header.html")
 <div id="content">
+<div id="content-left">
 <h2>Tools:</h2>
 <form action="/results" style="margin-left: 1em">
   #for @tool in @tools:
@@ -40,10 +42,15 @@ function toggleCheck(td) {
         #if(!@vers)
 	    #set @vers="<i>(no version)</i>":
         #end
-	 <tr class="version"><td colspan=1>@vers</td></tr>
 
+	#set @version_printed = 0:
 	#for @tool_with_options in @get(@tool_run, 1):
-          #for @run in @tool_with_options.getRuns():
+	  #set @runs = @tool_with_options.getRuns(@runs_filter):
+	  #if(@version_printed == 0 && @nonempty_list(@runs))
+	  #set @version_printed = 1:
+	  <tr class="version"><td colspan=1>@vers</td></tr>
+	  #end
+          #for @run in @runs:
 	  <tr>
 	     <td title="@run_details(@run)" onclick="toggleCheck(this)">
 	     <input type="checkbox" name="run" value="@run.getID()">
@@ -53,7 +60,9 @@ function toggleCheck(td) {
 
 	     <td class="tag-box">
 	     #for @tag in @getTags(@run):
-	        <a href="#" class="tag" style="@tag.getCSS()">@tag.getName()</a>
+	        <a href="javascript: void(0);"
+		   onclick="addFilter('@tag.getName()', 'tags-filter');"
+		   class="tag" style="@tag.getCSS()">@tag.getName()</a>
 	     #end
 	     </td>
 	  <tr/>
@@ -66,6 +75,43 @@ function toggleCheck(td) {
   <input type="submit" value="Show!">
 </form>
 
+</div> <!-- content-left -->
+<div id="content-right">
+<h3>Filters:</h3>
+  <form id="settingsform" action="/">
+#if(@filters)
+  #for @f in @filters:
+	  <input type="text" name="filter"
+	         value="@f"
+		 onkeydown="updateFiltersOnEnter(event);"
+		 >
+		 Description filter</input></br>
+  #end
+#end
+	  <input type="text" name="filter"
+		 onkeydown="updateFiltersOnEnter(event);"
+                 >
+		 Description filter</input>
+    <br> <br>
+#if(@tags_filters)
+  #for @f in @tags_filters:
+	  <input type="text" name="tags-filter"
+	         value="@f"
+		 onkeydown="updateFiltersOnEnter(event, 'tags-filter');"
+		 >
+		 Tags filter</input></br>
+  #end
+#end
+	  <input type="text" name="tags-filter"
+		 onkeydown="updateFiltersOnEnter(event, 'tags-filter');"
+                 >
+		 Tags filter</input>
+    <br>
+  </form>
+
+</div> <!-- content-right -->
+<div id="content-bottom">
+</div> <!-- content-bottom -->
 </div> <!-- content -->
 </body>
 

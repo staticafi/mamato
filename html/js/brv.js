@@ -49,45 +49,49 @@ function toggleSettings(obj) {
     }
 }
 
-function updateFilters() {
-// gather all filters
+function updateFilters(filtName = 'filter') {
+    // gather all filters
 	var form = document.getElementById("settingsform");
-var filters = []
-var elements = form.elements;
-for (i=0; i < elements.length; ++i) {
-        if (elements[i].name == "filter"
-        && elements[i].value != "") {
-        filters.push("filter="+elements[i].value);
+    var filters = []
+    var elements = form.elements;
+    for (i=0; i < elements.length; ++i) {
+            if (elements[i].name == filtName
+            && elements[i].value != "") {
+            filters.push(filtName+"="+elements[i].value);
+        }
     }
-}
 
-// filter out old filters
+    // filter out old filters
     var kvp = document.location.search.substr(1).split('&');
     var new_search = "";
     var i = kvp.length;
     var new_search="";
     while (i--) {
         var x = kvp[i].split('=');
-        if (x == '' || x[0] == 'filter') {
+        if (x == '' || x[0] == filtName) {
             continue;
         } else {
             new_search += "&" + kvp[i];
         }
     }
 
-// set new URI
-for (i=0; i < filters.length; ++i) {
-	new_search += "&" + filters[i];
-}
-//alert('Updating loc to: ' + new_search);
+    // set new URI
+    for (i=0; i < filters.length; ++i) {
+        new_search += "&" + filters[i];
+    }
+    //alert('Updating loc to: ' + new_search);
     document.location.search = new_search;
 }
 
-function updateFiltersOnEnter(event) {
-if (event.keyCode == 13) {
-	updateFilters();
-	event.preventDefault();
+function addFilter(filt, filtName = 'filter') {
+    document.location.search += "&" + filtName + "=" + filt;
 }
+
+function updateFiltersOnEnter(event, filtName='filter') {
+    if (event.keyCode == 13) {
+        updateFilters(filtName);
+        event.preventDefault();
+    }
 }
 
 function hideTool(tool_id) {

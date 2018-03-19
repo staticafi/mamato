@@ -33,8 +33,10 @@ class ToolsManager(object):
         def options(self):
             return self._tool_run.options()
 
-        def getRuns(self):
+        def getRuns(self, filt = None):
             """ Return the list of results for this tool """
+            if filt:
+                return [run for run in self._runs if filt(run)]
             return self._runs
 
         def equalsToolRun(self, tr):

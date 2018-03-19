@@ -3,6 +3,7 @@
 import sys
 from os.path import basename, join, isfile
 from math import ceil, floor
+from re import compile
 
 if (sys.version_info > (3, 0)):
     from http.server import SimpleHTTPRequestHandler
@@ -56,19 +57,6 @@ def _get(p, idx):
     return p[idx]
 
 def showRoot(wfile, args):
-    tools = datamanager.getTools()
-    tools_sorted = {}
-    for t in tools:
-        # tools is a list of tool runs where each of the
-        # tools has a unique name+version+options attributes
-        # We want to divide them to groups according to names
-        # and versions. So we have a mapping name -> version -> tools
-        nkey = tools_sorted.setdefault(t.name(), {})
-        nkey.setdefault(t.version(), []).append(t)
-    tools_final = []
-    for t in tools_sorted.items():
-        tools_final.append((t[0], list(t[1].items())))
-
     def _setSize(lst):
         sz = 0
         for (x, tr) in lst:
@@ -86,12 +74,69 @@ def showRoot(wfile, args):
     def _getTags(run):
         return datamanager.getToolRunTags(run)
 
+    opts = _parse_args(args)
+    _filter = opts.setdefault('filter', [])
+    _tags_filter = opts.setdefault('tags-filter', [])
+
+    filters = []
+    tags_filters = []
+    for f in _filter:
+        try:
+            rf = compile(f)
+            filters.append((f, lambda x : rf.search(x)))
+        except Exception as e:
+            print('ERROR: Invalid regular expression given in filter: ' + str(e))
+
+    for f in _tags_filter:
+        try:
+            rf = compile(f)
+            tags_filters.append((f, lambda x : rf.search(x)))
+        except Exception as e:
+            print('ERROR: Invalid regular expression given in filter: ' + str(e))
+
+    if filters or tags_filters:
+        def _runs_filter(run):
+            descr = run.run_description() if run.run_description() else ''
+            for (_, f) in filters:
+                if f(descr) is None:
+                    return False
+
+            tags = run.tags() if run.tags() else ''
+            for (_, f) in tags_filters:
+                if f(tags) is None:
+                    return False
+
+            return True
+    else:
+        _runs_filter = None
+
+    tools = datamanager.getTools()
+    tools_sorted = {}
+    for t in tools:
+        # tools is a list of tool runs where each of the
+        # tools has a unique name+version+options attributes
+        # We want to divide them to groups according to names
+        # and versions. So we have a mapping name -> version -> tools
+        nkey = tools_sorted.setdefault(t.name(), {})
+        nkey.setdefault(t.version(), []).append(t)
+
+    tools_final = []
+    for (name, tls) in tools_sorted.items():
+        tools_final.append((name, list(tls.items())))
+
+    def _nonempty_list(l):
+        return l != []
+
     _render_template(wfile, 'index.html',
                      {'tools' : tools_final,
                       'get' : _get,
                       'setSize' : _setSize,
                       'getTags' : _getTags,
                       'run_details' : _run_details,
+                      'runs_filter' : _runs_filter,
+                      'filters' : _filter,
+                      'tags_filters' : _tags_filter,
+                      'nonempty_list': _nonempty_list,
                       'descr' : getDescriptionOrVersion})
 
 
