@@ -176,7 +176,7 @@
         #if(@hasAnswers(@runs, @bset.id, @classif))
 	    <tr> <!--<td class="classif status-@get(@classif,1)"
         style="padding-right: 1.5em">@get(@classif,0)</td>-->
-	       <td class="count"><span class="status-@get(@classif,1)">@getCount(@stats, @classif)</span></td>
+	       <td class="count"><span class="status-@get(@classif,1)"><abbr title="@get(@classif,0)-@get(@classif,1)">@getCount(@stats, @classif)</abbr></span></td>
 	       #if(@showTimes)
            <td class="time">
              <span style="font-size: 11px">@formatTime(@getTime(@stats, @classif))</span>
