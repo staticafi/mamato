@@ -100,6 +100,16 @@ function updateTags(e, rid, obj) {
 	return true;
 }
 
+function updateTagsConfig() {
+	conf = document.getElementById("tags-config-text").value;
+	httpGetAsync('set?tags_config='+encodeURIComponent(conf), function (resp) {
+			hideStatusBar();
+			location.reload();
+			});
+	showStatusBar("Updating tags configuration");
+	return false;
+}
+
 </script>
 
 <head>
@@ -123,6 +133,7 @@ function updateTags(e, rid, obj) {
 
 #include("../header.html")
 <div id="content">
+<div id="content-left">
 <!-- fixme: make this modal box -->
 <div id="status-bar" class="status-bar-hidden">
 Status bar
@@ -159,7 +170,26 @@ Status bar
   #end
 </form>
 
+</div> <!-- content-left -->
+<div id="content-right">
+<h3>Tags setting</h3>
+<form id="tags-config">
+<textarea cols="60" rows="10" form="tags-config" name="tags-config" id="tags-config-text" style="white-space: pre-wrap;">
+#for @line in @tags_config:
+  @line.strip()
+#end
+</textarea>
+<input type="submit" onclick="updateTagsConfig();return false;" value="Update">
+</form>
+#for @tag in @tags:
+   <span class="tag" style="@tag.getCSS()">@tag.getName()</span>
+#end
+
+</div> <!-- content-right -->
+<div id="content-bottom">
+</div> <!-- content-bottom -->
 </div> <!-- content -->
+
 </body>
 
 </html>

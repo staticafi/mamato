@@ -279,11 +279,20 @@ def manageTools(wfile, args):
     def _none2Empty(x):
         return x if x else ''
 
+    tags_config_file = open('brv/tags.conf')
+    tags_config = tags_config_file.readlines()
+
+    tags = list(datamanager.tagsmanager.getTags())
+
     _render_template(wfile, 'manage.html',
                      {'tools' : tools_final,
                       'None2Empty': _none2Empty,
                       'get' : _get,
+                      'tags': tags,
+                      'tags_config': tags_config,
                       'descr' : getDescriptionOrVersion})
+
+    tags_config_file.close()
 
 def performDelete(wfile, args):
     opts = _parse_args(args)
@@ -298,6 +307,15 @@ def performDelete(wfile, args):
 
 def setToolRunAttr(wfile, args):
     opts = _parse_args(args)
+
+    _tags_config = 'tags_config' in opts
+    if _tags_config:
+       tags_config = open('brv/tags.conf', 'w')
+       tags_config.write(opts['tags_config'][0])
+       tags_config.close()
+       datamanager.tagsmanager.reloadTags()
+
+       return
 
     if len(opts['run']) != 1:
         print('Incorrect number of tools')

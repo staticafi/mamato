@@ -7,6 +7,9 @@ class Tag(object):
         self._name = tag
         self._css = css
 
+    def setCSS(self, css):
+        self._css = css
+
     def getName(self):
         return self._name
 
@@ -19,6 +22,7 @@ class TagsManager(object):
         self._mapping = {}
         # tag name -> Tag object
         self._tags = {}
+        self._tags_conf_path = tags_conf_path
         # read tags from a file and create
         # css properties describe in the file to them
         self._tagsFromFile(tags_conf_path)
@@ -26,14 +30,38 @@ class TagsManager(object):
     def _tagsFromFile(self, path):
         f = open(path)
         for line in f:
+            line = line.strip()
+            if not line:
+                continue
+
             splt = line.split('=')
             assert len(splt) == 2
             name = splt[0].strip()
             self._tags[name] = Tag(name, splt[1].strip())
         f.close()
 
+    def reloadTags(self):
+        f = open(self._tags_conf_path)
+        for line in f:
+            line = line.strip()
+            if not line:
+                continue
+
+            splt = line.split('=')
+            assert len(splt) == 2
+            name = splt[0].strip()
+            tag = self._tags.get(name)
+            if tag:
+                tag.setCSS(splt[1].strip())
+            else:
+                self._tags[name] = Tag(name, splt[1].strip())
+        f.close()
+
     def _getOrCreateTag(self, name, css = ''):
         return self._tags.setdefault(name, Tag(name, css))
+
+    def getTags(self):
+        return self._tags.values()
 
     def getToolRunTags(self, toolrun):
         tgs = self._mapping.get(toolrun.getID())
