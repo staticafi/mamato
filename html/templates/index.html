@@ -33,10 +33,7 @@ function toggleCheck(td) {
 <form action="/results" style="margin-left: 1em">
   #for @tool in @tools:
     <h3>@get(@tool, 0):</h3>
-    <table id="tools-select">
-      <!--<select name="run" multiple="multiple" @setSize(@get(@tool, 1))
-              style="display: inline-block; overflow-y: auto;">
-	      -->
+    <table id="tools-select" style="width:90%">
       #for @tool_run in @get(@tool, 1):
 	#set @vers = @get(@tool_run, 0):
         #if(!@vers)
