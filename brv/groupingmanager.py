@@ -7,21 +7,20 @@ class GroupingBucket:
         Create bucket from configuration file section.
         @b is expected to contain "displayName" and "classifications" keys.
             "displayName" is string
-            "classifications" is array of dictionaries with "type" and "cat" keys
+            "classifications" is array of dictionaries with "result" and "class" keys
         """
         self._display_name = b["displayName"]
         self._name_class = b["nameClass"]
         self._classes = {}
-        self._classifications = list(map(lambda x: (x["type"], x["cat"]), b["classifications"]))
+        self._classifications = list(map(lambda x: (x["result"], x["class"]), b["classifications"]))
 
     def getClassifications(self):
         """
         Return list of classifications that belong in this bucket.
-        The return type is list of tuples in this format: (type, category, numClass)
+        The return type is list of tuples in this format: (result, classification)
         Where:
-            @type       could be 'true', 'error', ...
-            @category   could be 'correct-unconfirmed', ...
-            @numClass   is CSS class for the <span> tag that contains the stat
+            @result     could be 'true', 'error', ...
+            @class      could be 'correct-unconfirmed', ...
         """
         return self._classifications
 
