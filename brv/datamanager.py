@@ -3,6 +3,7 @@
 from brv.toolsmanager import ToolsManager
 from brv.tagsmanager import TagsManager
 from brv.toolrun import RunInfosTable
+from brv.groupingmanager import GroupingManager
 
 class DataManager(object):
     """
@@ -14,6 +15,7 @@ class DataManager(object):
     def __init__(self, db_conf = None, xmls = []):
         self.toolsmanager = ToolsManager()
         self.tagsmanager = TagsManager()
+        self.groupingmanager = GroupingManager()
         self._db_reader = None
         self._db_config = db_conf
 
@@ -89,4 +91,8 @@ class DataManager(object):
         newrun = self._db_reader.getToolRun(run_id)
         self._updateToolRun(newrun)
 
+    def getGroupingChoices(self):
+        return self.groupingmanager.getGroupingChoices()
 
+    def getGrouping(self, id):
+        return self.groupingmanager.getGrouping(id)

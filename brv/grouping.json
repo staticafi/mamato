@@ -1,0 +1,88 @@
+{
+  "groupings": [
+    {
+      "displayName": "No Grouping",
+      "buckets": [
+        {
+          "displayName": "false",
+          "nameClass": "classif status-correct",
+          "classifications": [
+            {"type": "false", "cat": "correct", "numClass": "classif status-correct"}
+          ]
+        },
+        {
+          "displayName": "true",
+          "nameClass": "classif status-correct",
+          "classifications": [
+            {"type": "true", "cat": "correct", "numClass": "classif status-correct"}
+          ]
+        },
+        {
+          "displayName": "false",
+          "nameClass": "classif status-correct-unconfirmed",
+          "classifications": [
+            {"type": "false", "cat": "correct-unconfirmed", "numClass": "classif status-correct-unconfirmed"}
+          ]
+        },
+        {
+          "displayName": "timeout",
+          "nameClass": "classif status-error",
+          "classifications": [
+            {"type": "timeout", "cat": "error", "numClass": "classif status-error" }
+          ]
+        },
+        {
+          "displayName": "unknown",
+          "nameClass": "classif status-unknown",
+          "classifications": [
+            {"type": "unknown", "cat": "unknown", "numClass": "classif status-unknown" }
+          ]
+        },
+        {
+          "displayName": "false",
+          "nameClass": "classif status-wrong",
+          "classifications": [
+            {"type": "false", "cat": "wrong", "numClass": "classif status-wrong"}
+          ]
+        },
+        {
+          "displayName": "error",
+          "nameClass": "classif status-error",
+          "classifications": [
+            {"type": "error", "cat": "error", "numClass": "classif status-error" }
+          ]
+        }
+      ]
+    },
+    {
+      "displayName": "True,False,Error",
+      "buckets": [
+          {
+              "displayName": "true",
+              "nameClass": "classif",
+              "classifications": [
+                {"type": "true", "cat": "correct", "numClass": "classif status-correct"}
+              ]
+          },
+          {
+              "displayName": "false",
+              "nameClass": "classif",
+              "classifications": [
+                {"type": "false", "cat": "correct", "numClass": "classif status-correct"},
+                {"type": "false", "cat": "correct-unconfirmed", "numClass": "classif status-correct-unconfirmed"},
+                {"type": "false", "cat": "wrong", "numClass": "classif status-wrong"}
+              ]
+          },
+          {
+              "displayName": "other",
+              "nameClass": "classif",
+              "classifications": [
+                {"type": "error", "cat": "error", "numClass": "classif status-error"},
+                {"type": "timeout", "cat": "error", "numClass": "classif status-error"},
+                {"type": "unknown", "cat": "unknown", "numClass": "classif status-unknown"}
+              ]
+          }
+      ]
+    }
+  ]
+}

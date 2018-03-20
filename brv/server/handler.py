@@ -159,8 +159,13 @@ def showResults(wfile, args):
 
     _showTimes = 'show_times' in opts
     _showTimesOnlySolved = 'show_times_only_solved' in opts
-    _compactNumbers = 'compact_numbers' in opts
-
+    groupingId = 0
+    if 'grouping' in opts:
+        groupingId = int(opts['grouping'][0])
+    grouping = datamanager.getGrouping(groupingId)
+    if grouping is None:
+        grouping = datamanager.getGrouping(0)
+    buckets = grouping.getBuckets()
     # list of ToolRun objects
     run_ids = list(map(int, opts['run']))
     runs = datamanager.getToolRuns(run_ids)
@@ -178,9 +183,6 @@ def showResults(wfile, args):
             for c in stats.getClassifications():
                 if c not in classifications:
                     classifications.append(c)
-                    if c[0] not in classifications_types:
-                        classifications_types.append(c[0])
-
 
     # give it some fixed order
     cats = [x for x in categories]
@@ -230,6 +232,13 @@ def showResults(wfile, args):
 
         return False
 
+    def _bucketHasAnswers(runs, bset_id, bucket):
+        classifs = bucket.getClassifications()
+        for classif in classifs:
+            if _hasAnswers(runs, bset_id, classif):
+                return True
+        return False
+
     def _formatTime(time):
         "Transform time in seconds to hours, minutes and seconds"
         if not time:
@@ -257,16 +266,18 @@ def showResults(wfile, args):
                       'getStats' : _getStats,
                       'getTotalStats' : _getTotalStats,
                       'hasAnswers': _hasAnswers,
+                      'bucketHasAnswers': _bucketHasAnswers,
                       'getCount' : _getCount,
                       'getTime' : _getTime,
                       'get' : _get,
                       'showTimes' : _showTimes,
                       'showTimesOnlySolved' : _showTimesOnlySolved,
-                      'compactNumbers': _compactNumbers,
                       'formatTime' : _formatTime,
                       'descr' : getDescriptionOrVersion,
                       'classifications' : classifications,
-                      'classifications_types': classifications_types })
+                      'buckets': buckets,
+                      'groupingId': groupingId,
+                      'groupings': datamanager.getGroupingChoices() })
 
 
 def manageTools(wfile, args):
