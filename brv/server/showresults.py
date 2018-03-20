@@ -35,12 +35,10 @@ def showResults(wfile, datamanager, opts):
     categories = set()
     # there's few of classifications usually, it will be faster in list
     classifications = []
-    classifications_types = []
     for run in runs:
         run._stats = datamanager.getToolInfoStats(run.getID())
         for stats in run._stats.getAllStats().values():
             stats.accumulateTime(_showTimesOnlySolved)
-            #stats.prune()
             # a pair (name, id)
             categories.add(BSet(stats.getBenchmarksName(), stats.getBenchmarksID()))
             for c in stats.getClassifications():
@@ -67,6 +65,16 @@ def showResults(wfile, datamanager, opts):
             return stats.getCount(classif)
         else:
             return 0
+
+    def _getBucketCount(stats, bucket):
+        if stats:
+            result = 0
+            for classif in bucket.getClassifications():
+                result += _getCount(stats, classif)
+            return result
+        else:
+            return 0
+
 
     def _getTime(stats, classif):
         if stats:
@@ -139,6 +147,7 @@ def showResults(wfile, datamanager, opts):
                       'getTotalStats' : _getTotalStats,
                       'hasAnswers': _hasAnswers,
                       'bucketHasAnswers': _bucketHasAnswers,
+                      'getBucketCount' : _getBucketCount,
                       'getCount' : _getCount,
                       'getTime' : _getTime,
                       'getBucketTime' : _getBucketTime,

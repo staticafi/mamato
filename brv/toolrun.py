@@ -140,28 +140,6 @@ class RunsStats(object):
     def getClassifications(self):
         return list(self._stats.keys())
 
-    def prune(self):
-        """
-        Merge all false(...) and timeouts and other results.
-        """
-        newstats = {}
-        for (key, stats) in self._stats.items():
-            # key is a pair (status, classification)
-            # value is a pair (count, consumed time)
-            new_key =('other', 'error')
-            for new_result in ['false', 'true', 'unknown', 'timeout', 'error']:
-                if key[0].lower().startswith(new_result):
-                    if key[1] is None:
-                        new_key = (new_result, 'error')
-                    else:
-                        new_key = (new_result, key[1])
-                    break
-
-            newstats[new_key] =\
-                sum_elems(newstats.setdefault(new_key, (0,0)), stats)
-
-        self._stats = newstats
-
 class ToolRunStats(object):
     def __init__(self):
         self._stats = {}

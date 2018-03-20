@@ -1,85 +1,112 @@
 {
   "groupings": [
     {
-      "displayName": "No Grouping",
+      "displayName": "Default Grouping",
       "buckets": [
         {
           "displayName": "false",
           "nameClass": "classif status-correct",
           "classifications": [
-            {"type": "false", "cat": "correct", "numClass": "classif status-correct"}
+            {"type": "false(valid-deref)", "cat": "correct"},
+            {"type": "false(valid-free)", "cat": "correct"},
+            {"type": "false(valid-memtrack)", "cat": "correct"}
           ]
         },
         {
           "displayName": "true",
           "nameClass": "classif status-correct",
           "classifications": [
-            {"type": "true", "cat": "correct", "numClass": "classif status-correct"}
+            {"type": "true", "cat": "correct"}
           ]
         },
         {
           "displayName": "false",
           "nameClass": "classif status-correct-unconfirmed",
           "classifications": [
-            {"type": "false", "cat": "correct-unconfirmed", "numClass": "classif status-correct-unconfirmed"}
+            {"type": "false(valid-deref)", "cat": "correct-unconfirmed"},
+            {"type": "false(valid-free)", "cat": "correct-unconfirmed"},
+            {"type": "false(valid-memtrack)", "cat": "correct-unconfirmed"}
           ]
         },
         {
           "displayName": "timeout",
           "nameClass": "classif status-error",
           "classifications": [
-            {"type": "timeout", "cat": "error", "numClass": "classif status-error" }
+            {"type": "TIMEOUT", "cat": "error" },
+            {"type": "TIMEOUT (timeout)", "cat": "error" }
           ]
         },
         {
           "displayName": "unknown",
           "nameClass": "classif status-unknown",
           "classifications": [
-            {"type": "unknown", "cat": "unknown", "numClass": "classif status-unknown" }
+            {"type": "unknown", "cat": "unknown" }
           ]
         },
         {
           "displayName": "false",
           "nameClass": "classif status-wrong",
           "classifications": [
-            {"type": "false", "cat": "wrong", "numClass": "classif status-wrong"}
+            {"type": "false(valid-deref)", "cat": "wrong"},
+            {"type": "false(valid-free)", "cat": "wrong"},
+            {"type": "false(valid-memtrack)", "cat": "wrong"}
           ]
         },
         {
           "displayName": "error",
           "nameClass": "classif status-error",
           "classifications": [
-            {"type": "error", "cat": "error", "numClass": "classif status-error" }
+            {"type": "ERROR (1)", "cat": "error" },
+            {"type": "OUT OF MEMORY", "cat": "error" }
           ]
         }
       ]
     },
     {
-      "displayName": "True,False,Error",
+      "displayName": "True, False, Other",
       "buckets": [
           {
-              "displayName": "true",
-              "nameClass": "classif",
+              "displayName": "false",
+              "nameClass": "classif status-correct",
               "classifications": [
-                {"type": "true", "cat": "correct", "numClass": "classif status-correct"}
+                {"type": "false(valid-deref)", "cat": "correct"},
+                {"type": "false(valid-free)", "cat": "correct"},
+                {"type": "false(valid-memtrack)", "cat": "correct"}
+              ]
+          },
+          {
+              "displayName": "true",
+              "nameClass": "classif status-correct",
+              "classifications": [
+                {"type": "true", "cat": "correct"}
               ]
           },
           {
               "displayName": "false",
-              "nameClass": "classif",
+              "nameClass": "classif status-correct-unconfirmed",
               "classifications": [
-                {"type": "false", "cat": "correct", "numClass": "classif status-correct"},
-                {"type": "false", "cat": "correct-unconfirmed", "numClass": "classif status-correct-unconfirmed"},
-                {"type": "false", "cat": "wrong", "numClass": "classif status-wrong"}
+                {"type": "false(valid-deref)", "cat": "correct-unconfirmed"},
+                {"type": "false(valid-free)", "cat": "correct-unconfirmed"},
+                {"type": "false(valid-memtrack)", "cat": "correct-unconfirmed"}
+              ]
+          },
+          {
+              "displayName": "false",
+              "nameClass": "classif status-wrong",
+              "classifications": [
+                {"type": "false(valid-deref)", "cat": "wrong"},
+                {"type": "false(valid-free)", "cat": "wrong"},
+                {"type": "false(valid-memtrack)", "cat": "wrong"}
               ]
           },
           {
               "displayName": "other",
               "nameClass": "classif",
               "classifications": [
-                {"type": "error", "cat": "error", "numClass": "classif status-error"},
-                {"type": "timeout", "cat": "error", "numClass": "classif status-error"},
-                {"type": "unknown", "cat": "unknown", "numClass": "classif status-unknown"}
+                {"type": "ERROR (1)", "cat": "error" },
+                {"type": "OUT OF MEMORY", "cat": "error" },
+                {"type": "TIMEOUT", "cat": "error" },
+                {"type": "TIMEOUT (timeout)", "cat": "error" }
               ]
           }
       ]

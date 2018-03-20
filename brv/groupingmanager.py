@@ -13,8 +13,6 @@ class GroupingBucket:
         self._name_class = b["nameClass"]
         self._classes = {}
         self._classifications = list(map(lambda x: (x["type"], x["cat"]), b["classifications"]))
-        for c in b["classifications"]:
-            self._classes[(c["type"], c["cat"])] = c["numClass"]
 
     def getClassifications(self):
         """
@@ -32,9 +30,6 @@ class GroupingBucket:
 
     def getNameClass(self):
         return self._name_class
-
-    def getNumClass(self, classification):
-        return self._classes[classification]
 
 class Grouping:
     def __init__(self, g):

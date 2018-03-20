@@ -186,9 +186,9 @@ value="@get(@grouping, 1)">@get(@grouping, 0)</option>
         #if(@bucketHasAnswers(@runs, -1, @bucket))
           <tr>
               <td class="classif">
-              #for @classif in @bucket.getClassifications():
-                    <span class="@bucket.getNumClass(@classif)"><abbr title="@get(@classif,0)-@get(@classif,1)">@getCount(@stats,@classif)</abbr></span> /
-              #end
+                <span class="@bucket.getNameClass()">
+                  <abbr title="@bucket.getDisplayName()">@getBucketCount(@stats, @bucket)</abbr>
+                </span>
               </td>
               #if(@showTimes)
                 <td class="time">
@@ -238,9 +238,9 @@ value="@get(@grouping, 1)">@get(@grouping, 0)</option>
         #if(@bucketHasAnswers(@runs, -1, @bucket))
           <tr>
               <td class="classif">
-              #for @classif in @bucket.getClassifications():
-                    <span class="@bucket.getNumClass(@classif)"><abbr title="@get(@classif,0)-@get(@classif,1)">@getCount(@stats,@classif)</abbr></span> /
-              #end
+                <span class="@bucket.getNameClass()">
+                  <abbr title="@bucket.getDisplayName()">@getBucketCount(@stats, @bucket)</abbr>
+                </span>
               </td>
               #if(@showTimes)
                 <td class="time">
