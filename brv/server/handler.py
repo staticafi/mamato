@@ -14,24 +14,12 @@ else:
 
 from brv.datamanager import DataManager
 from .. utils import dbg
-
-try:
-    from quik import FileLoader
-except ImportError:
-    print('Sorry, need quik framework to work.')
-    print('Run "pip install quik" or check "http://quik.readthedocs.io/en/latest/"')
-    sys.exit(1)
+from . rendering import render_template
 
 # the tools manager object -- it must be globals,
 # since handler is created for each request and we do
 # not want to create it again and again
 datamanager = DataManager('database.conf')
-
-def _render_template(wfile, name, variables):
-    loader = FileLoader('html/templates/')
-    template = loader.load_template(name)
-    wfile.write(template.render(variables,
-                                loader=loader).encode('utf-8'))
 
 def getDescriptionOrVersion(toolr):
     descr = toolr.run_description()
@@ -127,7 +115,7 @@ def showRoot(wfile, args):
     def _nonempty_list(l):
         return l != []
 
-    _render_template(wfile, 'index.html',
+    render_template(wfile, 'index.html',
                      {'tools' : tools_final,
                       'get' : _get,
                       'setSize' : _setSize,
@@ -177,7 +165,7 @@ def showResults(wfile, args):
         run._stats = datamanager.getToolInfoStats(run.getID())
         for stats in run._stats.getAllStats().values():
             stats.accumulateTime(_showTimesOnlySolved)
-            stats.prune()
+            #stats.prune()
             # a pair (name, id)
             categories.add(BSet(stats.getBenchmarksName(), stats.getBenchmarksID()))
             for c in stats.getClassifications():
@@ -269,7 +257,7 @@ def showResults(wfile, args):
 
     #def _tagsToCSS(tags):
 
-    _render_template(wfile, 'results.html',
+    render_template(wfile, 'results.html',
                      {'runs':runs, 'benchmarks_sets' : cats,
                       'toolsGETList' : _toolsGETList,
                       'getStats' : _getStats,
@@ -312,7 +300,7 @@ def manageTools(wfile, args):
 
     tags = list(datamanager.tagsmanager.getTags())
 
-    _render_template(wfile, 'manage.html',
+    render_template(wfile, 'manage.html',
                      {'tools' : tools_final,
                       'None2Empty': _none2Empty,
                       'get' : _get,
@@ -439,7 +427,7 @@ def showFiles(wfile, args):
 
     results = list(results)
     assert len(runs) == len(results[0][1])
-    _render_template(wfile, 'files.html',
+    render_template(wfile, 'files.html',
                      {'runs' : runs,
                       'get' : _get,
                       'getBenchmarkURL' : _getBenchmarkURL,
