@@ -190,6 +190,11 @@ value="@get(@grouping, 1)">@get(@grouping, 0)</option>
                     <span class="@bucket.getNumClass(@classif)"><abbr title="@get(@classif,0)-@get(@classif,1)">@getCount(@stats,@classif)</abbr></span> /
               #end
               </td>
+              #if(@showTimes)
+                <td class="time">
+                  <span style="font-size: 11px">@formatTime(@getBucketTime(@stats, @bucket))</span>
+                </td>
+              #end
           </tr>
         #end
       #end
@@ -237,6 +242,11 @@ value="@get(@grouping, 1)">@get(@grouping, 0)</option>
                     <span class="@bucket.getNumClass(@classif)"><abbr title="@get(@classif,0)-@get(@classif,1)">@getCount(@stats,@classif)</abbr></span> /
               #end
               </td>
+              #if(@showTimes)
+                <td class="time">
+                  <span style="font-size: 11px">@formatTime(@getBucketTime(@stats, @bucket))</span>
+                </td>
+              #end
           </tr>
         #end
       #end

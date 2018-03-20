@@ -211,6 +211,15 @@ def showResults(wfile, args):
         else:
             return 0
 
+    def _getBucketTime(stats, bucket):
+        if stats:
+            result = 0
+            for classif in bucket.getClassifications():
+                result += _getTime(stats, classif)
+            return result
+        else:
+            return 0
+
     def _getTotalStats(run):
         assert not run is None
 
@@ -269,6 +278,7 @@ def showResults(wfile, args):
                       'bucketHasAnswers': _bucketHasAnswers,
                       'getCount' : _getCount,
                       'getTime' : _getTime,
+                      'getBucketTime' : _getBucketTime,
                       'get' : _get,
                       'showTimes' : _showTimes,
                       'showTimesOnlySolved' : _showTimesOnlySolved,
