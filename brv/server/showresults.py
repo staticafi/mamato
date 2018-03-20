@@ -34,16 +34,12 @@ def showResults(wfile, datamanager, opts):
     runs = datamanager.getToolRuns(run_ids)
     categories = set()
     # there's few of classifications usually, it will be faster in list
-    classifications = []
     for run in runs:
         run._stats = datamanager.getToolInfoStats(run.getID())
         for stats in run._stats.getAllStats().values():
             stats.accumulateTime(_showTimesOnlySolved)
             # a pair (name, id)
             categories.add(BSet(stats.getBenchmarksName(), stats.getBenchmarksID()))
-            for c in stats.getClassifications():
-                if c not in classifications:
-                    classifications.append(c)
 
     # give it some fixed order
     cats = [x for x in categories]
@@ -156,7 +152,6 @@ def showResults(wfile, datamanager, opts):
                       'showTimesOnlySolved' : _showTimesOnlySolved,
                       'formatTime' : _formatTime,
                       'descr' : getDescriptionOrVersion,
-                      'classifications' : classifications,
                       'buckets': buckets,
                       'groupingId': groupingId,
                       'groupings': datamanager.getGroupingChoices() })
