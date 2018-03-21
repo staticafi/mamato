@@ -134,8 +134,6 @@ def showResults(wfile, datamanager, opts):
         else:
             return ret + '{0} s'.format(int(time))
 
-    #def _tagsToCSS(tags):
-
     render_template(wfile, 'results.html',
                      {'runs':runs, 'benchmarks_sets' : cats,
                       'toolsGETList' : _toolsGETList,
