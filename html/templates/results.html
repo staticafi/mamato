@@ -174,7 +174,7 @@ value="@get(@grouping, 1)">@get(@grouping, 0)</option>
         #if(@showTimes)
         <hr />
         <table>
-          <tr><td>&nbsp;</td></tr>
+          <tr><td>&nbsp;CPU time:</td></tr>
         </table>
         #end
     </td>
@@ -203,7 +203,7 @@ value="@get(@grouping, 1)">@get(@grouping, 0)</option>
       <hr/>
       <table>
       <tr>
-      <td> CPU time: </td><td> @formatTime(@stats.getAccTime())</td>
+      <td> @formatTime(@stats.getAccTime())</td>
       </tr>
       </table>
       #end
@@ -226,7 +226,7 @@ value="@get(@grouping, 1)">@get(@grouping, 0)</option>
       #if(@showTimes)
       <hr />
       <table>
-        <tr><td>&nbsp;</td></tr>
+        <tr><td>CPU Time:</td></tr>
       </table>
       #end
     </td>
@@ -255,7 +255,7 @@ value="@get(@grouping, 1)">@get(@grouping, 0)</option>
       <hr/>
       <table>
       <tr>
-      <td> CPU time: </td><td> @formatTime(@stats.getAccTime())</td>
+      <td></td><td>@formatTime(@stats.getAccTime())</td>
       </tr>
       </table>
       #end
