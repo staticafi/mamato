@@ -2,17 +2,24 @@ import json
 
 class GroupingBucket:
 
-    def __init__(self, b):
+    def __init__(self, display_name, name_class, classifications):
+        self._display_name = display_name
+        self._name_class = name_class
+        self._classifications = classifications
+
+    @classmethod
+    def fromConfig(cls, b):
         """
         Create bucket from configuration file section.
         @b is expected to contain "displayName" and "classifications" keys.
             "displayName" is string
             "classifications" is array of dictionaries with "result" and "class" keys
         """
-        self._display_name = b["displayName"]
-        self._name_class = b["nameClass"]
-        self._classes = {}
-        self._classifications = list(map(lambda x: (x["result"], x["class"]), b["classifications"]))
+        display_name = b["displayName"]
+        name_class = b["nameClass"]
+        classifications = list(map(lambda x: (x["result"], x["class"]), b["classifications"]))
+        return cls(display_name, name_class, classifications)
+
 
     def getClassifications(self):
         """
@@ -39,7 +46,7 @@ class Grouping:
             "buckets" is array of dictionaries
         """
         self._display_name = g["displayName"]
-        self._buckets = list(map(lambda x: GroupingBucket(x), g["buckets"]))
+        self._buckets = list(map(lambda x: GroupingBucket.fromConfig(x), g["buckets"]))
 
     def getBuckets(self):
         return self._buckets
