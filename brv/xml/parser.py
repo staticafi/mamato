@@ -113,8 +113,10 @@ class XMLParser(object):
         writer = DatabaseWriter(self._db_config)
         xmlfl = minidom.parse(filePath)
 
+        # replace .xml with .zip
+        outputs = os.path.basename(filePath)[:-3] + 'zip'
         tool_info = _createToolRun(xmlfl)
-        tool_run_id = writer.getOrCreateToolInfoID(tool_info)
+        tool_run_id = writer.getOrCreateToolInfoID(tool_info, outputs)
         benchmarks_set_id = writer.getOrCreateBenchmarksSetID(tool_info.block)
 
         rcnt = writer.getRunCount(tool_run_id, benchmarks_set_id)

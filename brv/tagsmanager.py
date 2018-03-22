@@ -88,5 +88,8 @@ class TagsManager(object):
             self.addToolRunTag(toolrun, tag)
 
     def remove(self, toolrun):
-        del self._mapping[toolrun.getID()]
+        try:
+            del self._mapping[toolrun.getID()]
+        except KeyError:
+            print('No tags for tool {0}'.format(toolrun.getID()))
 

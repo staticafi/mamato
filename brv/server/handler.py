@@ -15,6 +15,7 @@ from brv.datamanager import DataManager
 from . showfiles import showFiles
 from . showtools import showTools
 from . showresults import showResults
+from . showoutput import showOutput
 from . manage import manageTools, performDelete, setToolRunAttr
 
 # the tools manager object -- it must be globals,
@@ -46,6 +47,7 @@ handlers = {
     'files'             : showFiles,
     'manage'            : manageTools,
     'delete'            : performDelete,
+    'output'            : showOutput,
     'set'               : setToolRunAttr,
 }
 

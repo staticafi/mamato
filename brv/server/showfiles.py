@@ -15,6 +15,9 @@ def _getBenchmarkURL(name):
 def _getShortName(name):
     return basename(name)
 
+def None2Empty(s):
+    return s if s else ''
+
 def showFiles(wfile, datamanager, opts):
     if not 'run' in opts:
         wfile.write(b'<h2>No runs of tools given</h2>')
@@ -80,8 +83,10 @@ def showFiles(wfile, datamanager, opts):
 
     results = list(results)
     assert len(runs) == len(results[0][1])
+    outputs = [None2Empty(r.outputs()) for r in runs]
     render_template(wfile, 'files.html',
                      {'runs' : runs,
+                      'outputs' : outputs,
                       'get' : get_elem,
                       'getBenchmarkURL' : _getBenchmarkURL,
                       'getShortName' : _getShortName,

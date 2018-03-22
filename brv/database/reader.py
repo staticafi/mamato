@@ -37,7 +37,8 @@ class DatabaseReader(DatabaseProxy):
         q = """
         SELECT tool_run.id, tool.name, tool.version, date,
                options, cpulimit, memlimit,
-               tool_run.description, tool_run.tags
+               tool_run.description, tool_run.tags,
+               tool_run.outputs
         FROM tool JOIN tool_run ON tool.id = tool_id;
         """
         res = self.query(q)
@@ -53,6 +54,7 @@ class DatabaseReader(DatabaseProxy):
         SELECT tool_run.id, tool.name, tool.version, date,
                options, cpulimit, memlimit,
                tool_run.description, tool_run.tags
+               tool_run.outputs
         FROM tool JOIN tool_run ON tool.id = tool_id
         WHERE tool_run.id = {0};
         """.format(rid)

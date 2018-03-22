@@ -37,6 +37,9 @@ class ToolRun(object):
     def tags(self):
         raise NotImplemented
 
+    def outputs(self):
+        raise NotImplemented
+
     def getResults(self):
         return self._runs
 
@@ -80,6 +83,9 @@ class DBToolRun(ToolRun):
 
     def tags(self):
         return self._query_result[8]
+
+    def outputs(self):
+        return self._query_result[9]
 
 
 def sum_elems(lhs, rhs):

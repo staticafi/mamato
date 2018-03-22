@@ -7,6 +7,43 @@
 -->
 
 <script src="../js/brv.js"></script>
+<script>
+function renderOutput(modal, text) {
+	var txt = modal.getElementsByClassName("text")[0];
+	txt.innerHTML = "<pre>\n" + text + "\n</pre>";
+}
+
+function getOutput(modal, archive, name) {
+	httpGetAsync('output?arch='+archive+'&file='+name, function (resp) {
+			hideStatusBar();
+			renderOutput(modal, resp);
+			});
+	showStatusBar("Retrieving output");
+	return false;
+}
+
+function modalToggle(modal) {
+        modal.classList.toggle("show-modal");
+//if (modal.classList.contains("show-modal")) {
+//	// we turned the modal on
+//} else {
+//	// we turned the modal off
+//}
+}
+
+function showOutput(archive, name) {
+	var modal = document.getElementById("modal");
+	modalToggle(modal);
+
+	if (archive == '' || archive == null) {
+            renderOutput(modal, "Do not have outputs for this run");
+            return;
+        } else {
+		getOutput(modal, archive, name);
+	}
+}
+
+</script>
 
 <head>
 <meta charset="utf-8" />
@@ -40,6 +77,10 @@
       font-size: 12px;
     }
 
+    .status {
+      cursor: pointer;
+    }
+
     .status-correct {
       color: green;
     }
@@ -70,6 +111,48 @@
 	    color: black;
     }
 
+    .modal {
+        position: fixed;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        opacity: 0;
+        visibility: hidden;
+        transform: scale(1.1);
+        transition: visibility 0s linear 0.25s, opacity 0.25s 0s, transform 0.25s;
+    }
+    .modal-content {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: white;
+        padding: 1rem 1.5rem;
+        min-width: 24rem;
+        max-width: 90%;
+        border-radius: 0.5rem;
+    }
+    .close-button {
+        float: right;
+        width: 1.5rem;
+        line-height: 1.5rem;
+        text-align: center;
+        cursor: pointer;
+        border-radius: 0.25rem;
+        background-color: lightgray;
+    }
+    .close-button:hover {
+        background-color: darkgray;
+    }
+    .show-modal {
+        opacity: 1;
+        visibility: visible;
+        transform: scale(1.0);
+        transition: visibility 0s linear 0s, opacity 0.25s 0s, transform 0.25s;
+    }
+
 </style>
 <title>mamato -- benchexec results viewer </title>
 </head>
@@ -77,6 +160,21 @@
 <body>
 
 #include("../header.html")
+
+<div class="modal" id="modal">
+    <div class="modal-content" id="modal-content">
+	<span class="close-button"
+              onclick="modalToggle(parentElement.parentElement);">
+		&times;
+	</span>
+	<div id="status-bar" class="status-bar-hidden">
+	Status bar
+	</div>
+	<div class="text" style="padding-top: 1.5em">
+	<!-- here will be the text of the file -->
+	</div>
+    </div>
+</div>
 
 <div id="content">
   <form id="settingsform" action="/res">
@@ -120,12 +218,15 @@
   #for @result in @results:
   <tr class="row">
     #set @name = @get(@result, 0):
+    #set @shortname = @getShortName(@name):
     <td>
-      <a href="@getBenchmarkURL(@name)">@getShortName(@name)</a>
+      <a href="@getBenchmarkURL(@name)">@shortname</a>
     </td>
+    #set @n = 0:
     #for @runinfo in @get(@result, 1):
       <td>
-      <span class="status-@runinfo.classification()">
+      <span class="status status-@runinfo.classification()"
+            onclick="showOutput('@get(@outputs, @n)','@shortname')">
       #if(@runinfo)
       @runinfo.status()
       #else
@@ -139,6 +240,7 @@
       --
       #end
       </td>
+    #set @n = @n + 1:
     #end
   </tr>
   #end

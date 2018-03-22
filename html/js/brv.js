@@ -117,3 +117,31 @@ function hideTool(tool_id) {
 	return false;
 }
 
+function httpGetAsync(theUrl, callback = null)
+{
+    var xmlHttp = new XMLHttpRequest();
+    if (callback) {
+   	xmlHttp.onreadystatechange = function() {
+   	    if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
+   	        callback(xmlHttp.responseText);
+   	}
+    }
+    xmlHttp.open("GET", theUrl, true); // true for asynchronous 
+    xmlHttp.send(null);
+}
+
+function showStatusBar(text, in_progress = true) {
+	var bar = document.getElementById("status-bar");
+	bar.innerHTML = "<p>";
+	if (in_progress) {
+		bar.innerHTML += "<img alt=\"In Progress... \" src=\"../img/loader.gif\" height=\"24\">";
+	}
+	bar.innerHTML += text+"</p>";
+	bar.setAttribute("class", "status-bar");
+}
+
+function hideStatusBar() {
+	var bar = document.getElementById("status-bar");
+	bar.innerHTML = "";
+	bar.setAttribute("class", "status-bar-hidden");
+}

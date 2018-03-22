@@ -36,8 +36,8 @@ select {
 
 #tools-select tr:hover {
        background-color: #e9ffe1;
+        cursor: pointer;
 }
-
 
 a {
 	text-decoration: none; 
@@ -102,4 +102,13 @@ a {
 	padding: 2px;
 	font-size: 11px;
 	color: black;
+}
+
+.status-bar-hidden {
+        display: none;
+}
+
+.status-bar {
+        padding: 10px;
+        background-color: #99ccff;
 }

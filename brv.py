@@ -27,4 +27,4 @@ if __name__ == "__main__":
         if version_info < (3, 0):
             createServer()
         else:
-            BRVServer.establish()
+            BRVServer.establish(port=3001)
