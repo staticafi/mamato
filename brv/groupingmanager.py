@@ -47,9 +47,6 @@ class Grouping:
     def getDisplayName(self):
         return self._display_name
 
-    def getNameClass(self):
-        return self._name_class
-
 class GroupingManager:
 
     """
