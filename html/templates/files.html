@@ -13,8 +13,8 @@ function renderOutput(modal, text) {
 	txt.innerHTML = "<pre>\n" + text + "\n</pre>";
 }
 
-function getOutput(modal, archive, name) {
-	httpGetAsync('output?arch='+archive+'&file='+name, function (resp) {
+function getOutput(modal, archive, run_name, name) {
+	httpGetAsync('output?arch='+archive+'&file='+run_name + "." + name + ".log" , function (resp) {
 			hideStatusBar();
 			renderOutput(modal, resp);
 			});
@@ -31,7 +31,7 @@ function modalToggle(modal) {
 //}
 }
 
-function showOutput(archive, name) {
+function showOutput(archive, run_name, name) {
 	var modal = document.getElementById("modal");
 	modalToggle(modal);
 
@@ -39,7 +39,7 @@ function showOutput(archive, name) {
             renderOutput(modal, "Do not have outputs for this run");
             return;
         } else {
-		getOutput(modal, archive, name);
+		getOutput(modal, archive, run_name, name);
 	}
 }
 
@@ -243,7 +243,7 @@ function showOutput(archive, name) {
     #for @runinfo in @get(@result, 1):
       <td>
       <span class="status status-@runinfo.classification()"
-            onclick="showOutput('@get(@outputs, @n)','@shortname')">
+            onclick="showOutput('@get(@outputs, @n)', '@get(@run_names, @n)', '@shortname')">
       #if(@runinfo)
       @runinfo.status()
       #else

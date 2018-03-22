@@ -97,7 +97,9 @@ class XMLParser(object):
     """
 
     def __init__(self, db_conf = None):
-        self._db_config = db_conf
+        if db_conf:
+            from .. database.writer import DatabaseWriter
+            self._db_writer = DatabaseWriter(db_conf)
 
     def parseToMem(self, filePath):
         """
@@ -113,14 +115,11 @@ class XMLParser(object):
 
         return ret
 
-    def parseToDB(self, filePath):
-        from .. database.writer import DatabaseWriter
-        writer = DatabaseWriter(self._db_config)
+    def parseToDB(self, filePath, outputs = None, descr = None):
+        writer = self._db_writer
         xmlfl = minidom.parse(filePath)
 
-        # replace .xml with .zip
-        outputs = os.path.basename(filePath)[:-3] + 'zip'
-        tool_info = _createToolRun(xmlfl)
+        tool_info = _createToolRun(xmlfl, descr)
         tool_run_id = writer.getOrCreateToolInfoID(tool_info, outputs)
         benchmarks_set_id = writer.getOrCreateBenchmarksSetID(tool_info.block)
 
