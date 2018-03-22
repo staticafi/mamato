@@ -24,6 +24,9 @@
 
 from . proxy import DatabaseProxy
 
+def None2Null(s):
+    return "'{0}'".format(s) if s else 'NULL'
+
 class DatabaseWriter(DatabaseProxy):
     """
     DatabaseProxy specialized for updating the database
@@ -41,12 +44,7 @@ class DatabaseWriter(DatabaseProxy):
 
         return self.queryInt(q)
 
-    def getOrCreateToolInfoID(self, toolinfo, outputs = None):
-        """
-        Add a new tool_run into database and return its ID.
-        If the tool already is in the database, return its ID.
-        """
-
+    def _getOrCreateToolID(self, name, version):
         tool_id = self._getToolID(toolinfo.tool, toolinfo.tool_version)
         if tool_id is None:
             # update the 'tool' table if needed
@@ -56,6 +54,16 @@ class DatabaseWriter(DatabaseProxy):
             """.format(toolinfo.tool, toolinfo.tool_version)
             self.query_noresult(q)
             tool_id = self.queryInt("SELECT LAST_INSERT_ID();")
+
+        return tool_id
+
+    def getOrCreateToolInfoID(self, toolinfo, outputs = None):
+        """
+        Add a new tool_run into database and return its ID.
+        If the tool already is in the database, return its ID.
+        """
+
+        tool_id = self._getOrCreateToolID(name, version)
 
         q = """
         SELECT id FROM tool_run WHERE
@@ -71,13 +79,14 @@ class DatabaseWriter(DatabaseProxy):
             # add a new tool_run record
             q = """
             INSERT INTO tool_run
-              (tool_id, options, memlimit, cpulimit, date, description, outputs)
+              (tool_id, options, memlimit, cpulimit, date,
+               description, name, outputs)
               VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}:{6}', {7});
             """.format(tool_id, toolinfo.options,
                        toolinfo.memlimit, toolinfo.timelimit,
                        toolinfo.date, toolinfo.benchmarkname,
-                       toolinfo.name,
-                       "'{0}'".format(outputs) if outputs else 'NULL')
+                       None2Null(toolinfo.description),
+                       toolinfo.name, None2Null(outputs))
             self.query_noresult(q)
             tool_run_id = self.queryInt("SELECT LAST_INSERT_ID();")
 

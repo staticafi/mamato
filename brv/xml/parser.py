@@ -62,7 +62,7 @@ def _parse_run_elem(run):
 
     return r
 
-def _createToolRun(xmlfl):
+def _createToolRun(xmlfl, descr = None):
     """
     Parse xml attributes that contain the information
     about tool, property and so on
@@ -79,9 +79,14 @@ def _createToolRun(xmlfl):
     tr.options = root.getAttribute('options')
     tr.timelimit = root.getAttribute('timelimit')
     tr.memlimit = root.getAttribute('memlimit')
-    tr.name = root.getAttribute('name')
-    tr.block = root.getAttribute('block')
     tr.benchmarkname = root.getAttribute('benchmarkname')
+    tr.block = root.getAttribute('block')
+
+    tr.name = root.getAttribute('name')
+    if tr.name.endswith(tr.block):
+        tr.name = tr.name[:-(len(tr.block)+1)]
+
+    tr.description = descr
 
     return tr
 
