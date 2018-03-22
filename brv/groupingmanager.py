@@ -81,10 +81,6 @@ class GroupingManager:
             self._groupings.append(grouping)
             self._choices.append((grouping.getDisplayName(), i))
 
-        if not groupings:
-            # TODO config file is empty, add default grouping(no grouping)
-            pass
-
     def getGroupingChoices(self):
         """
         Returns list of tuples in following format: (display_name, id)

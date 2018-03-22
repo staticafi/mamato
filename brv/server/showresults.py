@@ -3,6 +3,7 @@
 from . rendering import render_template
 from . util import get_elem, getDescriptionOrVersion
 from math import ceil
+from .. import groupingmanager
 
 def showResults(wfile, datamanager, opts):
     if not 'run' in opts:
@@ -34,12 +35,25 @@ def showResults(wfile, datamanager, opts):
     runs = datamanager.getToolRuns(run_ids)
     categories = set()
     # there's few of classifications usually, it will be faster in list
+    classifications = []
     for run in runs:
         run._stats = datamanager.getToolInfoStats(run.getID())
         for stats in run._stats.getAllStats().values():
             stats.accumulateTime(_showTimesOnlySolved)
             # a pair (name, id)
             categories.add(BSet(stats.getBenchmarksName(), stats.getBenchmarksID()))
+            for c in stats.getClassifications():
+                if c not in classifications:
+                    classifications.append(c)
+
+    # extend the selected grouping to avoid hiding non-configured results
+    for c in classifications:
+        found = False
+        for b in buckets:
+            if c in b.getClassifications():
+                found = True
+        if not found:
+            buckets.append(groupingmanager.GroupingBucket(c[0], "classif status-{}".format(c[1]), [c]))
 
     # give it some fixed order
     cats = [x for x in categories]
