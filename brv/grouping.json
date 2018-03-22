@@ -1,6 +1,10 @@
 {
   "groupings": [
     {
+      "displayName": "No Grouping",
+      "buckets": []
+    },
+    {
       "displayName": "Default Grouping",
       "buckets": [
         {
