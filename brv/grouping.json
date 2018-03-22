@@ -106,7 +106,8 @@
                 {"result": "ERROR (1)", "class": "error" },
                 {"result": "OUT OF MEMORY", "class": "error" },
                 {"result": "TIMEOUT", "class": "error" },
-                {"result": "TIMEOUT (timeout)", "class": "error" }
+                {"result": "TIMEOUT (timeout)", "class": "error" },
+                {"result": "unknown", "class": "unknown" }
               ]
           }
       ]
