@@ -113,7 +113,7 @@
 
 <div id="content">
   <form name="settingsform" action="/res">
-    <select name="grouping" onchange="toggleSettings(this)">
+    <select name="grouping" onchange="changeSettings(this)">
 #for @grouping in @groupings:
 <option 
 #if(@get(@grouping, 1) == @groupingId)

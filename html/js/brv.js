@@ -18,6 +18,30 @@ function toggleRollingByName(name) {
 
 
 
+function changeSettings(obj) {
+    var key = encodeURIComponent(obj.name);
+    var value = encodeURIComponent(obj.value);
+
+    var kvp = document.location.search.substr(1).split('&');
+    var new_search = "";
+
+    var i = kvp.length;
+    var new_search="";
+    while (i--) {
+        var x = kvp[i].split('=');
+        if (x == '') {
+            continue;
+        }
+        if (x[0] != key) {
+            new_search += "&" + kvp[i];
+        }
+    }
+
+    new_search += "&" + key + "=" + value;
+    document.location.search = new_search;
+}
+
+
 function toggleSettings(obj) {
     var key = encodeURIComponent(obj.name);
     var value = encodeURIComponent(obj.value);
