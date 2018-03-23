@@ -16,3 +16,9 @@ To import benchexec results to database for viewing:
 To start a webserver at http://localhost:3000 that displays results from database:
 
 `./brv.py`
+
+## Development
+
+The easiest way to install dependencies is:
+
+`pip install -r requirements.txt`
