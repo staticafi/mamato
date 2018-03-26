@@ -10,6 +10,29 @@ def showResults(wfile, datamanager, opts):
         wfile.write(b'<h2>No runs of tools given</h2>')
         return
 
+    def hasAnswers(runs, bset_id, classif):
+        assert not runs is None
+        assert not bset_id is None
+
+        for run in runs:
+            if bset_id != -1:
+                # get stats for one of the categories
+                stats = run.getStats().getStatsByID(bset_id)
+            else:
+                # get the overall stats
+                stats = run.getStats().getSummary(_showTimesOnlySolved)
+            if not stats is None and stats.getCount(classif) != 0:
+                return True
+
+        return False
+
+    def bucketHasAnswers(runs, bucket):
+        classifs = bucket.getClassifications()
+        for classif in classifs:
+            if hasAnswers(runs, -1, classif):
+                return True
+        return False
+
     class BSet(object):
         def __init__(self, name, bid):
             self.name = name
@@ -59,6 +82,7 @@ def showResults(wfile, datamanager, opts):
                 display_name = "<i>&lt;missing classification&gt;</i>"
             buckets.append(groupingmanager.GroupingBucket(display_name, "classif status-{0}".format(c[1]), [c]))
 
+    buckets = list(filter(lambda b: bucketHasAnswers(runs, b), buckets))
     # give it some fixed order
     cats = [x for x in categories]
 
@@ -110,29 +134,6 @@ def showResults(wfile, datamanager, opts):
 
         return run.getStats().getSummary(_showTimesOnlySolved)
 
-    def _hasAnswers(runs, bset_id, classif):
-        assert not runs is None
-        assert not bset_id is None
-
-        for run in runs:
-            if bset_id != -1:
-                # get stats for one of the categories
-                stats = run.getStats().getStatsByID(bset_id)
-            else:
-                # get the overall stats
-                stats = run.getStats().getSummary(_showTimesOnlySolved)
-            if not stats is None and stats.getCount(classif) != 0:
-                return True
-
-        return False
-
-    def _bucketHasAnswers(runs, bset_id, bucket):
-        classifs = bucket.getClassifications()
-        for classif in classifs:
-            if _hasAnswers(runs, bset_id, classif):
-                return True
-        return False
-
     def _lenPlus(o, a):
         return len(o) + a
 
@@ -163,8 +164,6 @@ def showResults(wfile, datamanager, opts):
                       'toolsGETList' : _toolsGETList,
                       'getStats' : _getStats,
                       'getTotalStats' : _getTotalStats,
-                      'hasAnswers': _hasAnswers,
-                      'bucketHasAnswers': _bucketHasAnswers,
                       'getBucketCount' : _getBucketCount,
                       'getCount' : _getCount,
                       'getTime' : _getTime,

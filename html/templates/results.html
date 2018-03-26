@@ -135,7 +135,6 @@
   #macro longResultsRow @statsFunc:
         #for @bucket in @buckets:
           <tr class="row">
-          #if(@bucketHasAnswers(@runs, -1, @bucket))
             <td class="sep-right">
               <span class="@bucket.getNameClass()">@bucket.getDisplayName()</span>
             </td>
@@ -159,7 +158,6 @@ sep-right
                   <span style="font-size: 11px">@formatTime(@getBucketTime(@stats, @bucket))</span>
                 </td>
               #end
-            #end
           #end
           </tr>
         #end
@@ -180,13 +178,11 @@ sep-right
       #for @run in @runs:
         #set @stats = @statsFunc(@run):
         #for @bucket in @buckets:
-          #if(@bucketHasAnswers(@runs, -1, @bucket))
           <td class="classif center">
             <span class="@bucket.getNameClass()">
               <abbr title="@bucket.getDisplayName()">@getBucketCount(@stats, @bucket)</abbr>
             </span>
             </td>
-          #end
         #end
         <td class="sep-right"></td>
       #end
