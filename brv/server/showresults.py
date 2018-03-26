@@ -29,6 +29,7 @@ def showResults(wfile, datamanager, opts):
     grouping = datamanager.getGrouping(groupingId)
     if grouping is None:
         grouping = datamanager.getGrouping(0)
+    _inlineView = 'inline_view' in opts
     buckets = grouping.getBuckets()
     # list of ToolRun objects
     run_ids = list(map(int, opts['run']))
@@ -177,5 +178,6 @@ def showResults(wfile, datamanager, opts):
                       'groupingId': groupingId,
                       'lenPlus': _lenPlus,
                       'packStatsFunc': _packStatsFunc,
+                      'inlineView': _inlineView,
                       'groupings': datamanager.getGroupingChoices() })
 

@@ -128,6 +128,9 @@
   #if(@showTimes)
     #set @rowspan = @lenPlus(@buckets, 2):
   #end
+  #if(@inlineView)
+    #set @rowspan = 1:
+  #end
 
   #macro longResultsRow @statsFunc:
         #for @bucket in @buckets:
@@ -173,6 +176,40 @@ sep-right
           </tr>
         #end
   #end
+  #macro inlineViewRow @statsFunc:
+      #for @run in @runs:
+        #set @stats = @statsFunc(@run):
+        #for @bucket in @buckets:
+          #if(@bucketHasAnswers(@runs, -1, @bucket))
+          <td class="classif center">
+            <span class="@bucket.getNameClass()">
+              <abbr title="@bucket.getDisplayName()">@getBucketCount(@stats, @bucket)</abbr>
+            </span>
+            </td>
+          #end
+        #end
+        <td class="sep-right"></td>
+      #end
+    </tr>
+
+      #if(@showTimes)
+        <tr>
+          <td class="sep-right">CPU time:</td>
+          #for @run in @runs:
+            #set @stats = @statsFunc(@run):
+            <td class="center sep-right" colspan="
+#if(@inlineView)
+@lenPlus(@buckets, 1)
+#else
+2
+#end
+              ">
+              <span>@formatTime(@stats.getAccTime())</span>
+            </td>
+          #end
+        </tr>
+      #end
+  #end
 
 <div id="content">
   <form name="settingsform" action="/res">
@@ -185,24 +222,35 @@ sep-right
 value="@get(@grouping, 1)">@get(@grouping, 0)</option>
 #end
    </select>
-   <input type="checkbox" name="show_times"
-#if(@showTimes)
+   <input type="checkbox" name="inline_view"
+#if(@inlineView)
           checked="1"
 #end
+          onchange="toggleSettings(this)">inline view
+   <input type="checkbox" name="show_times"
+  #if(@showTimes)
+          checked="1"
+  #end
           onchange="toggleSettings(this)">show times
     (<input type="checkbox" name="show_times_only_solved"
-#if(@showTimesOnlySolved)
+  #if(@showTimesOnlySolved)
           checked="1"
-#end
-          onchange="toggleSettings(this)">solved only)<br>
+  #end
+          onchange="toggleSettings(this)">solved only)
+          <br>
   </form>
 
   <table style="margin-top: 15px;">
   <tr class="header_row">
   <th>Category</th>
+  #if(!@inlineView)
   <th>Classifications</th>
+  #end
   #for @run in @runs:
     <th
+#if(@inlineView)
+      colspan="@lenPlus(@buckets,1)"
+#end
 #if(@showTimes)
       colspan="2"
 #end
@@ -232,9 +280,16 @@ value="@get(@grouping, 1)">@get(@grouping, 0)</option>
   #for @bset in @benchmarks_sets:
     #set @statsFunc = @packStatsFunc(@bset.id):
     <tr>
-      <td rowspan="@rowspan"><a href="/files?benchmarks=@{bset.id}@toolsGETList()">@bset.name</a></td>
+      <td
+      #if(@inlineView)
+              class="sep-right"
+      #end
+        rowspan="@rowspan"><a href="/files?benchmarks=@{bset.id}@toolsGETList()">@bset.name</a></td>
+      #if(@inlineView)
+        #inlineViewRow @statsFunc:
+      #end
     </tr>
-      #if(!@shortResults)
+      #if(!@inlineView)
         #longResultsRow @statsFunc:
       #end
     <tr>
@@ -247,7 +302,13 @@ value="@get(@grouping, 1)">@get(@grouping, 0)</option>
   <tr class="row overall">
     <td rowspan="@rowspan">Overall</td>
       #set @statsFunc = @getTotalStats:
-      #longResultsRow @statsFunc:
+      #if(@inlineView)
+        #inlineViewRow @statsFunc:
+      #end
+    </tr>
+      #if(!@inlineView)
+        #longResultsRow @statsFunc:
+      #end
   </table>
 </div> <!-- content -->
 </body>
