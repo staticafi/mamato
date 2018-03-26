@@ -182,7 +182,12 @@ function showOutput(archive, name) {
 #if(@showDifferent)
           checked="1"
 #end
-          onchange="toggleSettings(this)"> Show different only </br>
+          onchange="toggleSettings(this)"> Show different only
+   <input type="checkbox" name="incorrect"
+#if(@showIncorrect)
+          checked="1"
+#end
+          onchange="toggleSettings(this)"> Show incorrect results </br>
 #if(@filters)
   #for @f in @filters:
 	  <input type="text" name="filter"

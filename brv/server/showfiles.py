@@ -38,6 +38,7 @@ def showFiles(wfile, datamanager, opts):
         return
 
     _showDifferent = 'different_only' in opts
+    _showIncorrect = 'incorrect' in opts
     _filter = opts.setdefault('filter', [])
 
     results = datamanager.getRunInfos(bset_id, run_ids).getRows().items()
@@ -59,6 +60,17 @@ def showFiles(wfile, datamanager, opts):
             return False
 
         results = filter(some_different, results)
+
+    if _showIncorrect:
+        def some_incorrect(x):
+            L = x[1]
+            for r in L:
+                if r is not None and r.classification() == 'wrong':
+                    return True
+
+            return False
+
+        results = filter(some_incorrect, results)
 
     if _filter:
         filters = []
@@ -92,6 +104,7 @@ def showFiles(wfile, datamanager, opts):
                       'getBenchmarkURL' : _getBenchmarkURL,
                       'getShortName' : _getShortName,
                       'showDifferent' : _showDifferent,
+                      'showIncorrect' : _showIncorrect,
                       'descr' : getDescriptionOrVersion,
                       'filters' : _filter,
                       'results': results})
