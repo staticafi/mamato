@@ -19,18 +19,21 @@ def showOutput(wfile, datamanager, args):
 
 
     try:
-        with ZipFile(outputs_dir + archive, "r") as zip_ref:
-            try:
-                path = zip_ref.extract(name, path='/tmp')
-            except KeyError as e:
-                wfile.write(str(e).encode('utf-8'))
-                return
+        zip_ref = ZipFile(outputs_dir + archive, "r")
+        try:
+            path = zip_ref.extract(name, path='/tmp')
+        except KeyError as e:
+            wfile.write(str(e).encode('utf-8'))
+            zip_ref.close()
+            return
 
-            print('Got file ' + name)
-            output_file = open(path, 'rb')
-            wfile.write(output_file.read())
-            output_file.close()
-            unlink(path)
-    except FileNotFoundError as e:
+        zip_ref.close()
+
+        print('Got file ' + name)
+        output_file = open(path, 'rb')
+        wfile.write(output_file.read())
+        output_file.close()
+        unlink(path)
+    except IOError as e:
         wfile.write(str(e).encode('utf-8'))
 
