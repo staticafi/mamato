@@ -45,6 +45,13 @@
 	    padding: 0 0 0 0;
     }
 
+    .right {
+        text-align: right;
+    }
+    .center {
+        text-align: center;
+    }
+
     td.count {
 #if(@showTimes)
 	    padding: 0 1em 0 0;
@@ -143,7 +150,11 @@ value="@get(@grouping, 1)">@get(@grouping, 0)</option>
   <th>Category</th>
   <th>Classifications</th>
   #for @run in @runs:
-    <th>@run.tool() </br>
+    <th
+#if(@showTimes)
+      colspan="2"
+#end
+      >@run.tool() </br>
     #if(@run.date())
     @run.date()
     </br>
@@ -177,14 +188,19 @@ value="@get(@grouping, 1)">@get(@grouping, 0)</option>
         #for @bucket in @buckets:
           <tr class="row">
           #if(@bucketHasAnswers(@runs, -1, @bucket))
-            <td class="classif">
+            <td>
               <span class="@bucket.getNameClass()">@bucket.getDisplayName()</span>
             </td>
             #for @run in @runs:
             #set @stats = @getStats(@run, @bset.id):
-              <td class="classif">
-                <table><tr>
-                    <td>
+              <td
+                class="classif
+#if(@showTimes)
+right
+#else
+center
+#end
+                ">
                 <span class="@bucket.getNameClass()">
                   <abbr title="@bucket.getDisplayName()">@getBucketCount(@stats, @bucket)</abbr>
                 </span>
@@ -194,8 +210,6 @@ value="@get(@grouping, 1)">@get(@grouping, 0)</option>
                   <span style="font-size: 11px">@formatTime(@getBucketTime(@stats, @bucket))</span>
                 </td>
               #end
-                </tr></table>
-              </td>
             #end
           #end
           </tr>
@@ -206,7 +220,7 @@ value="@get(@grouping, 1)">@get(@grouping, 0)</option>
             <td>CPU time:</td>
             #for @run in @runs:
               #set @stats = @getStats(@run, @bset.id):
-              <td>
+              <td colspan="2">
                 <span>@formatTime(@stats.getAccTime())</span>
               </td>
             #end
@@ -220,34 +234,46 @@ value="@get(@grouping, 1)">@get(@grouping, 0)</option>
         </tr>
   #end
   <tr class="row overall">
-    <td rowspan="@lenPlus(@buckets,1)">Overall</td>
+    <td rowspan="@rowspan">Overall</td>
   </tr>
         #for @bucket in @buckets:
           <tr class="row">
           #if(@bucketHasAnswers(@runs, -1, @bucket))
-            <td class="classif">
+            <td>
               <span class="@bucket.getNameClass()">@bucket.getDisplayName()</span>
             </td>
             #for @run in @runs:
             #set @stats = @getTotalStats(@run):
-              <td class="classif">
-              <table>
-                <tr>
-                  <td>
+              <td
+                class="classif
+#if(@showTimes)
+right
+#else
+center
+#end
+                ">
                 <span class="@bucket.getNameClass()">
                   <abbr title="@bucket.getDisplayName()">@getBucketCount(@stats, @bucket)</abbr>
                 </span>
-                </td>
+              </td>
               #if(@showTimes)
                 <td class="time">
                   <span style="font-size: 11px">@formatTime(@getBucketTime(@stats, @bucket))</span>
                 </td>
               #end
-                </tr>
-                </table>
-              </td>
             #end
           #end
+          </tr>
+        #end
+        #if(@showTimes)
+          <tr>
+            <td>CPU time:</td>
+            #for @run in @runs:
+              #set @stats = @getTotalStats(@run):
+              <td colspan="2">
+                <span>@formatTime(@stats.getAccTime())</span>
+              </td>
+            #end
           </tr>
         #end
   </table>
