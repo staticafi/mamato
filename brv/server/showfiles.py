@@ -82,7 +82,8 @@ def showFiles(wfile, datamanager, opts):
             results = filter(match, results)
 
     results = list(results)
-    assert len(runs) == len(results[0][1])
+    if results:
+        assert len(runs) == len(results[0][1])
     outputs = [None2Empty(r.outputs()) for r in runs]
     render_template(wfile, 'files.html',
                      {'runs' : runs,
