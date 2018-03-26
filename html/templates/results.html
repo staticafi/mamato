@@ -22,6 +22,9 @@
     .row:nth-child(even) {
       background-color: #eeeeee;
     }
+    .sep-right {
+      border-right: 2px solid black;
+    }
 
     .header_row {
       background-color: #889988;
@@ -66,7 +69,6 @@
 
     td.time {
       padding: 0 0 0 1em;
-      border-left: 1px dotted black;
     }
 
     tr:hover {
@@ -127,11 +129,11 @@
     #set @rowspan = @lenPlus(@buckets, 2):
   #end
 
-  #macro resultsRow @statsFunc:
+  #macro longResultsRow @statsFunc:
         #for @bucket in @buckets:
           <tr class="row">
           #if(@bucketHasAnswers(@runs, -1, @bucket))
-            <td>
+            <td class="sep-right">
               <span class="@bucket.getNameClass()">@bucket.getDisplayName()</span>
             </td>
             #for @run in @runs:
@@ -142,6 +144,7 @@
 right
 #else
 center
+sep-right
 #end
                 ">
                 <span class="@bucket.getNameClass()">
@@ -149,7 +152,7 @@ center
                 </span>
                 </td>
               #if(@showTimes)
-                <td class="time">
+                <td class="time sep-right">
                   <span style="font-size: 11px">@formatTime(@getBucketTime(@stats, @bucket))</span>
                 </td>
               #end
@@ -160,10 +163,10 @@ center
 
         #if(@showTimes)
           <tr>
-            <td>CPU time:</td>
+            <td class="sep-right">CPU time:</td>
             #for @run in @runs:
               #set @stats = @statsFunc(@run):
-              <td colspan="2">
+              <td class="center sep-right" colspan="2">
                 <span>@formatTime(@stats.getAccTime())</span>
               </td>
             #end
@@ -227,11 +230,13 @@ value="@get(@grouping, 1)">@get(@grouping, 0)</option>
 
 
   #for @bset in @benchmarks_sets:
+    #set @statsFunc = @packStatsFunc(@bset.id):
     <tr>
       <td rowspan="@rowspan"><a href="/files?benchmarks=@{bset.id}@toolsGETList()">@bset.name</a></td>
     </tr>
-    #set @statsFunc = @packStatsFunc(@bset.id):
-    #resultsRow @statsFunc:
+      #if(!@shortResults)
+        #longResultsRow @statsFunc:
+      #end
     <tr>
       <td colspan="200">
         <hr />
@@ -241,8 +246,8 @@ value="@get(@grouping, 1)">@get(@grouping, 0)</option>
   #end
   <tr class="row overall">
     <td rowspan="@rowspan">Overall</td>
-  </tr>
-  #resultsRow @getTotalStats:
+      #set @statsFunc = @getTotalStats:
+      #longResultsRow @statsFunc:
   </table>
 </div> <!-- content -->
 </body>
