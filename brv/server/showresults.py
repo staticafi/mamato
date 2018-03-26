@@ -56,7 +56,7 @@ def showResults(wfile, datamanager, opts):
             display_name = c[0]
             if display_name == None or len(display_name) == 0:
                 display_name = "<i>&lt;missing classification&gt;</i>"
-            buckets.append(groupingmanager.GroupingBucket(display_name, "classif status-{}".format(c[1]), [c]))
+            buckets.append(groupingmanager.GroupingBucket(display_name, "classif status-{0}".format(c[1]), [c]))
 
     # give it some fixed order
     cats = [x for x in categories]

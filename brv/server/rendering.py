@@ -1,4 +1,5 @@
 #!/usr/bin/python
+import sys
 
 try:
     from quik import FileLoader
