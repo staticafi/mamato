@@ -129,6 +129,9 @@ def showResults(wfile, datamanager, opts):
                 return True
         return False
 
+    def _lenPlus(o, a):
+        return len(o) + a
+
     def _formatTime(time):
         "Transform time in seconds to hours, minutes and seconds"
         if not time:
@@ -166,5 +169,6 @@ def showResults(wfile, datamanager, opts):
                       'descr' : getDescriptionOrVersion,
                       'buckets': buckets,
                       'groupingId': groupingId,
+                      'lenPlus': _lenPlus,
                       'groupings': datamanager.getGroupingChoices() })
 
