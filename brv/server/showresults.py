@@ -151,6 +151,9 @@ def showResults(wfile, datamanager, opts):
         else:
             return ret + '{0} s'.format(int(time))
 
+    def _packStatsFunc(bset_id):
+        return (lambda run: _getStats(run, bset_id))
+
     render_template(wfile, 'results.html',
                      {'runs':runs, 'benchmarks_sets' : cats,
                       'toolsGETList' : _toolsGETList,
@@ -170,5 +173,6 @@ def showResults(wfile, datamanager, opts):
                       'buckets': buckets,
                       'groupingId': groupingId,
                       'lenPlus': _lenPlus,
+                      'packStatsFunc': _packStatsFunc,
                       'groupings': datamanager.getGroupingChoices() })
 
