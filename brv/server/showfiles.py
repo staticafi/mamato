@@ -4,6 +4,7 @@ from . rendering import render_template
 from . util import get_elem, getDescriptionOrVersion
 from os.path import basename
 from re import compile
+import sys
 
 def _getBenchmarkURL(name):
     base='https://github.com/sosy-lab/sv-benchmarks/tree/master'
@@ -39,6 +40,8 @@ def showFiles(wfile, datamanager, opts):
 
     _showDifferent = 'different_only' in opts
     _showIncorrect = 'incorrect' in opts
+    _differentTimes10 = 'time_diff_10' in opts
+    _differentTimes50 = 'time_diff_50' in opts
     _filter = opts.setdefault('filter', [])
 
     results = datamanager.getRunInfos(bset_id, run_ids).getRows().items()
@@ -60,6 +63,30 @@ def showFiles(wfile, datamanager, opts):
             return False
 
         results = filter(some_different, results)
+
+    if _differentTimes10:
+        def time_diff_10(x):
+            L = x[1]
+            min_x = min(L, key=lambda x: sys.float_info.max if x is None else x.cputime())
+            max_x = max(L, key=lambda x: -1 if x is None else x.cputime())
+            if min_x.cputime() > 1 and max_x.cputime() > min_x.cputime() * 1.1:
+                return True
+
+            return False
+
+        results = filter(time_diff_10, results)
+
+    if _differentTimes50:
+        def time_diff_50(x):
+            L = x[1]
+            min_x = min(L, key=lambda x: sys.float_info.max if x is None else x.cputime())
+            max_x = max(L, key=lambda x: -1 if x is None else x.cputime())
+            if min_x.cputime() > 1 and max_x.cputime() > min_x.cputime() * 1.5:
+                return True
+
+            return False
+
+        results = filter(time_diff_50, results)
 
     if _showIncorrect:
         def some_incorrect(x):
@@ -105,6 +132,8 @@ def showFiles(wfile, datamanager, opts):
                       'getShortName' : _getShortName,
                       'showDifferent' : _showDifferent,
                       'showIncorrect' : _showIncorrect,
+                      'timeDiff10' : _differentTimes10,
+                      'timeDiff50' : _differentTimes50,
                       'descr' : getDescriptionOrVersion,
                       'filters' : _filter,
                       'results': results})
