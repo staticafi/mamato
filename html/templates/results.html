@@ -48,6 +48,9 @@
     td.classif {
 	    padding: 0 0 0 0;
     }
+    td.classif-inline {
+      width: 3em;
+    }
 
     .right {
         text-align: right;
@@ -179,7 +182,7 @@ sep-right
       #for @run in @runs:
         #set @stats = @statsFunc(@run):
         #for @bucket in @buckets:
-          <td class="classif center">
+          <td class="classif classif-inline center">
             <span class="@bucket.getNameClass()">
               <abbr title="@bucket.getDisplayName()">@getBucketCount(@stats, @bucket)</abbr>
             </span>
