@@ -134,6 +134,9 @@
     .col-bp-@lenPlus(@buckets, -1) {
       border-right: 1px solid black;
     }
+    td.bc-inline {
+      width: 3em;
+    }
 </style>
 
 <title>mamato -- benchexec results viewer </title>
@@ -187,7 +190,7 @@
           #set @bucket = @get(@bp, 0):
           #for @pair in @bucketComponents:
             #set @c=@get(@pair, 0):
-            <td class="center col-bp-@get(@bp, 1)">
+            <td class="center bc-inline col-bp-@get(@bp, 1)">
               @c.render(@run, @bucket, @stats)
             </td>
           #end
