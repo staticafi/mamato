@@ -83,6 +83,7 @@ def showResults(wfile, datamanager, opts):
             buckets.append(groupingmanager.GroupingBucket(display_name, "classif status-{0}".format(c[1]), [c]))
 
     buckets = list(filter(lambda b: bucketHasAnswers(runs, b), buckets))
+    buckets = list(zip(buckets, range(len(buckets))))
     # give it some fixed order
     cats = [x for x in categories]
 

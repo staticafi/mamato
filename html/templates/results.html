@@ -19,16 +19,15 @@
       border: 3px solid #efefef;
     }
 
+    .sep-bot > td {
+      border-bottom: 1px solid black;
+    }
+
     .row:nth-child(even) {
       background-color: #eeeeee;
     }
     .sep-right {
       border-right: 1px solid black;
-    }
-    .sep-top {
-      border-top: 1px solid black;
-      height: 0px;
-      padding: 0;
     }
 
     .header_row {
@@ -119,6 +118,12 @@
     .status-correct-unconfirmed {
       color: orange;
     }
+
+#if(!@showTimes)
+    .row-@lenPlus(@buckets, -1) > td {
+      border-bottom: 1px solid black;
+    }
+#end
 </style>
 
 <title>mamato -- benchexec results viewer </title>
@@ -137,8 +142,10 @@
   #end
 
   #macro longResultsRow @statsFunc:
-        #for @bucket in @buckets:
-          <tr class="row">
+        #for @bp in @buckets:
+          #set @bucket_id = @get(@bp, 1):
+          #set @bucket = @get(@bp, 0):
+          <tr class="row row-@bucket_id">
             <td class="sep-right">
               <span class="@bucket.getNameClass()">@bucket.getDisplayName()</span>
             </td>
@@ -167,7 +174,7 @@ sep-right
         #end
 
         #if(@showTimes)
-          <tr>
+          <tr class="sep-bot">
             <td class="sep-right">CPU time:</td>
             #for @run in @runs:
               #set @stats = @statsFunc(@run):
@@ -181,7 +188,8 @@ sep-right
   #macro inlineViewRow @statsFunc:
       #for @run in @runs:
         #set @stats = @statsFunc(@run):
-        #for @bucket in @buckets:
+        #for @bp in @buckets:
+          #set @bucket = @get(@bp, 0):
           <td class="classif classif-inline center">
             <span class="@bucket.getNameClass()">
               <abbr title="@bucket.getDisplayName()">@getBucketCount(@stats, @bucket)</abbr>
@@ -193,7 +201,7 @@ sep-right
     </tr>
 
       #if(@showTimes)
-        <tr>
+        <tr class="row sep-bot">
           <td class="sep-right">CPU time:</td>
           #for @run in @runs:
             #set @stats = @statsFunc(@run):
@@ -279,7 +287,11 @@ value="@get(@grouping, 1)">@get(@grouping, 0)</option>
 
   #for @bset in @benchmarks_sets:
     #set @statsFunc = @packStatsFunc(@bset.id):
-    <tr>
+    <tr class="row
+              #if((@inlineView && !@showTimes) || !@inlineView)
+                  sep-bot
+              #end
+      ">
       <td
       #if(@inlineView)
               class="sep-right"
@@ -292,24 +304,8 @@ value="@get(@grouping, 1)">@get(@grouping, 0)</option>
       #if(!@inlineView)
         #longResultsRow @statsFunc:
       #end
-      <tr>
-        #if(@inlineView)
-        <td class="sep-top"></td>
-        #for @run in @runs:
-          <td colspan="@lenPlus(@buckets, 1)" class="sep-top">
-          </td>
-        #end
-        #else
-          <td colspan="2" class="sep-top"></td>
-          #for @run in @runs:
-            <td class="sep-top">
-              </td>
-          #end
-        #end
-      </tr>
-
   #end
-  <tr class="row overall">
+  <tr class="row sep-bot overall">
     <td
       #if(@inlineView)
               class="sep-right"
