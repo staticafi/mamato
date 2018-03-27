@@ -119,12 +119,12 @@
       color: orange;
     }
 
-#if(!@showTimes)
+#if(@lenPlus(@categoryComponents, 0) == 0)
     .row-@lenPlus(@buckets, -1) > td {
       border-bottom: 1px solid black;
     }
 #end
-    .col-@lenPlus(@buckets, -1) {
+    .col-@lenPlus(@bucketComponents, -1) {
       border-right: 1px solid black;
     }
 </style>
@@ -136,10 +136,7 @@
 
 #include("../header.html")
 
-  #set @rowspan = @lenPlus(@buckets, 1):
-  #if(@showTimes)
-    #set @rowspan = @lenPlus(@buckets, 2):
-  #end
+  #set @rowspan = @lenPlus(@buckets, @lenPlus(@categoryComponents, 1)):
   #if(@inlineView)
     #set @rowspan = 1:
   #end
@@ -154,35 +151,22 @@
             </td>
             #for @run in @runs:
             #set @stats = @statsFunc(@run):
-              <td
-                class="classif
-#if(@showTimes)
-right
-#else
-center
-sep-right
-#end
-                ">
-                <span class="@bucket.getNameClass()">
-                  <abbr title="@bucket.getDisplayName()">@getBucketCount(@stats, @bucket)</abbr>
-                </span>
-              </td>
-              #if(@showTimes)
-                <td class="time sep-right">
-                  <span style="font-size: 11px">@formatTime(@getBucketTime(@stats, @bucket))</span>
+              #for @c in @bucketComponents:
+                <td class="center col-@c">
+                  @c.render(@run, @bucket, @stats)
                 </td>
               #end
           #end
           </tr>
         #end
-
-        #if(@showTimes)
-          <tr class="sep-bot">
-            <td class="sep-right">CPU time:</td>
+        <!-- TODO for(component in categoryComponents) { component.render(@run, @stats) } -->
+        #for @c in @categoryComponents:
+          <tr class="row">
+            <td class="sep-right">@c.getDisplayName()</td>
             #for @run in @runs:
               #set @stats = @statsFunc(@run):
-              <td class="center sep-right" colspan="2">
-                <span>@formatTime(@stats.getAccTime())</span>
+              <td class="center sep-right" colspan="@lenPlus(@bucketComponents, 0)">
+                @c.render(@run, @stats)
               </td>
             #end
           </tr>
@@ -202,6 +186,7 @@ sep-right
       #end
     </tr>
 
+      <!-- TODO for(component in categoryComponents) { component.render(@run, @stats) } -->
       #if(@showTimes)
         <tr class="row sep-bot">
           <td class="sep-right">CPU time:</td>
@@ -259,10 +244,9 @@ value="@get(@grouping, 1)">@get(@grouping, 0)</option>
   #for @run in @runs:
     <th
 #if(@inlineView)
-      colspan="@lenPlus(@buckets,0)"
-#end
-#if(@showTimes)
-      colspan="2"
+      colspan="@lenPlus(@buckets, 0)"
+#else
+      colspan="@lenPlus(@bucketComponents, 0)"
 #end
       >@run.tool() </br>
     #if(@run.date())
