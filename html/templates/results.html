@@ -86,9 +86,15 @@
       border: 0;
     }
 
-    .overall {
-        border-top: 10px solid #eeeeee;
+    .overall > td {
+        border-top: 10px solid black;
     }
+
+    #if(!@inlineView)
+    tr.overall + tr > td {
+        border-top: 10px solid black;
+    }
+    #end
 
     .stats {
       border: 0;
@@ -137,6 +143,14 @@
     td.bc-inline {
       width: 3em;
     }
+
+
+    #if(!@inlineView || (@inlineView && @lenPlus(@categoryComponents,0) == 0))
+    .cat-row > td {
+      border-bottom: 1px solid black;
+    }
+    #end
+
 </style>
 
 <title>mamato -- benchexec results viewer </title>
@@ -216,7 +230,7 @@
   <form name="settingsform" action="/res">
     <select name="grouping" onchange="changeSettings(this)">
 #for @grouping in @groupings:
-<option 
+<option
 #if(@get(@grouping, 1) == @groupingId)
                             selected
 #end
@@ -279,11 +293,7 @@ value="@get(@grouping, 1)">@get(@grouping, 0)</option>
 
   #for @bset in @benchmarks_sets:
     #set @statsFunc = @packStatsFunc(@bset.id):
-    <tr class="row
-              #if((@inlineView && !@showTimes) || !@inlineView)
-                  sep-bot
-              #end
-      ">
+    <tr class="row cat-row">
       <td
       #if(@inlineView)
               class="sep-right"
@@ -297,7 +307,10 @@ value="@get(@grouping, 1)">@get(@grouping, 0)</option>
         #longResultsRow @statsFunc:
       #end
   #end
-  <tr class="row sep-bot overall">
+  <tr class="row
+      cat-row
+      overall
+    ">
     <td
       #if(@inlineView)
               class="sep-right"
@@ -311,19 +324,6 @@ value="@get(@grouping, 1)">@get(@grouping, 0)</option>
       #if(!@inlineView)
         #longResultsRow @statsFunc:
       #end
-        #if(@inlineView)
-        <td class="sep-top"></td>
-        #for @run in @runs:
-          <td colspan="@lenPlus(@buckets, 1)" class="sep-top">
-          </td>
-        #end
-        #else
-          <td colspan="2" class="sep-top"></td>
-          #for @run in @runs:
-            <td class="sep-top">
-              </td>
-          #end
-        #end
   </table>
 </div> <!-- content -->
 </body>
