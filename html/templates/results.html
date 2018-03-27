@@ -124,7 +124,14 @@
       border-bottom: 1px solid black;
     }
 #end
-    .col-@lenPlus(@bucketComponents, -1) {
+    .row-catcomp-@lenPlus(@categoryComponents, -1) > td {
+      border-bottom: 1px solid black;
+    }
+
+    .col-bucketcomp-@lenPlus(@bucketComponents, -1) {
+      border-right: 1px solid black;
+    }
+    .col-bp-@lenPlus(@buckets, -1) {
       border-right: 1px solid black;
     }
 </style>
@@ -151,17 +158,18 @@
             </td>
             #for @run in @runs:
             #set @stats = @statsFunc(@run):
-              #for @c in @bucketComponents:
-                <td class="center col-@c">
+              #for @pair in @bucketComponents:
+                #set @c=@get(@pair, 0):
+                <td class="center col-bucketcomp-@get(@pair, 1)">
                   @c.render(@run, @bucket, @stats)
                 </td>
               #end
           #end
           </tr>
         #end
-        <!-- TODO for(component in categoryComponents) { component.render(@run, @stats) } -->
-        #for @c in @categoryComponents:
-          <tr class="row">
+        #for @pair in @categoryComponents:
+          <tr class="row row-catcomp-@get(@pair, 1)">
+          #set @c = @get(@pair, 0):
             <td class="sep-right">@c.getDisplayName()</td>
             #for @run in @runs:
               #set @stats = @statsFunc(@run):
@@ -177,29 +185,24 @@
         #set @stats = @statsFunc(@run):
         #for @bp in @buckets:
           #set @bucket = @get(@bp, 0):
-          <td class="classif classif-inline col-@get(@bp,1) center">
-            <span class="@bucket.getNameClass()">
-              <abbr title="@bucket.getDisplayName()">@getBucketCount(@stats, @bucket)</abbr>
-            </span>
+          #for @pair in @bucketComponents:
+            #set @c=@get(@pair, 0):
+            <td class="center col-bp-@get(@bp, 1)">
+              @c.render(@run, @bucket, @stats)
             </td>
+          #end
         #end
       #end
     </tr>
 
-      <!-- TODO for(component in categoryComponents) { component.render(@run, @stats) } -->
-      #if(@showTimes)
-        <tr class="row sep-bot">
-          <td class="sep-right">CPU time:</td>
+      #for @pair in @categoryComponents:
+        <tr class="row row-catcomp-@get(@pair, 1)">
+        #set @c = @get(@pair, 0):
+          <td class="sep-right">@c.getDisplayName()</td>
           #for @run in @runs:
             #set @stats = @statsFunc(@run):
-            <td class="center sep-right" colspan="
-#if(@inlineView)
-@lenPlus(@buckets, 0)
-#else
-2
-#end
-              ">
-              <span>@formatTime(@stats.getAccTime())</span>
+            <td class="center sep-right" colspan="@lenPlus(@buckets, 0)">
+              @c.render(@run, @stats)
             </td>
           #end
         </tr>

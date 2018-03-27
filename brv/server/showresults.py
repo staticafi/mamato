@@ -96,7 +96,8 @@ class ResultsView:
         # parse opts and add components accordingly
         times_only_solved = 'show_times_only_solved' in opts
         if 'show_times' in opts:
-            bucket_components.append(BucketTimeComponent())
+            if 'inline_view' not in opts:
+                bucket_components.append(BucketTimeComponent())
             category_components.append(CategoryTimeComponent())
 
         # prepare grouping and categories
@@ -108,6 +109,9 @@ class ResultsView:
             grouping = datamanager.getGrouping(0)
         (buckets, cats) = ResultsView.crunchData(datamanager, runs, times_only_solved, grouping)
         groupings = datamanager.getGroupingChoices()
+
+        category_components = list(zip(category_components, range(len(category_components))))
+        bucket_components = list(zip(bucket_components, range(len(bucket_components))))
         return cls(runs, buckets, bucket_components, cats, category_components, datamanager.getGroupingChoices(), opts)
 
     def render(self, wfile):
@@ -138,6 +142,8 @@ class ResultsView:
         render_template(wfile, 'results.html',
                      {'runs':self._runs, 'benchmarks_sets' : self._categories,
                       'toolsGETList' : _toolsGETList,
+                      'showTimes': 'show_times' in self._opts,
+                      'showTimesOnlySolved': 'show_times_only_solved' in self._opts,
                       'getStats' : _getStats,
                       'getTotalStats' : _getTotalStats,
                       'get' : get_elem,
@@ -148,7 +154,8 @@ class ResultsView:
                       'bucketComponents': self._bucket_components,
                       'lenPlus': _lenPlus,
                       'categoryComponents': self._category_components,
-                      'groupings': self._groupings })
+                      'groupings': self._groupings,
+                      'groupingId': int(self._opts['grouping'][0]) })
 
 def showResults(wfile, datamanager, opts):
     if not 'run' in opts:
