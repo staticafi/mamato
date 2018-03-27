@@ -23,17 +23,18 @@
       background-color: #eeeeee;
     }
     .sep-right {
-      border-right: 2px solid black;
+      border-right: 1px solid black;
+    }
+    .sep-top {
+      border-top: 1px solid black;
+      height: 0px;
+      padding: 0;
     }
 
     .header_row {
       background-color: #889988;
       color: white;
       border: 3px solid #eeeeee;
-    }
-
-    table {
-        border-collapse: collapse;
     }
 
     th {
@@ -236,7 +237,7 @@ value="@get(@grouping, 1)">@get(@grouping, 0)</option>
           <br>
   </form>
 
-  <table style="margin-top: 15px;">
+  <table cellpadding="0" cellspacing="0" style="margin-top: 15px;">
   <tr class="header_row">
   <th>Category</th>
   #if(!@inlineView)
@@ -288,15 +289,29 @@ value="@get(@grouping, 1)">@get(@grouping, 0)</option>
       #if(!@inlineView)
         #longResultsRow @statsFunc:
       #end
-    <tr>
-      <td colspan="200">
-        <hr />
-      </td>
-    </tr>
+      <tr>
+        #if(@inlineView)
+        <td class="sep-top"></td>
+        #for @run in @runs:
+          <td colspan="@lenPlus(@buckets, 1)" class="sep-top">
+          </td>
+        #end
+        #else
+          <td colspan="2" class="sep-top"></td>
+          #for @run in @runs:
+            <td class="sep-top">
+              </td>
+          #end
+        #end
+      </tr>
 
   #end
   <tr class="row overall">
-    <td rowspan="@rowspan">Overall</td>
+    <td
+      #if(@inlineView)
+              class="sep-right"
+      #end
+      rowspan="@rowspan">Overall</td>
       #set @statsFunc = @getTotalStats:
       #if(@inlineView)
         #inlineViewRow @statsFunc:
@@ -305,6 +320,19 @@ value="@get(@grouping, 1)">@get(@grouping, 0)</option>
       #if(!@inlineView)
         #longResultsRow @statsFunc:
       #end
+        #if(@inlineView)
+        <td class="sep-top"></td>
+        #for @run in @runs:
+          <td colspan="@lenPlus(@buckets, 1)" class="sep-top">
+          </td>
+        #end
+        #else
+          <td colspan="2" class="sep-top"></td>
+          #for @run in @runs:
+            <td class="sep-top">
+              </td>
+          #end
+        #end
   </table>
 </div> <!-- content -->
 </body>
