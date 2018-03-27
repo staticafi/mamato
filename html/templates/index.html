@@ -49,10 +49,12 @@ function toggleCheck(td) {
 	  #end
           #for @run in @runs:
 	  <tr>
-	     <td title="@run_details(@run)" onclick="toggleCheck(this)">
+	     <td title="@run_details(@run)">
 	     <input type="checkbox" name="run" value="@run.getID()">
+	     <span  onclick="toggleCheck(this.parentElement)">
              &nbsp;&nbsp;&nbsp;&nbsp;[@run.date()]
 	     @descr(@run)
+	     </span>
              </td>
 
 	     <td class="tag-box">
