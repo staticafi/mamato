@@ -111,6 +111,25 @@ function addFilter(filt, filtName = 'filter') {
     document.location.search += "&" + filtName + "=" + filt;
 }
 
+function setFilter(filtName = 'filter', value) {
+    // filter out old filters
+    var kvp = document.location.search.substr(1).split('&');
+    var new_search = "";
+    var i = kvp.length;
+    var new_search="";
+    while (i--) {
+        var x = kvp[i].split('=');
+        if (x == '' || x[0] == filtName) {
+            continue;
+        } else {
+            new_search += "&" + kvp[i];
+        }
+    }
+
+    //alert('Updating loc to: ' + new_search);
+    document.location.search = new_search + "&" + filtName + "=" + value;
+}
+
 function updateFiltersOnEnter(event, filtName='filter') {
     if (event.keyCode == 13) {
         updateFilters(filtName);

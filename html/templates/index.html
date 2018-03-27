@@ -58,7 +58,7 @@ function toggleCheck(td) {
 	     <td class="tag-box">
 	     #for @tag in @getTags(@run):
 	        <a href="javascript: void(0);"
-		   onclick="addFilter('@tag.getName()', 'tags-filter');"
+		   onclick="setFilter('tags-filter', '@tag.getName()');"
 		   class="tag" style="@tag.getCSS()">@tag.getName()</a>
 	     #end
 	     </td>
@@ -90,20 +90,18 @@ function toggleCheck(td) {
                  >
 		 Description filter</input>
     <br> <br>
-#if(@tags_filters)
-  #for @f in @tags_filters:
-	  <input type="text" name="tags-filter"
-	         value="@f"
-		 onkeydown="updateFiltersOnEnter(event, 'tags-filter');"
-		 >
-		 Tags filter</input></br>
-  #end
+
+#for @tag in @tags:
+   <input type="checkbox" name="tags-filter" value="@tag.getName()"
+   #if(@isIn(@tags_filters, @tag.getName()))
+   checked
+   #end
+   >
+   <span class="tag" style="@tag.getCSS()">@tag.getName()</span></br>
 #end
-	  <input type="text" name="tags-filter"
-		 onkeydown="updateFiltersOnEnter(event, 'tags-filter');"
-                 >
-		 Tags filter</input>
-    <br>
+   </br>
+   <input type="submit" value="Apply filters" style="float: right; margin-right: 3rem;">
+
   </form>
 
 </div> <!-- content-right -->
