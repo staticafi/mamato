@@ -58,13 +58,18 @@ def showTools(wfile, datamanager, opts):
         def _runs_filter(run):
             descr = run.run_description() if run.run_description() else ''
             for (_, rf) in filters:
+                # satisfies if all tags matches (AND)
                 if not rf.search(descr):
                     return False
 
-            tags = run.tags() if run.tags() else ''
-            for (_, rf) in tags_filters:
-                if not rf.search(tags):
-                    return False
+            if tags_filters:
+                tags = run.tags() if run.tags() else ''
+                for (_, rf) in tags_filters:
+                    # satisfied if any tag matches (OR)
+                    if rf.search(tags):
+                        return True
+
+                return False
 
             return True
     else:

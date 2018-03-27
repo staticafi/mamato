@@ -22,8 +22,6 @@ def manageTools(wfile, datamanager, args):
 
     tags_config_file = open('brv/tags.conf')
     tags_config = filter(lambda x: x, map(lambda x: x.strip(), tags_config_file.readlines()))
-    print(tags_config)
-
     tags = list(datamanager.tagsmanager.getTags())
 
     render_template(wfile, 'manage.html',
