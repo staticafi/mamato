@@ -115,6 +115,52 @@
               ]
           }
       ]
+    },
+    {
+      "displayName": "By Correctness",
+      "buckets": [
+        {
+          "displayName": "correct",
+          "nameClass": "classif status-correct",
+          "classifications": [
+            {"result": "false(valid-deref)", "class": "correct"},
+            {"result": "false(valid-free)", "class": "correct"},
+            {"result": "false(valid-memtrack)", "class": "correct"},
+            {"result": "true", "class": "correct"}
+          ]
+        },
+        {
+          "displayName": "unconfirmed",
+          "nameClass": "classif status-correct-unconfirmed",
+          "classifications": [
+            {"result": "false(valid-deref)", "class": "correct-unconfirmed"},
+            {"result": "false(valid-free)", "class": "correct-unconfirmed"},
+            {"result": "false(valid-memtrack)", "class": "correct-unconfirmed"},
+            {"result": "true", "class": "correct-unconfirmed"}
+          ]
+        },
+        {
+          "displayName": "wrong",
+          "nameClass": "classif status-wrong",
+          "classifications": [
+            {"result": "false(valid-deref)", "class": "wrong"},
+            {"result": "false(valid-free)", "class": "wrong"},
+            {"result": "false(valid-memtrack)", "class": "wrong"},
+            {"result": "true", "class": "wrong"}
+          ]
+        },
+        {
+          "displayName": "other",
+          "nameClass": "classif status-error",
+          "classifications": [
+            {"result": "ERROR (1)", "class": "error" },
+            {"result": "OUT OF MEMORY", "class": "error" },
+            {"result": "unknown", "class": "unknown" },
+            {"result": "TIMEOUT", "class": "error" },
+            {"result": "TIMEOUT (timeout)", "class": "error" }
+          ]
+        }
+      ]
     }
   ]
 }
