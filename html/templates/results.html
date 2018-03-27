@@ -124,6 +124,9 @@
       border-bottom: 1px solid black;
     }
 #end
+    .col-@lenPlus(@buckets, -1) {
+      border-right: 1px solid black;
+    }
 </style>
 
 <title>mamato -- benchexec results viewer </title>
@@ -163,7 +166,7 @@ sep-right
                 <span class="@bucket.getNameClass()">
                   <abbr title="@bucket.getDisplayName()">@getBucketCount(@stats, @bucket)</abbr>
                 </span>
-                </td>
+              </td>
               #if(@showTimes)
                 <td class="time sep-right">
                   <span style="font-size: 11px">@formatTime(@getBucketTime(@stats, @bucket))</span>
@@ -190,13 +193,12 @@ sep-right
         #set @stats = @statsFunc(@run):
         #for @bp in @buckets:
           #set @bucket = @get(@bp, 0):
-          <td class="classif classif-inline center">
+          <td class="classif classif-inline col-@get(@bp,1) center">
             <span class="@bucket.getNameClass()">
               <abbr title="@bucket.getDisplayName()">@getBucketCount(@stats, @bucket)</abbr>
             </span>
             </td>
         #end
-        <td class="sep-right"></td>
       #end
     </tr>
 
@@ -207,7 +209,7 @@ sep-right
             #set @stats = @statsFunc(@run):
             <td class="center sep-right" colspan="
 #if(@inlineView)
-@lenPlus(@buckets, 1)
+@lenPlus(@buckets, 0)
 #else
 2
 #end
@@ -257,7 +259,7 @@ value="@get(@grouping, 1)">@get(@grouping, 0)</option>
   #for @run in @runs:
     <th
 #if(@inlineView)
-      colspan="@lenPlus(@buckets,1)"
+      colspan="@lenPlus(@buckets,0)"
 #end
 #if(@showTimes)
       colspan="2"
