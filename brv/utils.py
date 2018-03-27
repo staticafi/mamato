@@ -1,10 +1,12 @@
 #!/usr/bin/env python
 
-import sys
 
 def err(msg):
+    import sys
+
     sys.stderr.write(msg)
     sys.stderr.write('\n')
+    sys.stderr.flush()
     sys.exit(1)
 
 def dbg(msg):

@@ -57,7 +57,7 @@ function enableEntryOnClick(obj, tid) {
 function setTags(tid, tags) {
 	httpGetAsync('set?run='+tid+'&tags='+tags, function (resp) {
 			hideStatusBar();
-			// no reload needed, the entry is updated
+			location.reload();
 			});
 	showStatusBar("Setting tags to tool " + tid);
 	return false;
@@ -109,16 +109,18 @@ Status bar
           #for @run in @tool_with_options.getRuns():
 	     <tr>
 	     <td class="description">
-	     [@run.date()] [@run.getID()]
+	     [@run.date()] [@run.getID()]</td>
+	     <td>
              <input class="description-entry" readonly="true"
+                    style="min-width: 30em;"
                     ondblclick="enableEntry(this, @run.getID())" value="@descr(@run)" />
 	     <td/>
+	     <td>&nbsp;</td>
 	     <td class="tags">tags:
 	     	<input value="@None2Empty(@run.tags())"
 			onkeypress="updateTags(event, @run.getID(), this)"/>
 	     </td>
-	     <td class="rename"><a href="javascript:void(0)"
-                    onclick="enableEntryOnClick(this, @run.getID());" >rename</a> </td>
+	     <td>&nbsp;</td>
 	     <td class="delete"><a href="javascript:void(0)"
                     onclick="deleteTool(@run.getID(), this.parentElement.parentElement);">delete</a> </td>
              </tr>
@@ -133,17 +135,23 @@ Status bar
 </div> <!-- content-left -->
 <div id="content-right">
 <h3>Tags setting</h3>
-<form id="tags-config">
-<textarea cols="60" rows="10" form="tags-config" name="tags-config" id="tags-config-text" style="white-space: pre-wrap;">
-#for @line in @tags_config:
-  @line.strip()
-#end
-</textarea>
-<input type="submit" onclick="updateTagsConfig();return false;" value="Update">
-</form>
+<div style="line-height: 150%; width: 80%">
 #for @tag in @tags:
    <span class="tag" style="@tag.getCSS()">@tag.getName()</span>
 #end
+</div>
+<br> <br>
+<form id="tags-config">
+<textarea cols="60" rows="10" form="tags-config" name="tags-config"
+          id="tags-config-text" style="white-space: pre-wrap;">
+#for @line in @tags_config:
+@line
+#end
+</textarea>
+<br> <br>
+<input type="submit" onclick="updateTagsConfig();return false;" value="Update">
+</form>
+
 
 </div> <!-- content-right -->
 <div id="content-bottom">
