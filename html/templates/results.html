@@ -252,6 +252,21 @@ value="@get(@grouping, 1)">@get(@grouping, 0)</option>
           checked="1"
   #end
           onchange="toggleSettings(this)">solved only)
+          Scoring:
+          <select name="scoring" onchange="changeSettings(this)">
+#for @scoring in @scorings:
+<option
+  #if(@get(@scoring, 1) == 0)
+          selected
+  #end
+  value="0">Hidden</option>
+<option
+  #if(@get(@scoring, 1) == @scoringId)
+          selected
+  #end
+  value="@get(@scoring, 1)">@get(@scoring, 0)</option>
+#end
+            </select>
           <br>
   </form>
 

@@ -4,10 +4,10 @@ from . rendering import render_template
 from . util import get_elem, getDescriptionOrVersion
 from math import ceil
 from .. import groupingmanager
-from . results.components import BucketTimeComponent, CategoryTimeComponent, BucketCountComponent
+from . results.components import *
 
 class ResultsView:
-    def __init__(self, runs, buckets, bucket_components, categories, category_components, groupings, opts):
+    def __init__(self, runs, buckets, bucket_components, categories, category_components, groupings, scorings, opts):
         self._runs = runs
         self._buckets = buckets
         self._bucket_components = bucket_components
@@ -15,6 +15,7 @@ class ResultsView:
         self._category_components = category_components
         self._opts = opts
         self._groupings = groupings
+        self._scorings = scorings
 
     # TODO this method is way too long
     @classmethod
@@ -110,9 +111,17 @@ class ResultsView:
         (buckets, cats) = ResultsView.crunchData(datamanager, runs, times_only_solved, grouping)
         groupings = datamanager.getGroupingChoices()
 
+        # initialize scoring if requested
+        scoringId = 0
+        if 'scoring' in opts:
+            scoringId = int(opts['scoring'][0])
+        scoring = datamanager.getScoring(scoringId)
+        if scoring is not None:
+            category_components.append(CategoryScoreComponent(scoring))
+
         category_components = list(zip(category_components, range(len(category_components))))
         bucket_components = list(zip(bucket_components, range(len(bucket_components))))
-        return cls(runs, buckets, bucket_components, cats, category_components, datamanager.getGroupingChoices(), opts)
+        return cls(runs, buckets, bucket_components, cats, category_components, datamanager.getGroupingChoices(), datamanager.getScoringChoices(), opts)
 
     def render(self, wfile):
         def _toolsGETList():
@@ -142,6 +151,10 @@ class ResultsView:
         if 'grouping' in self._opts:
             groupingId = int(self._opts['grouping'][0])
 
+        scoringId = 0
+        if 'scoring' in self._opts:
+            scoringId = int(self._opts['scoring'][0])
+
         render_template(wfile, 'results.html',
                      {'runs':self._runs, 'benchmarks_sets' : self._categories,
                       'toolsGETList' : _toolsGETList,
@@ -158,6 +171,8 @@ class ResultsView:
                       'lenPlus': _lenPlus,
                       'categoryComponents': self._category_components,
                       'groupings': self._groupings,
+                      'scorings': self._scorings,
+                      'scoringId': scoringId,
                       'groupingId': groupingId })
 
 def showResults(wfile, datamanager, opts):

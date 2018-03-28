@@ -51,6 +51,22 @@ class CategoryTimeComponent(CategoryComponent):
             result = formatTime(stats.getAccTime())
         return result
 
+class CategoryScoreComponent(CategoryComponent):
+    def __init__(self, scoring):
+        self._scoring = scoring
+
+    def getDisplayName(self):
+        return 'Score'
+
+    def getValue(self, run, stats):
+        if not stats:
+            return '0'
+        classifications = stats.getClassifications()
+        score = 0
+        for classif in classifications:
+            score += stats.getCount(classif) * self._scoring.getPoints(classif)
+        return str(score)
+
 # define CategoryComponent-s here
 
 class BucketComponent:

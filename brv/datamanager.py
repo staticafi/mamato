@@ -4,6 +4,7 @@ from brv.toolsmanager import ToolsManager
 from brv.tagsmanager import TagsManager
 from brv.toolrun import RunInfosTable
 from brv.groupingmanager import GroupingManager
+from brv.scoringmanager import ScoringManager
 
 class DataManager(object):
     """
@@ -16,6 +17,7 @@ class DataManager(object):
         self.toolsmanager = ToolsManager()
         self.tagsmanager = TagsManager()
         self.groupingmanager = GroupingManager()
+        self.scoringmanager = ScoringManager()
         self._db_reader = None
         self._db_config = db_conf
 
@@ -96,3 +98,9 @@ class DataManager(object):
 
     def getGrouping(self, id):
         return self.groupingmanager.getGrouping(id)
+
+    def getScoringChoices(self):
+        return self.scoringmanager.getScoringChoices()
+
+    def getScoring(self, id):
+        return self.scoringmanager.getScoringScheme(id)
