@@ -123,11 +123,12 @@ class BucketTimeComponent(BucketComponent):
             self.getValue(run, bucket, stats),
             '</span>'
         ])
+
     def getValue(self, run, bucket, stats):
         result = 0
         if stats:
             for classif in bucket.getClassifications():
-                result += stats.getCount(classif)
+                result += stats.getTime(classif)
         return formatTime(result)
 
 # define BucketComponent-s here
