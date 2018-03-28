@@ -187,14 +187,14 @@ function showOutput(archive, run_name, name) {
 #if(@showIncorrect)
           checked="1"
 #end
-          onchange="toggleSettings(this)"> Show incorrect results
+          onchange="toggleSettings(this)"> Show incorrect only
    <input type="checkbox" name="time_diff_10"
 #if(@timeDiff10)
           checked="1"
 #end
           onchange="toggleSettings(this)"> Time difference &ge; 10%
    <input type="checkbox" name="time_diff_50"
-#if(@timeDiff10)
+#if(@timeDiff50)
           checked="1"
 #end
           onchange="toggleSettings(this)"> Time difference &ge; 50% </br>
