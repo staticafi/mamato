@@ -138,6 +138,9 @@ class ResultsView:
             return len(o) + a
 
         times_only_solved = 'show_times_only_solved' in self._opts
+        groupingId = 0
+        if 'grouping' in self._opts:
+            groupingId = int(self._opts['grouping'][0])
 
         render_template(wfile, 'results.html',
                      {'runs':self._runs, 'benchmarks_sets' : self._categories,
@@ -155,7 +158,7 @@ class ResultsView:
                       'lenPlus': _lenPlus,
                       'categoryComponents': self._category_components,
                       'groupings': self._groupings,
-                      'groupingId': int(self._opts['grouping'][0]) })
+                      'groupingId': groupingId })
 
 def showResults(wfile, datamanager, opts):
     if not 'run' in opts:
