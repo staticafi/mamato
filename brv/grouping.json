@@ -1,14 +1,10 @@
 {
   "groupings": [
     {
-      "displayName": "No Grouping",
-      "buckets": []
-    },
-    {
       "displayName": "Default Grouping",
       "buckets": [
         {
-          "displayName": "false",
+          "displayName": "false corr.",
           "nameClass": "classif status-correct",
           "classifications": [
             {"result": "false(valid-deref)", "class": "correct"},
@@ -18,14 +14,14 @@
           ]
         },
         {
-          "displayName": "true",
+          "displayName": "true corr.",
           "nameClass": "classif status-correct",
           "classifications": [
             {"result": "true", "class": "correct"}
           ]
         },
         {
-          "displayName": "false",
+          "displayName": "false unconf.",
           "nameClass": "classif status-correct-unconfirmed",
           "classifications": [
             {"result": "false(valid-deref)", "class": "correct-unconfirmed"},
@@ -46,11 +42,13 @@
           "displayName": "unknown",
           "nameClass": "classif status-unknown",
           "classifications": [
-            {"result": "unknown", "class": "unknown" }
+            {"result": "unknown", "class": "unknown" },
+            {"result": "", "class": "None" },
+            {"result": "false(unreach-call)", "class": "unknown"}
           ]
         },
         {
-          "displayName": "false",
+          "displayName": "false wrong",
           "nameClass": "classif status-wrong",
           "classifications": [
             {"result": "false(valid-deref)", "class": "wrong"},
@@ -63,6 +61,7 @@
           "displayName": "error",
           "nameClass": "classif status-error",
           "classifications": [
+            {"result": "ERROR", "class": "error" },
             {"result": "ERROR (1)", "class": "error" },
             {"result": "OUT OF MEMORY", "class": "error" }
           ]
@@ -73,7 +72,7 @@
       "displayName": "True, False, Other",
       "buckets": [
           {
-              "displayName": "false",
+              "displayName": "false corr.",
               "nameClass": "classif status-correct",
               "classifications": [
                 {"result": "false(valid-deref)", "class": "correct"},
@@ -83,14 +82,14 @@
               ]
           },
           {
-              "displayName": "true",
+              "displayName": "true corr.",
               "nameClass": "classif status-correct",
               "classifications": [
                 {"result": "true", "class": "correct"}
               ]
           },
           {
-              "displayName": "false",
+              "displayName": "false unconf.",
               "nameClass": "classif status-correct-unconfirmed",
               "classifications": [
                 {"result": "false(valid-deref)", "class": "correct-unconfirmed"},
@@ -100,7 +99,7 @@
               ]
           },
           {
-              "displayName": "false",
+              "displayName": "false wrong",
               "nameClass": "classif status-wrong",
               "classifications": [
                 {"result": "false(valid-deref)", "class": "wrong"},
@@ -113,11 +112,14 @@
               "displayName": "other",
               "nameClass": "classif",
               "classifications": [
+                {"result": "ERROR", "class": "error" },
                 {"result": "ERROR (1)", "class": "error" },
                 {"result": "OUT OF MEMORY", "class": "error" },
                 {"result": "TIMEOUT", "class": "error" },
                 {"result": "TIMEOUT (timeout)", "class": "error" },
-                {"result": "unknown", "class": "unknown" }
+                {"result": "unknown", "class": "unknown" },
+                {"result": "false(unreach-call)", "class": "unknown"},
+                {"result": "", "class": "None" }
               ]
           }
       ]
@@ -162,14 +164,21 @@
           "displayName": "other",
           "nameClass": "classif status-error",
           "classifications": [
+            {"result": "ERROR", "class": "error" },
             {"result": "ERROR (1)", "class": "error" },
             {"result": "OUT OF MEMORY", "class": "error" },
             {"result": "unknown", "class": "unknown" },
+            {"result": "false(unreach-call)", "class": "unknown"},
             {"result": "TIMEOUT", "class": "error" },
-            {"result": "TIMEOUT (timeout)", "class": "error" }
+            {"result": "TIMEOUT (timeout)", "class": "error" },
+            {"result": "", "class": "None" }
           ]
         }
       ]
+    },
+    {
+      "displayName": "No Grouping",
+      "buckets": []
     }
   ]
 }
