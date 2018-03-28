@@ -21,7 +21,9 @@ def showOutput(wfile, datamanager, args):
     try:
         zip_ref = ZipFile(outputs_dir + archive, "r")
         try:
-            path = zip_ref.extract(name, path='/tmp')
+            # the file name is archive name (without .zip) + the name
+            filename = '{0}/{1}'.format(archive[:-4], name)
+            path = zip_ref.extract(filename, path='/tmp')
         except KeyError as e:
             wfile.write(str(e).encode('utf-8'))
             zip_ref.close()
