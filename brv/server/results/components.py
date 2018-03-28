@@ -3,7 +3,7 @@
 from math import ceil
 
 # define utility functions here
-def formatTime(time):
+def formatTime(time, round_to_largest):
     "Transform time in seconds to hours, minutes and seconds"
     if not time:
         return '0 s'
@@ -13,14 +13,18 @@ def formatTime(time):
         hrs = time // 3600
         time = time - hrs*3600
         ret = '{0} h'.format(int(hrs))
+        if round_to_largest:
+            return ret
     if time >= 60 or ret != '':
         mins = time // 60
         time = time - mins*60
         ret += ' {0} min'.format(int(mins))
+        if round_to_largest:
+            return ret
     if ret != 0:
         return ret + ' {0} s'.format(int(time))
     else:
-        return ret + '{0} s'.format(int(time))
+        return '0 s'
 
 class CategoryComponent:
     def __init__(self):
@@ -36,8 +40,8 @@ class CategoryComponent:
         pass
 
 class CategoryTimeComponent(CategoryComponent):
-    def __init__(self):
-        pass
+    def __init__(self, round_to_largest):
+        self._round_to_largest = round_to_largest
 
     def getDisplayName(self):
         return 'CPU Time:'
@@ -46,9 +50,9 @@ class CategoryTimeComponent(CategoryComponent):
     Return String
     """
     def getValue(self, run, stats):
-        result = '0'
+        result = '0 s'
         if stats:
-            result = formatTime(stats.getAccTime())
+            result = formatTime(stats.getAccTime(), self._round_to_largest)
         return result
 
 class CategoryScoreComponent(CategoryComponent):
@@ -129,6 +133,6 @@ class BucketTimeComponent(BucketComponent):
         if stats:
             for classif in bucket.getClassifications():
                 result += stats.getTime(classif)
-        return formatTime(result)
+        return formatTime(result, False)
 
 # define BucketComponent-s here

@@ -99,7 +99,7 @@ class ResultsView:
         if 'show_times' in opts:
             if 'inline_view' not in opts:
                 bucket_components.append(BucketTimeComponent())
-            category_components.append(CategoryTimeComponent())
+            category_components.append(CategoryTimeComponent('inline_view' in opts))
 
         # prepare grouping and categories
         groupingId = 0
