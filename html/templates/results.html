@@ -177,7 +177,7 @@
             #set @stats = @statsFunc(@run):
               #for @pair in @bucketComponents:
                 #set @c=@get(@pair, 0):
-                <td class="center col-bucketcomp-@get(@pair, 1)">
+                <td style="width: 3em" class="center col-bucketcomp-@get(@pair, 1)">
                   @c.render(@run, @bucket, @stats)
                 </td>
               #end
