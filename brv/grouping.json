@@ -13,7 +13,8 @@
           "classifications": [
             {"result": "false(valid-deref)", "class": "correct"},
             {"result": "false(valid-free)", "class": "correct"},
-            {"result": "false(valid-memtrack)", "class": "correct"}
+            {"result": "false(valid-memtrack)", "class": "correct"},
+            {"result": "false(unreach-call)", "class": "correct"}
           ]
         },
         {
@@ -29,7 +30,8 @@
           "classifications": [
             {"result": "false(valid-deref)", "class": "correct-unconfirmed"},
             {"result": "false(valid-free)", "class": "correct-unconfirmed"},
-            {"result": "false(valid-memtrack)", "class": "correct-unconfirmed"}
+            {"result": "false(valid-memtrack)", "class": "correct-unconfirmed"},
+            {"result": "false(unreach-call)", "class": "correct-unconfirmed"}
           ]
         },
         {
@@ -53,7 +55,8 @@
           "classifications": [
             {"result": "false(valid-deref)", "class": "wrong"},
             {"result": "false(valid-free)", "class": "wrong"},
-            {"result": "false(valid-memtrack)", "class": "wrong"}
+            {"result": "false(valid-memtrack)", "class": "wrong"},
+            {"result": "false(unreach-call)", "class": "wrong"}
           ]
         },
         {
@@ -75,7 +78,8 @@
               "classifications": [
                 {"result": "false(valid-deref)", "class": "correct"},
                 {"result": "false(valid-free)", "class": "correct"},
-                {"result": "false(valid-memtrack)", "class": "correct"}
+                {"result": "false(valid-memtrack)", "class": "correct"},
+                {"result": "false(unreach-call)", "class": "correct"}
               ]
           },
           {
@@ -91,7 +95,8 @@
               "classifications": [
                 {"result": "false(valid-deref)", "class": "correct-unconfirmed"},
                 {"result": "false(valid-free)", "class": "correct-unconfirmed"},
-                {"result": "false(valid-memtrack)", "class": "correct-unconfirmed"}
+                {"result": "false(valid-memtrack)", "class": "correct-unconfirmed"},
+                {"result": "false(unreach-call)", "class": "correct-unconfirmed"}
               ]
           },
           {
@@ -100,7 +105,8 @@
               "classifications": [
                 {"result": "false(valid-deref)", "class": "wrong"},
                 {"result": "false(valid-free)", "class": "wrong"},
-                {"result": "false(valid-memtrack)", "class": "wrong"}
+                {"result": "false(valid-memtrack)", "class": "wrong"},
+                {"result": "false(unreach-call)", "class": "wrong"}
               ]
           },
           {
@@ -126,6 +132,7 @@
             {"result": "false(valid-deref)", "class": "correct"},
             {"result": "false(valid-free)", "class": "correct"},
             {"result": "false(valid-memtrack)", "class": "correct"},
+            {"result": "false(unreach-call)", "class": "correct"},
             {"result": "true", "class": "correct"}
           ]
         },
@@ -136,6 +143,7 @@
             {"result": "false(valid-deref)", "class": "correct-unconfirmed"},
             {"result": "false(valid-free)", "class": "correct-unconfirmed"},
             {"result": "false(valid-memtrack)", "class": "correct-unconfirmed"},
+            {"result": "false(unreach-call)", "class": "correct-unconfirmed"},
             {"result": "true", "class": "correct-unconfirmed"}
           ]
         },
@@ -146,6 +154,7 @@
             {"result": "false(valid-deref)", "class": "wrong"},
             {"result": "false(valid-free)", "class": "wrong"},
             {"result": "false(valid-memtrack)", "class": "wrong"},
+            {"result": "false(unreach-call)", "class": "wrong"},
             {"result": "true", "class": "wrong"}
           ]
         },
