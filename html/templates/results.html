@@ -151,6 +151,19 @@
     }
     #end
 
+    ul.inline-catcomp-list {
+      list-style-type: none;
+      padding: 0;
+      margin: 0;
+      align: center;
+    }
+    li.inline-catcomp-item {
+      float: right;
+      display: block;
+      padding-right: 0.5em;
+      padding-left: 0.5em;
+    }
+
 </style>
 
 <title>mamato -- benchexec results viewer </title>
@@ -185,8 +198,8 @@
           </tr>
         #end
         #for @pair in @categoryComponents:
-          <tr class="row row-catcomp-@get(@pair, 1)">
           #set @c = @get(@pair, 0):
+          <tr style="@c.getStyle()" class="row row-catcomp-@get(@pair, 1)">
             <td class="sep-right">@c.getDisplayName()</td>
             #for @run in @runs:
               #set @stats = @statsFunc(@run):
@@ -212,19 +225,36 @@
       #end
     </tr>
 
-      #for @pair in @categoryComponents:
-        <tr class="row row-catcomp-@get(@pair, 1)">
+      #if(@lenPlus(@categoryComponents, 0) > 0)
+      <tr style="background-color: #A5D5E6;" class="row row-catcomp-@lenPlus(@categoryComponents, -1)">
+        <td class="center sep-right">
+          <ul class="inline-catcomp-list">
+        #for @pair in @categoryComponents:
         #set @c = @get(@pair, 0):
-          <td class="sep-right">@c.getDisplayName()</td>
-          #for @run in @runs:
-            #set @stats = @statsFunc(@run):
-            <td class="center sep-right" colspan="@lenPlus(@buckets, 0)">
-              @c.render(@run, @stats)
-            </td>
+          <li class="inline-catcomp-item">@c.getDisplayName()</li>
           #end
-        </tr>
+          </ul>
+        </td>
+        #for @run in @runs:
+        <td class="center sep-right" colspan="@lenPlus(@buckets, 0)">
+        <ul class="inline-catcomp-list">
+          #for @pair in @categoryComponents:
+          #set @c = @get(@pair, 0):
+              #set @stats = @statsFunc(@run):
+              <li class="inline-catcomp-item
+                #if(@get(@pair, 1) > 0)
+                sep-right
+                #end
+                ">
+                <abbr title="@c.getDisplayName()">@c.render(@run, @stats)</abbr>
+              </li>
+            #end
+          #end
+        </ul>
+        </td>
+        #end
+      </tr>
       #end
-  #end
 
 <div id="content">
   <form name="settingsform" action="/res">

@@ -39,12 +39,15 @@ class CategoryComponent:
     def getValue(self, run, stats):
         pass
 
+    def getStyle(self):
+        return ''
+
 class CategoryTimeComponent(CategoryComponent):
     def __init__(self, round_to_largest):
         self._round_to_largest = round_to_largest
 
     def getDisplayName(self):
-        return 'CPU Time:'
+        return 'CPU Time'
 
     """
     Return String
@@ -54,6 +57,9 @@ class CategoryTimeComponent(CategoryComponent):
         if stats:
             result = formatTime(stats.getAccTime(), self._round_to_largest)
         return result
+
+    def getStyle(self):
+        return 'background-color: #A5D5E6;'
 
 class CategoryScoreComponent(CategoryComponent):
     def __init__(self, scoring):
@@ -70,6 +76,9 @@ class CategoryScoreComponent(CategoryComponent):
         for classif in classifications:
             score += stats.getCount(classif) * self._scoring.getPoints(classif)
         return str(score)
+
+    def getStyle(self):
+        return 'background-color: #A5D5E6;'
 
 # define CategoryComponent-s here
 
