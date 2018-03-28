@@ -1,0 +1,18 @@
+{
+ "schemes": [
+   {
+     "displayName": "SV-COMP",
+     "scoring": [
+       { "result": "true", "class": "wrong", "points": -32 },
+       { "result": "true", "class": "correct-unconfirmed", "points": 1 },
+       { "result": "true", "class": "correct", "points": 2 },
+       { "result": "false(valid-deref)", "class": "correct", "points": 1 },
+       { "result": "false(valid-free)", "class": "correct", "points": 1 },
+       { "result": "false(valid-memtrack)", "class": "correct", "points": 1 },
+       { "result": "false(valid-deref)", "class": "wrong", "points": -16 },
+       { "result": "false(valid-free)", "class": "wrong", "points": -16 },
+       { "result": "false(valid-memtrack)", "class": "wrong", "points": -16 }
+     ]
+   }
+ ]
+}
