@@ -16,6 +16,11 @@ def parse_cmd():
                         help='Directory with benchexec outputs (xml/bzip2 files + .zip with outputs)')
     parser.add_argument('--description', default=None,
                         help='Description of the run given in xml files')
+
+    parser.add_argument('--append-vers', default=None,
+                        help='Append the given string to the version of the tool. Can be used to store another run on the same version and distinguish it')
+    parser.add_argument('--allow-duplicates', action='store_true', default=False,
+                        help='Store also results that we already have')
     parser.add_argument('files', nargs="*", metavar="FILES",
                         help="XML files. If given, no server is run and the files are parsed and stored to dtabase")
     return parser.parse_args()
@@ -34,7 +39,8 @@ if __name__ == "__main__":
         total = 0
         for xmlfile in args.files:
             print('Parsing: {0}'.format(xmlfile))
-            cnt = parser.parseToDB(xmlfile, args.outputs, args.description)
+            cnt = parser.parseToDB(xmlfile, args.outputs, args.description,
+                                   args.append_vers, args.allow_duplicates)
             print('Got {0} results from {1}'.format(cnt, xmlfile))
             total += cnt
 

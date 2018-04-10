@@ -115,11 +115,15 @@ class XMLParser(object):
 
         return ret
 
-    def parseToDB(self, filePath, outputs = None, descr = None):
+    def parseToDB(self, filePath, outputs = None, descr = None,
+                  append_vers = None, allow_duplicates = False):
         writer = self._db_writer
         xmlfl = minidom.parse(filePath)
 
         tool_info = _createToolRun(xmlfl, descr)
+        if append_vers:
+            tool_info.tool_version += append_vers
+
         tool_run_id = writer.getOrCreateToolInfoID(tool_info, outputs)
         benchmarks_set_id = writer.getOrCreateBenchmarksSetID(tool_info.block)
 
