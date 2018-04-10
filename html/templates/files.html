@@ -39,6 +39,8 @@ function showOutput(archive, run_name, name) {
             renderOutput(modal, "Do not have outputs for this run");
             return;
         } else {
+		// do not show the old output until we get the text
+            	renderOutput(modal, "");
 		getOutput(modal, archive, run_name, name);
 	}
 }
