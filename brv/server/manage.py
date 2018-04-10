@@ -29,7 +29,7 @@ def manageTools(wfile, datamanager, args):
                       'None2Empty': _none2Empty,
                       'get' : get_elem,
                       'tags': tags,
-                      'tags_config': tags_config,
+                      'tags_config': list(tags_config),
                       'descr' : getDescriptionOrVersion})
 
     tags_config_file.close()
