@@ -27,6 +27,9 @@ from . proxy import DatabaseProxy
 def None2Null(s):
     return "'{0}'".format(s) if s else 'NULL'
 
+def None2Empty(s):
+    return "{0}".format(s) if s else ''
+
 class DatabaseWriter(DatabaseProxy):
     """
     DatabaseProxy specialized for updating the database
@@ -81,11 +84,12 @@ class DatabaseWriter(DatabaseProxy):
             INSERT INTO tool_run
               (tool_id, options, memlimit, cpulimit, date,
                description, name, outputs)
-              VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', {5}, '{6}', {7});
+              VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', {7});
             """.format(tool_id, toolinfo.options,
                        toolinfo.memlimit, toolinfo.timelimit,
                        toolinfo.date,
-                       None2Null(toolinfo.benchmarkname + ":" +toolinfo.description),
+                       None2Empty(toolinfo.benchmarkname) + ":" +
+                       None2Empty(toolinfo.description),
                        toolinfo.name, None2Null(outputs))
             self.query_noresult(q)
             tool_run_id = self.queryInt("SELECT LAST_INSERT_ID();")
