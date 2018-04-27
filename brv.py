@@ -50,7 +50,7 @@ def getrundescr(s):
 def load_data_with_prefix(path, prefix, xmls, bz2s, outputs, descr = None):
     outputs = filter(lambda s : s.startswith(prefix), outputs)
     # we must have only one file with outputs
-    assert len(outputs) == 1
+    assert len(outputs) <= 1
 
     # filter the xmls and prefix with the directory path
     tmp = []
@@ -79,13 +79,15 @@ def load_data_with_prefix(path, prefix, xmls, bz2s, outputs, descr = None):
         bzfile.close()
 
 
-    total = load_xmls(xmls, outputs[0], descr)
+    outfile = outputs[0] if outputs else None
+    total = load_xmls(xmls, outfile, descr)
     print('Added {0} results in total'.format(total))
 
     # copy the archive with outputs
-    from shutil import copyfile
-    copyfile(os.path.join(path, outputs[0]), os.path.join('outputs/', outputs[0]))
-    print('Copied the output: {0}'.format(outputs[0]))
+    if outfile:
+        from shutil import copyfile
+        copyfile(os.path.join(path, outfile), os.path.join('outputs/', outfile))
+        print('Copied the output: {0}'.format(outputs[0]))
 
     # clean the temporary xml files
     for f in bz2xmls:
@@ -106,10 +108,10 @@ def load_dir(path):
             outputs.append(fl)
         elif fl.endswith('.xml'):
             xmls.append(fl)
+            prefixes.add(getrundescr(fl))
         elif fl.endswith('.bz2'):
             bz2s.append(fl)
-
-        prefixes.add(getrundescr(fl))
+            prefixes.add(getrundescr(fl))
 
     for (prefix, descr) in prefixes:
         print("Found results for: {0}.{1}".format(prefix, descr))
