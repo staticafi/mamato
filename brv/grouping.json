@@ -77,6 +77,13 @@
             {"result": "ERROR (1)", "class": "error" },
             {"result": "OUT OF MEMORY", "class": "error" }
           ]
+        },
+        {
+          "displayName": "true wrong",
+          "nameClass": "classif status-wrong",
+          "classifications": [
+            {"result": "true", "class": "wrong"}
+          ]
         }
       ]
     },
@@ -131,6 +138,13 @@
                 {"result": "false(no-overflow)", "class": "wrong"},
                 {"result": "false(no-deadlock)", "class": "wrong"}
               ]
+          },
+          {
+            "displayName": "true wrong",
+            "nameClass": "classif status-wrong",
+            "classifications": [
+              {"result": "true", "class": "wrong"}
+            ]
           },
           {
               "displayName": "other",
