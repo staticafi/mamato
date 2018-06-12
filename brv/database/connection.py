@@ -111,7 +111,7 @@ class DatabaseConnection(object):
             err('Failed querying db: {0}\n\n{1}'.format(e.args[1], q))
 
         if not ret is None:
-            return ret[0]
+            return int(ret[0])
 
     def query(self, q):
         """
