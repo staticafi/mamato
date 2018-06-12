@@ -57,7 +57,8 @@ class QueryResult(object):
 
 class DatabaseConnection(object):
     def __init__(self, conffile = None):
-        self._conn, self._cursor = _database_connect(conffile)
+        self._conffile = conffile
+        self._connect()
 
     def __del__(self):
         # if creating the database failed, then the attribute _conn
@@ -67,8 +68,18 @@ class DatabaseConnection(object):
             self._conn.close()
         del self
 
+    def _connect(self):
+        self._conn, self._cursor = _database_connect(self._conffile)
+
+    def _check_conn(self):
+        # try to re-establish connection if it is down.
+        # NOTE: this will do rollback
+        if self._conn.open == 0:
+            self._conn.ping(True)
+
     def _execute(self, q):
         #dbg(q)
+        self._check_conn()
         self._cursor.execute(q)
 
     def query_unchecked(self, q):
