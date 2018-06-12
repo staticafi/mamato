@@ -16,6 +16,17 @@ function toggleCheck(td) {
 		input.checked = true;
 	}
 }
+
+function reloadTools() {
+	httpGetAsync('env?reload=1',
+			function (resp) {
+				location.reload();
+			});
+
+	showStatusBar("Reloading tools");
+	return false;
+}
+
 </script>
 <head>
 <meta charset="utf-8" />
@@ -106,6 +117,8 @@ function toggleCheck(td) {
 
   </form>
 
+<h3>Manage:</h3>
+<a href="#" onclick="reloadTools()">Reload tools</a>
 </div> <!-- content-right -->
 <div id="content-bottom">
 </div> <!-- content-bottom -->

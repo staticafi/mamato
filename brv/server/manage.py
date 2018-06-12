@@ -68,3 +68,8 @@ def setToolRunAttr(wfile, datamanager, opts):
         tags = opts['tags'][0]
         datamanager.setToolRunTags(run_id, tags)
 
+def adjustEnviron(wfile, datamanager, opts):
+    _reload = 'reload' in opts
+    if _reload:
+        datamanager.reloadData()
+

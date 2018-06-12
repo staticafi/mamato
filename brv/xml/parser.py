@@ -129,7 +129,8 @@ class XMLParser(object):
 
         rcnt = writer.getRunCount(tool_run_id, benchmarks_set_id)
         if rcnt and rcnt > 0:
-            print("Already have results for this xml file: {0}".format(filePath))
+            print(" -- Already have results for this xml file: {0}".format(filePath))
+            print(" -- The results are under id {0}, benchmarks set id {1}".format(tool_run_id, benchmarks_set_id))
             return 0
 
         assert tool_run_id is not None

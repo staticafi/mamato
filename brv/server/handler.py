@@ -16,7 +16,7 @@ from . showfiles import showFiles
 from . showtools import showTools
 from . showresults import showResults
 from . showoutput import showOutput
-from . manage import manageTools, performDelete, setToolRunAttr
+from . manage import manageTools, performDelete, setToolRunAttr, adjustEnviron
 
 # the tools manager object -- it must be globals,
 # since handler is created for each request and we do
@@ -49,6 +49,7 @@ handlers = {
     'delete'            : performDelete,
     'output'            : showOutput,
     'set'               : setToolRunAttr,
+    'env'               : adjustEnviron,
 }
 
 # see http://www.acmesystems.it/python_httpd

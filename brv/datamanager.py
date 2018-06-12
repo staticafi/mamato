@@ -44,6 +44,7 @@ class DataManager(object):
 
         tool_runs = self._db_reader.getToolRuns()
         self.toolsmanager.reset()
+        self.tagsmanager.reset()
         for run in tool_runs:
             self.toolsmanager.add(run)
             self.tagsmanager.addToolRunTags(run)

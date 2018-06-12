@@ -99,7 +99,7 @@ def sum_elems(lhs, rhs):
 
 class RunsStats(object):
     def __init__(self, cat, bset_id):
-        # '(status, classification)' -> count
+        # '(status, classification)' -> (count, time)
         self._stats = {}
         self._benchmarks_name = cat
         self._benchmarks_id = bset_id

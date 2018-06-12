@@ -40,22 +40,12 @@ class TagsManager(object):
             self._tags[name] = Tag(name, splt[1].strip())
         f.close()
 
-    def reloadTags(self):
-        f = open(self._tags_conf_path)
-        for line in f:
-            line = line.strip()
-            if not line:
-                continue
+    def reset(self):
+        self._mapping = {}
 
-            splt = line.split('=')
-            assert len(splt) == 2
-            name = splt[0].strip()
-            tag = self._tags.get(name)
-            if tag:
-                tag.setCSS(splt[1].strip())
-            else:
-                self._tags[name] = Tag(name, splt[1].strip())
-        f.close()
+    def reloadTags(self):
+        self._tags = {}
+        self._tagsFromFile(self._tags_conf_path)
 
     def _getOrCreateTag(self, name, css = ''):
         return self._tags.setdefault(name, Tag(name, css))
