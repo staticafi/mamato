@@ -29,8 +29,13 @@ def showFiles(wfile, datamanager, opts):
         return
 
     run_ids = list(map(int, opts['run']))
-    run_ids.sort()
     runs = datamanager.getToolRuns(run_ids)
+    # sort the runs according to their ID's,
+    # (and sort also the ID's)
+    # so that we have always the same order
+    # in the header and in the results
+    run_ids.sort()
+    sorted(runs, key=lambda r : r.getID())
 
     try:
         bset_id = int(opts['benchmarks'][0])
