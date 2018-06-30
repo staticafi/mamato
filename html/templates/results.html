@@ -268,8 +268,13 @@ function enableRenaming(obj, tid) {
       </tr>
       #end
 
-<div id="content">
   <form name="settingsform" action="/res">
+<div id="content">
+  <a href="/diagram?
+#for @run in @runs:
+run=@run.getID()&
+#end
+           ">Visual</a>
     <select name="grouping" onchange="changeSettings(this)">
 #for @grouping in @groupings:
 <option

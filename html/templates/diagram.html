@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+      <script src="../js/brv.js"></script>
+        <meta charset="utf-8" />
+        <link rel="stylesheet" type="text/css" href="../style.css">
+
+        <!-- docs: https://developers.google.com/chart/interactive/docs/gallery/sankey -->
+        <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
+        <script type="text/javascript">
+         google.charts.load('current', {'packages':['sankey']});
+         google.charts.setOnLoadCallback(drawChart);
+
+         function drawChart() {
+             var data = new google.visualization.DataTable();
+
+             // columns are individual runs
+             data.addColumn('string', 'From');
+             data.addColumn('string', 'To');
+
+             data.addColumn('number', 'Count');
+             data.addRows([
+                @printTransitions()
+             ]);
+
+
+             // Instantiates and draws our chart, passing in some options.
+             var chart = new google.visualization.Sankey(document.getElementById('sankey_basic'));
+             // the second parameter is chart options
+             chart.draw(data, {});
+         }
+        </script>
+
+
+        <title>mamato -- benchexec results viewer </title>
+    </head>
+    <body>
+        #include("../header.html")
+        <div id="content">
+        <form name="settingsform" action="/res">
+                <a href="/results?
+#for @run in @runs:
+run=@run.getID()&
+#end
+grouping=@groupingId
+                         ">Table</a>
+                <select name="grouping" onchange="changeSettings(this)">
+                    #for @grouping in @groupings:
+                    <option
+                        #if(@get(@grouping, 1) == @groupingId)
+                        selected
+                        #end
+                        value="@get(@grouping, 1)">@get(@grouping, 0)</option>
+                    #end
+                </select>
+            </form>
+            <div id="sankey_basic" style="width: 90%; height: 400px;"></div>
+            </div>
+    </body>
+</html>

@@ -16,6 +16,7 @@ from . showfiles import showFiles
 from . showtools import showTools
 from . showresults import showResults
 from . showoutput import showOutput
+from . showdiagram import showDiagram
 from . manage import manageTools, performDelete, setToolRunAttr, adjustEnviron
 
 # the tools manager object -- it must be globals,
@@ -44,6 +45,7 @@ def sendFile(wfile, path):
 handlers = {
     'root'              : showTools,
     'results'           : showResults,
+    'diagram'           : showDiagram,
     'files'             : showFiles,
     'manage'            : manageTools,
     'delete'            : performDelete,
