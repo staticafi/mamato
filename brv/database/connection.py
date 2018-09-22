@@ -71,16 +71,27 @@ class DatabaseConnection(object):
     def _connect(self):
         self._conn, self._cursor = _database_connect(self._conffile)
 
-    def _check_conn(self):
-        # try to re-establish connection if it is down.
-        # NOTE: this will do rollback
-        if self._conn.open == 0:
-            self._conn.ping(True)
-
     def _execute(self, q):
-        #dbg(q)
-        self._check_conn()
-        self._cursor.execute(q)
+        try:
+            self._cursor.execute(q)
+        except MySQLdb.Error as e:
+            print("Got exception: '{0}'".format(str(e)))
+            print("args: '{0}'".format(e.args))
+            print("args[0]: '{0}'".format(e.args[0]))
+            if e.args[0] == 2006: # "MySQL server has gone away"
+                print("Connection closed, sending ping to re-establish")
+                # NOTE: this can do rollback, but if the connection
+                # is down, we probably don't care
+                self._conn.ping(True)
+                if self._conn.open == 0:
+                    print("Ping didn't work, reconnecting")
+                    self._connect()
+
+                assert self._conn.open == 1
+            else:
+                print("Reraising exception")
+                # different exception, re-raise it
+                raise e
 
     def query_unchecked(self, q):
         """
