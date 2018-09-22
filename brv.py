@@ -48,7 +48,7 @@ def getrundescr(s):
     return ('.'.join(splt[:2]), splt[3])
 
 def load_data_with_prefix(path, prefix, xmls, bz2s, outputs, descr = None):
-    outputs = filter(lambda s : s.startswith(prefix), outputs)
+    outputs = list(filter(lambda s : s.startswith(prefix), outputs))
     # we must have only one file with outputs
     assert len(outputs) <= 1
 
@@ -69,7 +69,7 @@ def load_data_with_prefix(path, prefix, xmls, bz2s, outputs, descr = None):
         if not bz.startswith(prefix):
             continue
 
-        bzfile = BZ2File(path+bz)
+        bzfile = BZ2File(os.path.join(path,bz))
         data = bzfile.read()
         tmpfile = NamedTemporaryFile(suffix='.xml', delete=False)
         tmpfile.write(data)
