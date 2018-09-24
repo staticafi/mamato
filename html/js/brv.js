@@ -175,6 +175,10 @@ function httpGetAsync(theUrl, callback = null)
 
 function showStatusBar(text, in_progress = true) {
 	var bar = document.getElementById("status-bar");
+	if (!bar) {
+		return;
+	}
+
 	bar.innerHTML = "<p>";
 	if (in_progress) {
 		bar.innerHTML += "<img alt=\"In Progress... \" src=\"../img/loader.gif\" height=\"24\">";
@@ -187,4 +191,77 @@ function hideStatusBar() {
 	var bar = document.getElementById("status-bar");
 	bar.innerHTML = "";
 	bar.setAttribute("class", "status-bar-hidden");
+}
+
+// source: https://stackoverflow.com/questions/247483/http-get-request-in-javascript
+function deleteTool(tid, delElem) {
+	if (!confirm("Do you really want to delete tool run id " + tid + "?")) {
+		return false;
+	}
+
+	httpGetAsync('delete?run='+tid, function (resp) {
+			hideStatusBar();
+			delElem.parentNode.removeChild(delElem);
+			//location.reload();
+			});
+
+	showStatusBar("Deleting tool " + tid);
+	return false;
+}
+
+function renameTool(obj, tid, descr) {
+	httpGetAsync('set?run='+tid+'&description='+descr, function (resp) {
+			hideStatusBar();
+			// no reload needed, the entry is updated
+			});
+	showStatusBar("Renaming tool " + tid);
+	return false;
+}
+
+function enableEntry(obj, tid) {
+	obj.removeAttribute("readonly");
+	obj.onkeypress = function(e) {
+		if (e.keyCode == 13) { //enter
+			renameTool(obj, tid, obj.value);
+			obj.setAttribute("readonly", "true");
+			return false;
+		} else if (e.keyCode == 27) { //escape
+			obj.setAttribute("readonly", "true");
+			return false;
+		}
+		return true;
+	}
+	return false;
+}
+
+function enableEntryOnClick(obj, tid) {
+	var tr = obj.parentElement.parentElement;
+	var ent = tr.getElementsByClassName("description-entry")[0];
+	return enableEntry(ent, tid);
+}
+
+function setTags(tid, tags) {
+	httpGetAsync('set?run='+tid+'&tags='+tags, function (resp) {
+			hideStatusBar();
+			location.reload();
+			});
+	showStatusBar("Setting tags to tool " + tid);
+	return false;
+}
+
+function updateTags(e, rid, obj) {
+	if (e.keyCode == 13) { //enter
+		return setTags(rid, obj.value);
+	}
+	return true;
+}
+
+function updateTagsConfig() {
+	conf = document.getElementById("tags-config-text").value;
+	httpGetAsync('set?tags_config='+encodeURIComponent(conf), function (resp) {
+			hideStatusBar();
+			location.reload();
+			});
+	showStatusBar("Updating tags configuration");
+	return false;
 }

@@ -5,6 +5,18 @@
 -->
 
 <script src="../js/brv.js"></script>
+<script>
+function enableRenaming(obj, tid) {
+	var text = obj.innerHTML;
+	obj.innerHTML = '<input value="' + text + '"/>';
+	ipt = obj.childNodes[0];
+	enableEntry(ipt, tid);
+
+	ipt.onchange = function(e) {
+		obj.innerHTML = ipt.value;
+	}
+}
+</script>
 
 <head>
 <meta charset="utf-8" />
@@ -326,7 +338,7 @@ value="@get(@grouping, 1)">@get(@grouping, 0)</option>
     </div>
     #if(@run.run_description())
       </br>
-      @run.run_description()
+      <span ondblclick="enableRenaming(this, @run.getID())">@run.run_description()</span>
     #else
       <i>(no descr)</i>
     #end
