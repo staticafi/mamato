@@ -9,8 +9,35 @@
         <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 
         <script type="text/javascript">
+         var rowMapping = {
+           @printRowMapping()
+         };
          google.charts.load('current', {'packages':['sankey']});
          google.charts.setOnLoadCallback(drawChart);
+         var chart;
+
+         function addLink() {
+           if (chart.getSelection().length == 0)
+             return;
+           var row = rowMapping[chart.getSelection()[0].row];
+
+           var qs = 'grouping=@groupingId';
+           console.log(row);
+           for (var r in row.runs) {
+             var run = row.runs[r];
+             qs += '&run=' + run.toolrun;
+             qs += '&bucket=' + escape(run.bucket);
+           }
+
+           var a = document.createElement('a');
+           a.innerHTML = 'See filtered files';
+           a.setAttribute("href", "/filter?" + qs);
+
+           var container = document.getElementById('link_here');
+           if (container.firstChild != undefined)
+             container.removeChild(container.firstChild);
+           container.appendChild(a);
+         }
 
          function drawChart() {
              var data = new google.visualization.DataTable();
@@ -26,9 +53,19 @@
 
 
              // Instantiates and draws our chart, passing in some options.
-             var chart = new google.visualization.Sankey(document.getElementById('sankey_basic'));
+             chart = new google.visualization.Sankey(document.getElementById('sankey_basic'));
+             google.visualization.events.addListener(chart, 'select', addLink);
              // the second parameter is chart options
-             chart.draw(data, {});
+             chart.draw(data, {
+               sankey: {
+                 node: {
+                   interactivity: true
+                 },
+                 link: {
+                   interactivity: true
+                 }
+               }
+             });
          }
         </script>
 
@@ -55,6 +92,7 @@ grouping=@groupingId
                     #end
                 </select>
             </form>
+            <div id="link_here"></div>
             <div id="sankey_basic" style="width: 90%; height: 400px;"></div>
             </div>
     </body>

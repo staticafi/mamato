@@ -58,6 +58,9 @@ class DataManager(object):
     def getToolInfoStats(self, which):
         return self._db_reader.getToolInfoStats(which)
 
+    def getBenchmarksSets(self):
+        return self._db_reader.getBenchmarksSets()
+
     def getRunInfos(self, bset_id, toolruns_id):
         table = RunInfosTable()
         for tid in toolruns_id:

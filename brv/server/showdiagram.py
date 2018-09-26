@@ -104,7 +104,7 @@ class FilesData:
                     valid = False
                     break
 
-                now = (toolRun.run_description(), self.getBucket(runInfo).getDisplayName())
+                now = (toolRun, self.getBucket(runInfo).getDisplayName())
                 if prev is not None:
                     # if they belong in the same bucket, discard the transition
                     if different_only and prev[1] == now[1]:
@@ -155,12 +155,28 @@ class DiagramView:
         def get_elem(a, n):
             return a[n]
 
+        def print_row_mapping(transitions):
+            result = ''
+            for (i, (k, v)) in zip(range(len(transitions)), transitions.items()):
+                result += str(i) + ': {'
+                result += 'runs: ['
+                for t in k:
+                    result += '{'
+                    result += 'toolrun: ' + str(t[0].getID()) + ','
+                    result += 'bucket: "' + t[1] + '"'
+                    result += '},'
+                result = result [:-1]
+                result += ']'
+                result += '},'
+            result = result [:-1]
+            return result
+
         def print_transitions(transitions):
             result = ''
             for (k, v) in transitions.items():
                 result += '['
                 for t in k:
-                    result += '"' + (t[1].upper() + ' ' + t[0]).replace('"', '\"') + '"' + ',' + '\n'
+                    result += '"' + (t[1].upper() + ' ' + t[0].run_description()).replace('"', '\"') + '"' + ',' + '\n'
                 result += str(v) + '],'
             result = result [:-1]
             return result
@@ -169,6 +185,7 @@ class DiagramView:
             'get': get_elem,
             'runs': self.runs,
             'printTransitions': lambda: print_transitions(self.transitions),
+            'printRowMapping': lambda: print_row_mapping(self.transitions),
             'buckets': self.buckets,
             'grouping': self.grouping,
             'groupingId': self.groupingId,

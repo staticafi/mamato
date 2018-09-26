@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<!--
+   index.html template
+
+   Author: Marek Chalupa <xchalup4@fi.muni.cz>, 2017
+-->
+
+<script src="../js/brv.js"></script>
+<script>
+function renderOutput(modal, text) {
+	var txt = modal.getElementsByClassName("text")[0];
+	txt.innerHTML = "<pre>\n" + text + "\n</pre>";
+}
+
+function getOutput(modal, archive, run_name, name) {
+	httpGetAsync('output?arch='+archive+'&file='+run_name + "." + name + ".log" , function (resp) {
+			hideStatusBar();
+			renderOutput(modal, resp);
+			});
+	showStatusBar("Retrieving output");
+	return false;
+}
+
+function modalToggle(modal) {
+        modal.classList.toggle("show-modal");
+//if (modal.classList.contains("show-modal")) {
+//	// we turned the modal on
+//} else {
+//	// we turned the modal off
+//}
+}
+
+function showOutput(archive, run_name, name) {
+	var modal = document.getElementById("modal");
+	modalToggle(modal);
+
+	if (archive == '' || archive == null) {
+            renderOutput(modal, "Do not have outputs for this run");
+            return;
+        } else {
+		// do not show the old output until we get the text
+            	renderOutput(modal, "");
+		getOutput(modal, archive, run_name, name);
+	}
+}
+
+</script>
+
+<head>
+<meta charset="utf-8" />
+<link rel="stylesheet" type="text/css" href="../style.css">
+<style>
+    table, th, td {
+      border: 1px solid black;
+      padding: 3px 3px 3px 3px;
+      #border-collapse: collapse;
+      # border-spacing: 5px;
+    }
+
+    .row {
+      background-color: #fefffe;
+    }
+
+    .header_row {
+      background-color: #889988;
+      color: white;
+    }
+
+    tr:hover {
+      background-color: #f3fff3;
+    }
+
+    tr.header_row:hover {
+      background-color: #889988;
+    }
+
+    td.cpu_time {
+      font-size: 12px;
+    }
+
+    .status {
+      cursor: pointer;
+    }
+
+    .status-correct {
+      color: green;
+    }
+
+    .status-incorrect {
+      color: red;
+    }
+
+    .status-wrong {
+      color: red;
+    }
+
+
+    .status-error {
+      color: purple;
+    }
+
+    .status-unknown {
+      color: orange;
+    }
+
+    .status-correct-unconfirmed {
+      color: orange;
+    }
+
+    a {
+	    text-decoration: none;
+	    color: black;
+    }
+
+    .modal {
+        position: fixed;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        opacity: 0;
+        visibility: hidden;
+        transform: scale(1.1);
+        transition: visibility 0s linear 0.25s, opacity 0.25s 0s, transform 0.25s;
+    }
+    .modal-content {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: white;
+        padding: 1rem 1.5rem;
+        min-width: 24rem;
+        max-width: 90%;
+        max-height: 80%;
+        border-radius: 0.5rem;
+	overflow-y: auto;
+    }
+    .close-button {
+        float: right;
+        width: 1.5rem;
+        line-height: 1.5rem;
+        text-align: center;
+        cursor: pointer;
+        border-radius: 0.25rem;
+        background-color: lightgray;
+    }
+    .close-button:hover {
+        background-color: darkgray;
+    }
+    .show-modal {
+        opacity: 1;
+        visibility: visible;
+        transform: scale(1.0);
+        transition: visibility 0s linear 0s, opacity 0.25s 0s, transform 0.25s;
+    }
+
+</style>
+<title>mamato -- benchexec results viewer </title>
+</head>
+
+<body>
+
+#include("../header.html")
+
+<div class="modal" id="modal">
+    <div class="modal-content" id="modal-content">
+	<span class="close-button"
+              onclick="modalToggle(parentElement.parentElement);">
+		&times;
+	</span>
+	<div id="status-bar" class="status-bar-hidden">
+	Status bar
+	</div>
+	<div class="text" style="padding-top: 1.5em">
+	<!-- here will be the text of the file -->
+	</div>
+    </div>
+</div>
+
+<div id="content">
+  <form id="settingsform" action="/res">
+   <input type="checkbox" name="different_only"
+#if(@showDifferent)
+          checked="1"
+#end
+          onchange="toggleSettings(this)"> Show different only
+   <input type="checkbox" name="incorrect"
+#if(@showIncorrect)
+          checked="1"
+#end
+          onchange="toggleSettings(this)"> Show incorrect only
+   <input type="checkbox" name="time_diff_10"
+#if(@timeDiff10)
+          checked="1"
+#end
+          onchange="toggleSettings(this)"> Time difference &ge; 10%
+   <input type="checkbox" name="time_diff_50"
+#if(@timeDiff50)
+          checked="1"
+#end
+          onchange="toggleSettings(this)"> Time difference &ge; 50% </br>
+
+
+#if(@filters)
+  #for @f in @filters:
+	  <input type="text" name="filter"
+	         value="@f"
+		 onkeydown="updateFiltersOnEnter(event);"
+		 >
+		 Status filter</input></br>
+  #end
+#end
+	  <input type="text" name="filter"
+		 onkeydown="updateFiltersOnEnter(event);"
+                 >
+		 Status filter</input>
+    <br>
+  </form>
+
+#for @tup in @outputTables:
+  #set @bset = @get(@tup, 0):
+  #set @results = @get(@tup, 1):
+
+  <h1>@bset.name</h1>
+  <table style="margin-top: 15px;">
+  <tr class="header_row">
+    <th>Benchmark</th>
+    #for @run in @runs:
+    <th colspan="2">@descr(@run) <span style="font-size: 10px">[@run.date()]</span>
+    <a href="" style="font-size: 10px" onclick="return hideTool(@run.getID());">[X]</a>
+    </th>
+    #end
+  </tr>
+  <tr class="header_row_snd" style="font-size: 12px">
+    <th></th>
+    #for @run in @runs:
+    <th>status</th><th>CPU time [s]</th>
+    #end
+  </tr>
+
+  #for @result in @results:
+  <tr class="row">
+    #set @name = @get(@result, 0):
+    #set @shortname = @getShortName(@name):
+    <td>
+      <a href="@getBenchmarkURL(@name)">@shortname</a>
+    </td>
+    #set @n = 0:
+    #for @runinfo in @get(@result, 1):
+      <td>
+      <span class="status status-@runinfo.classification()"
+            onclick="showOutput('@get(@outputs, @n)', '@get(@run_names, @n)', '@shortname')">
+      #if(@runinfo)
+      @runinfo.status()
+      #else
+      --
+      #end
+      </span>
+      </td><td class="cpu_time">
+      #if(@runinfo)
+      @runinfo.cputime()
+      #else
+      --
+      #end
+      </td>
+    #set @n = @n + 1:
+    #end
+  </tr>
+  #end
+  </table>
+#end
+
+</div> <!-- content -->
+</body>
+
+</html>

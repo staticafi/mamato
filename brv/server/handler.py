@@ -13,6 +13,7 @@ else:
 from brv.datamanager import DataManager
 
 from . showfiles import showFiles
+from . showfilter import showFilter
 from . showtools import showTools
 from . showresults import showResults
 from . showoutput import showOutput
@@ -47,6 +48,7 @@ handlers = {
     'results'           : showResults,
     'diagram'           : showDiagram,
     'files'             : showFiles,
+    'filter'            : showFilter,
     'manage'            : manageTools,
     'delete'            : performDelete,
     'output'            : showOutput,

@@ -22,6 +22,7 @@
 # OF THIS SOFTWARE.
 
 from . proxy import DatabaseProxy
+from brv.bset import BSet
 from brv.toolrun import DBToolRun, ToolRunStats, RunsStats
 from brv.runinfo import DBRunInfo
 
@@ -89,6 +90,13 @@ class DatabaseReader(DatabaseProxy):
             classif = (r[1], r[2])
             stats.addStat(classif, cnt, time)
 
+        return ret
+
+    def getBenchmarksSets(self):
+        q = """
+        SELECT id, name FROM benchmarks_set;"""
+        res = self.query(q)
+        ret = list(map(lambda x: BSet(x[1], x[0]), res))
         return ret
 
     def getRunInfos(self, bset_id, tool_run_id):
