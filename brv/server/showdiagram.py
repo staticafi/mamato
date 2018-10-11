@@ -144,7 +144,7 @@ class DiagramView:
         if 'grouping' in opts:
             groupingId = int(opts['grouping'][0])
         grouping = datamanager.getGrouping(groupingId)
-        run_ids = list(map(int, opts['run']))
+        run_ids = list(sorted(map(int, opts['run'])))
         runs = RunsData(datamanager, run_ids, grouping)
         files = FilesData(datamanager, run_ids, runs.runs, runs.cats, grouping.getBuckets())
         transitions = files.calculate(True)
