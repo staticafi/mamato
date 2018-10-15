@@ -12,7 +12,12 @@ from xml.dom import minidom
 def _parse_run_elem(run):
     " Parse a <run>...</run> elements from xml"
 
-    r = DirectRunInfo(run.getAttribute('name'))
+    name = run.getAttribute('name')
+    # strip off ../.. if this is the benchmark from sv-comp
+    start = name.find("sv-benchmarks")
+    if start != -1:
+        name = name[start:]
+    r = DirectRunInfo(name)
     r._property = run.getAttribute('properties')
 
     NUMBER_OF_ITEMS = 7

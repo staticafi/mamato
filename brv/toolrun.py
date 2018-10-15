@@ -201,6 +201,16 @@ class ToolRunStats(object):
         return self._stats.keys()
 
 
+def _comparable_name(name):
+    """
+    Strip off any prefix from sv-benchmarks directory
+    """
+    start = name.find("sv-benchmarks")
+    if start == -1:
+        return name
+
+    return name[start:]
+
 class RunInfosTable(object):
     """
     Table of RunInfo objects:
@@ -220,7 +230,7 @@ class RunInfosTable(object):
         """ add results from one tool run"""
 
         for info in runinfos:
-            name = info.fullname()
+            name = _comparable_name(info.fullname())
             assert name
             infos = self._benchmarks.setdefault(name, [])
             assert len(infos) <= self._tools_num
