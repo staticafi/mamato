@@ -18,9 +18,9 @@ function toggleCheck(td) {
 }
 
 function reloadTools() {
-	httpGetAsync('env?reload=1',
-			function (resp) {
-				location.reload();
+	httpGetAsync("env?reload=1", function (resp) {
+			hideStatusBar();
+			location.reload();
 			});
 
 	showStatusBar("Reloading tools");
@@ -39,6 +39,10 @@ function reloadTools() {
 
 #include("../header.html")
 <div id="content">
+<div id="status-bar" class="status-bar-hidden">
+Status bar
+</div>
+
 <div id="content-left">
 <h2>Tools:</h2>
 <form action="/results" style="margin-left: 1em">
@@ -118,7 +122,7 @@ function reloadTools() {
   </form>
 
 <h3>Manage:</h3>
-<a href="" onclick="reloadTools()">Reload tools</a>
+<a href="" onclick="reloadTools();return false;">Reload tools</a>
 </div> <!-- content-right -->
 <div id="content-bottom">
 </div> <!-- content-bottom -->

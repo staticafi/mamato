@@ -160,6 +160,7 @@ function hideTool(tool_id) {
 	return false;
 }
 
+// https://stackoverflow.com/a/4033310
 function httpGetAsync(theUrl, callback = null)
 {
     var xmlHttp = new XMLHttpRequest();
