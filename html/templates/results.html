@@ -6,14 +6,19 @@
 
 <script src="../js/brv.js"></script>
 <script>
-function enableRenaming(obj, tid) {
+function enableRenaming(tid) {
+	obj = document.getElementById("description"+tid);
 	var text = obj.innerHTML;
 	obj.innerHTML = '<input value="' + text + '"/>';
 	ipt = obj.childNodes[0];
-	enableEntry(ipt, tid);
 
-	ipt.onchange = function(e) {
-		obj.innerHTML = ipt.value;
+	ipt.onkeypress = function(e) {
+		if (e.keyCode == 13) { //enter
+			renameTool(obj, tid, ipt.value);
+			obj.innerHTML = ipt.value;
+		} else if (e.keyCode == 27) { //escape
+			obj.innerHTML = text;
+		}
 	}
 }
 </script>
@@ -47,6 +52,13 @@ function enableRenaming(obj, tid) {
       color: white;
       border: 3px solid #eeeeee;
     }
+
+    .header_row_manage {
+      background-color: #888888;
+      color: white;
+      border: 3px solid #eeeeee;
+    }
+
 
     th {
 	    padding: 10px;
@@ -92,6 +104,10 @@ function enableRenaming(obj, tid) {
 
     tr.header_row:hover {
       background-color: #889988;
+    }
+
+    tr.header_row_manage:hover {
+      background-color: #888888;
     }
 
     tr.stats {
@@ -343,12 +359,36 @@ value="@get(@grouping, 1)">@get(@grouping, 0)</option>
     </div>
     #if(@run.run_description())
       </br>
-      <span ondblclick="enableRenaming(this, @run.getID())">@run.run_description()</span>
+      <span id="description@run.getID()">@run.run_description()</span>
     #else
       <i>(no descr)</i>
     #end
-    <a href="" style="font-size: 10px; color: red;" onclick="return hideTool(@run.getID());">[X]</a>
-    <!--<span style="font-size: 10px">[@run.date()]</span>--></th>
+    <!--<span style="font-size: 10px">[@run.date()]</span>-->
+    </th>
+  #end
+  </tr>
+
+  <tr class="header_row_manage">
+  <th></th> <th></th>
+  #for @run in @runs:
+    <th>
+      <span style="font-size: 10px; padding-right: 1em;"
+            onclick="enableRenaming(@run.getID())">Rename</span>
+    #set @tags = @getTags(@run):
+    #if(!@tags)
+      <span style="font-size: 10px; padding-right: 1em;">Add tag</span>
+    #else
+      #for @tag in @getTags(@run):
+         <a href="javascript: void(0);"
+            onclick="setFilter('tags-filter', '@tag.getName()');"
+            class="tag" style="@tag.getCSS()">@tag.getName()</a>
+      #end
+    #end
+
+    <a href="" style="font-size: 10px; color: #cc0000;"
+       onclick="return hideTool(@run.getID());">[X]</a>
+    
+    </th>
   #end
   </tr>
 
