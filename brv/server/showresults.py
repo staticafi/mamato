@@ -7,7 +7,8 @@ from .. import groupingmanager
 from . results.components import *
 
 class ResultsView:
-    def __init__(self, runs, buckets, bucket_components, categories, category_components, groupings, scorings, opts):
+    def __init__(self, datamanager, runs, buckets, bucket_components, categories, category_components, groupings, scorings, opts):
+        self._datamanager = datamanager
         self._runs = runs
         self._buckets = buckets
         self._bucket_components = bucket_components
@@ -121,7 +122,9 @@ class ResultsView:
 
         category_components = list(zip(category_components, range(len(category_components))))
         bucket_components = list(zip(bucket_components, range(len(bucket_components))))
-        return cls(runs, buckets, bucket_components, cats, category_components, datamanager.getGroupingChoices(), datamanager.getScoringChoices(), opts)
+        return cls(datamanager, runs, buckets, bucket_components, cats,
+                   category_components, datamanager.getGroupingChoices(),
+                   datamanager.getScoringChoices(), opts)
 
     def render(self, wfile):
         def _toolsGETList():
@@ -146,6 +149,9 @@ class ResultsView:
         def _lenPlus(o, a):
             return len(o) + a
 
+        def _getTags(run):
+            return self._datamanager.getToolRunTags(run)
+
         times_only_solved = 'show_times_only_solved' in self._opts
         groupingId = 0
         if 'grouping' in self._opts:
@@ -169,6 +175,7 @@ class ResultsView:
                       'inlineView': 'inline_view' in self._opts,
                       'bucketComponents': self._bucket_components,
                       'lenPlus': _lenPlus,
+                      'getTags': _getTags,
                       'categoryComponents': self._category_components,
                       'groupings': self._groupings,
                       'scorings': self._scorings,

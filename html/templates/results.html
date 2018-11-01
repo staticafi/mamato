@@ -368,29 +368,37 @@ value="@get(@grouping, 1)">@get(@grouping, 0)</option>
   #end
   </tr>
 
+<!--
+  <tr class="header_row_manage">
+  <th></th> <th></th>
+  #for @run in @runs:
+    <th>
+    #set @tags=@getTags(@run):
+    #for @tag in @tags:
+       <span class="tag"
+             style="background-color: white; @tag.getCSS();">@tag.getName()</span>
+    #end
+    </th>
+  #end
+  </tr>
+  -->
+
   <tr class="header_row_manage">
   <th></th> <th></th>
   #for @run in @runs:
     <th>
       <span style="font-size: 10px; padding-right: 1em;"
             onclick="enableRenaming(@run.getID())">Rename</span>
-    #set @tags = @getTags(@run):
-    #if(!@tags)
       <span style="font-size: 10px; padding-right: 1em;">Add tag</span>
-    #else
-      #for @tag in @getTags(@run):
-         <a href="javascript: void(0);"
-            onclick="setFilter('tags-filter', '@tag.getName()');"
-            class="tag" style="@tag.getCSS()">@tag.getName()</a>
-      #end
-    #end
+
 
     <a href="" style="font-size: 10px; color: #cc0000;"
        onclick="return hideTool(@run.getID());">[X]</a>
-    
     </th>
   #end
   </tr>
+
+
 
 
   #for @bset in @benchmarks_sets:
