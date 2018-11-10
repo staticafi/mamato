@@ -129,6 +129,10 @@ class XMLParser(object):
         if append_vers:
             tool_info.tool_version += append_vers
 
+        if tool_info.block == '':
+            print(" -- Skipping overall category row (mamato frontend adds this automatically)")
+            return 0
+
         tool_run_id = writer.getOrCreateToolInfoID(tool_info, outputs)
         benchmarks_set_id = writer.getOrCreateBenchmarksSetID(tool_info.block)
 
