@@ -50,6 +50,14 @@ def showFiles(wfile, datamanager, opts):
     _filter = opts.setdefault('filter', [])
 
     results = datamanager.getRunInfos(bset_id, run_ids).getRows().items()
+
+    bsets = datamanager.getBenchmarksSets()
+    bset = None
+
+    for bs in bsets:
+        if bs.id == bset_id:
+            bset = bs
+
     if _showDifferent:
         def some_different(x):
             L = x[1]
@@ -143,5 +151,6 @@ def showFiles(wfile, datamanager, opts):
                       'timeDiff50' : _differentTimes50,
                       'descr' : getDescriptionOrVersion,
                       'filters' : _filter,
+                      'bset': bset,
                       'results': results})
 
