@@ -386,7 +386,13 @@ value="@get(@grouping, 1)">@get(@grouping, 0)</option>
   <tr class="header_row_manage">
   <th></th> <th></th>
   #for @run in @runs:
-    <th>
+    <th
+#if(@inlineView)
+      colspan="@lenPlus(@buckets, 0)"
+#else
+      colspan="@lenPlus(@bucketComponents, 0)"
+#end
+    >
       <span style="font-size: 10px; padding-right: 1em;"
             onclick="enableRenaming(@run.getID())">Rename</span>
       <span style="font-size: 10px; padding-right: 1em;">Add tag</span>
