@@ -63,14 +63,20 @@ def showFiles(wfile, datamanager, opts):
             L = x[1]
             if L[0] is None:
                 status = None
+                classification = None
             else:
                 status = L[0].status()
+                classification = L[0].classification()
 
             for r in L:
                 if r is None:
                     if status is not None:
                         return True
+                    if classification is not None:
+                        return True
                 elif r.status() != status:
+                    return True
+                elif r.classification() != classification:
                     return True
 
             return False
