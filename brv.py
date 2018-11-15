@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-from sys import version_info
+from sys import version_info, stdout
 from argparse import ArgumentParser
 
 import os
@@ -26,6 +26,42 @@ def parse_cmd():
     parser.add_argument('files', nargs="*", metavar="FILES",
                         help="XML files. If given, no server is run and the files are parsed and stored to dtabase")
     return parser.parse_args()
+
+# make the xml parser global such that we open
+# just one connection to the database
+xmlparser = None
+
+COLORS = {
+    'DARK_BLUE': '\033[0;34m',
+    'CYAN': '\033[0;36m',
+    'BLUE': '\033[1;34m',
+    'PURPLE': '\033[0;35m',
+    'RED': '\033[1;31m',
+    'GREEN': '\033[1;32m',
+    'BROWN': '\033[0;33m',
+    'YELLOW': '\033[1;33m',
+    'WHITE': '\033[1;37m',
+    'GRAY': '\033[0;37m',
+    'DARK_GRAY': '\033[1;30m',
+    'RESET': '\033[0m'
+}
+
+def print_col(msg, color=None):
+    # don't print color when the output is redirected
+    # to a file
+    if not stdout.isatty():
+        color = None
+
+    if not color is None:
+        stdout.write(COLORS[color])
+
+    stdout.write(msg)
+
+    if not color is None:
+        stdout.write(COLORS['RESET'])
+
+    stdout.write('\n')
+    stdout.flush()
 
 #def commonprefix(s1, s2):
 #    idx = 0
@@ -78,20 +114,24 @@ def load_data_with_prefix(path, prefix, xmls, bz2s, outputs, descr = None):
         tmpfile.close()
         bzfile.close()
 
+        print_col("Decompressed '{0}' to '{1}'".format(bz, tmpfile.name), 'CYAN')
+
 
     outfile = outputs[0] if outputs else None
     total = load_xmls(xmls, outfile, descr)
-    print('Added {0} results in total'.format(total))
+    print('Added {0} results'.format(total))
 
     # copy the archive with outputs
     if outfile:
         from shutil import copyfile
         copyfile(os.path.join(path, outfile), os.path.join('outputs/', outfile))
-        print('Copied the output: {0}'.format(outputs[0]))
+        print_col('Copied the output: {0}'.format(outputs[0]), 'CYAN')
 
     # clean the temporary xml files
     for f in bz2xmls:
         os.unlink(f)
+
+    return total
 
 def load_dir(path):
     print("Loading results from {0}".format(path))
@@ -113,20 +153,25 @@ def load_dir(path):
             bz2s.append(fl)
             prefixes.add(getrundescr(fl))
 
+    total = 0
     for (prefix, descr) in prefixes:
         print("Found results for: {0}.{1}".format(prefix, descr))
-        load_data_with_prefix(path, prefix, xmls, bz2s, outputs, descr)
+        total += load_data_with_prefix(path, prefix, xmls, bz2s, outputs, descr)
+
+    return total
 
 def load_xmls(xmls, outputs = None, descr = None,
               append_vers = False, allow_duplicates = False):
 
-    from brv.xml.parser import XMLParser
-    parser = XMLParser('database.conf')
+    global xmlparser
+    if not xmlparser:
+        from brv.xml.parser import XMLParser
+        xmlparser = XMLParser('database.conf')
 
     total = 0
     for xmlfile in xmls:
-        print('Parsing: {0}'.format(xmlfile))
-        cnt = parser.parseToDB(xmlfile, outputs, descr, append_vers, allow_duplicates)
+        print_col('Parsing: {0}'.format(xmlfile), 'CYAN')
+        cnt = xmlparser.parseToDB(xmlfile, outputs, descr, append_vers, allow_duplicates)
         print('Got {0} results from {1}'.format(cnt, xmlfile))
         total += cnt
 
@@ -137,13 +182,13 @@ if __name__ == "__main__":
     args = parse_cmd()
 
     if args.results_dir:
-        load_dir(args.results_dir)
+        total = load_dir(args.results_dir)
+        print_col('Added {0} results in total'.format(total), 'GREEN')
     elif args.files:
 
-        total = 0
-        total += load_xmls(args.files, args.outputs, args.description,
-                           args.append_vers, args.allow_duplicates)
-        print('Added {0} results in total'.format(total))
+        total = load_xmls(args.files, args.outputs, args.description,
+                          args.append_vers, args.allow_duplicates)
+        print_col('Added {0} results in total'.format(total), "GREEN")
 
     else:
         if version_info < (3, 0):
