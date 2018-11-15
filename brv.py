@@ -118,7 +118,8 @@ def load_data_with_prefix(path, prefix, xmls, bz2s, outputs, descr = None):
 
 
     outfile = outputs[0] if outputs else None
-    total = load_xmls(xmls, outfile, descr)
+    total = load_xmls(xmls, outfile, descr or args.description,
+                      args.append_vers, args.allow_duplicates)
     print('Added {0} results'.format(total))
 
     # copy the archive with outputs
@@ -161,7 +162,7 @@ def load_dir(path):
     return total
 
 def load_xmls(xmls, outputs = None, descr = None,
-              append_vers = False, allow_duplicates = False):
+              append_vers = None, allow_duplicates = False):
 
     global xmlparser
     if not xmlparser:
@@ -185,7 +186,6 @@ if __name__ == "__main__":
         total = load_dir(args.results_dir)
         print_col('Added {0} results in total'.format(total), 'GREEN')
     elif args.files:
-
         total = load_xmls(args.files, args.outputs, args.description,
                           args.append_vers, args.allow_duplicates)
         print_col('Added {0} results in total'.format(total), "GREEN")
