@@ -45,7 +45,7 @@ Status bar
 
 <div id="content-left">
 <h2>Tools:</h2>
-<form action="/results" style="margin-left: 1em">
+<form name="toolForm" action="/results" style="margin-left: 1em">
   #for @tool in @tools:
     <h3>@get(@tool, 0):</h3>
     <table id="tools-select" style="width:90%">
@@ -91,6 +91,7 @@ Status bar
 
 </div> <!-- content-left -->
 <div id="content-right">
+<button style="width: 100%; height: 4em;" onclick="document.forms['toolForm'].submit();">Show!</button>
 <h3>Filters:</h3>
   <form id="settingsform" action="/">
 #if(@filters)
