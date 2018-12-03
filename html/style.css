@@ -73,6 +73,8 @@ a {
   text-align: left;
   padding-left: 3em;
   float: left;
+  position: fixed;
+  right: 0;
 }
 
 #content-bottom {
