@@ -10,6 +10,7 @@
             {"result": "false(valid-deref)", "class": "correct"},
             {"result": "false(valid-free)", "class": "correct"},
             {"result": "false(valid-memtrack)", "class": "correct"},
+            {"result": "false(valid-memcleanup)", "class": "correct"},
             {"result": "false(unreach-call)", "class": "correct"},
             {"result": "false(reach)", "class": "correct"},
             {"result": "false(termination)", "class": "correct"},
@@ -17,6 +18,13 @@
             {"result": "false(no-deadlock)", "class": "correct"}
           ]
         },
+		{
+          "displayName": "true unconf.",
+          "nameClass": "classif status-correct-unconfirmed",
+          "classifications": [
+            {"result": "true", "class": "correct-unconfirmed"}
+          ]
+		},
         {
           "displayName": "true corr.",
           "nameClass": "classif status-correct",
@@ -31,6 +39,7 @@
             {"result": "false(valid-deref)", "class": "correct-unconfirmed"},
             {"result": "false(valid-free)", "class": "correct-unconfirmed"},
             {"result": "false(valid-memtrack)", "class": "correct-unconfirmed"},
+            {"result": "false(valid-memcleanup)", "class": "correct-unconfirmed"},
             {"result": "false(unreach-call)", "class": "correct-unconfirmed"},
             {"result": "false(reach)", "class": "correct-unconfirmed"},
             {"result": "false(termination)", "class": "correct-unconfirmed"},
@@ -43,7 +52,11 @@
           "nameClass": "classif status-unknown",
           "classifications": [
             {"result": "TIMEOUT", "class": "error" },
-            {"result": "TIMEOUT (timeout)", "class": "error" }
+            {"result": "TIMEOUT (timeout)", "class": "error" },
+            {"result": "TIMEOUT (cex-confirmation)", "class": "error" },
+            {"result": "TIMEOUT (slicing)", "class": "error" },
+            {"result": "TIMEOUT (instrumentation)", "class": "error" },
+            {"result": "TIMEOUT (verification)", "class": "error" }
           ]
         },
         {
@@ -62,6 +75,7 @@
             {"result": "false(valid-deref)", "class": "wrong"},
             {"result": "false(valid-free)", "class": "wrong"},
             {"result": "false(valid-memtrack)", "class": "wrong"},
+            {"result": "false(valid-memcleanup)", "class": "wrong"},
             {"result": "false(unreach-call)", "class": "wrong"},
             {"result": "false(reach)", "class": "wrong"},
             {"result": "false(termination)", "class": "wrong"},
@@ -75,7 +89,19 @@
           "classifications": [
             {"result": "ERROR", "class": "error" },
             {"result": "ERROR (1)", "class": "error" },
-            {"result": "OUT OF MEMORY", "class": "error" }
+            {"result": "ERROR(unknown, verification-finished)", "class": "error" },
+            {"result": "OUT OF MEMORY", "class": "error" },
+            {"result": "OUT OF MEMORY (KILLED (signal 9, verification))", "class": "error" },
+            {"result": "PROBABLY OUT OF MEMORY (KILLED (signal 9, verification))", "class": "error" },
+            {"result": "PROBABLY OUT OF MEMORY (KILLED (signal 9, cex-confirmation))", "class": "error" },
+            {"result": "ERROR(unknown, cex-confirmation)", "class": "error" },
+            {"result": "ERROR(returned 1, before-instr)", "class": "error" },
+            {"result": "ERROR(returned 1, slicing)", "class": "error" },
+            {"result": "ERROR(returned 1, slicing)", "class": "error" },
+            {"result": "ERROR(unknown, slicing-finished)", "class": "error" },
+            {"result": "witness invalid (false(valid-deref))", "class": "error" },
+            {"result": "ERROR(returned 1, instr-finished)", "class": "error" },
+            {"result": "ERROR(returned 1, verification-finished)", "class": "error" }
           ]
         },
         {
@@ -97,6 +123,7 @@
                 {"result": "false(valid-deref)", "class": "correct"},
                 {"result": "false(valid-free)", "class": "correct"},
                 {"result": "false(valid-memtrack)", "class": "correct"},
+                {"result": "false(valid-memcleanup)", "class": "correct"},
                 {"result": "false(unreach-call)", "class": "correct"},
                 {"result": "false(reach)", "class": "correct"},
                 {"result": "false(termination)", "class": "correct"},
@@ -112,12 +139,20 @@
               ]
           },
           {
+              "displayName": "true unconf.",
+              "nameClass": "classif status-correct-unconfirmed",
+              "classifications": [
+                {"result": "true", "class": "correct-unconfirmed"}
+              ]
+          },
+          {
               "displayName": "false unconf.",
               "nameClass": "classif status-correct-unconfirmed",
               "classifications": [
                 {"result": "false(valid-deref)", "class": "correct-unconfirmed"},
                 {"result": "false(valid-free)", "class": "correct-unconfirmed"},
                 {"result": "false(valid-memtrack)", "class": "correct-unconfirmed"},
+                {"result": "false(valid-memcleanup)", "class": "correct-unconfirmed"},
                 {"result": "false(unreach-call)", "class": "correct-unconfirmed"},
                 {"result": "false(reach)", "class": "correct-unconfirmed"},
                 {"result": "false(termination)", "class": "correct-unconfirmed"},
@@ -132,6 +167,7 @@
                 {"result": "false(valid-deref)", "class": "wrong"},
                 {"result": "false(valid-free)", "class": "wrong"},
                 {"result": "false(valid-memtrack)", "class": "wrong"},
+                {"result": "false(valid-memcleanup)", "class": "wrong"},
                 {"result": "false(unreach-call)", "class": "wrong"},
                 {"result": "false(reach)", "class": "wrong"},
                 {"result": "false(termination)", "class": "wrong"},
@@ -150,14 +186,30 @@
               "displayName": "other",
               "nameClass": "classif status-error",
               "classifications": [
-                {"result": "ERROR", "class": "error" },
-                {"result": "ERROR (1)", "class": "error" },
-                {"result": "OUT OF MEMORY", "class": "error" },
                 {"result": "TIMEOUT", "class": "error" },
                 {"result": "TIMEOUT (timeout)", "class": "error" },
+                {"result": "TIMEOUT (cex-confirmation)", "class": "error" },
+                {"result": "TIMEOUT (slicing)", "class": "error" },
+                {"result": "TIMEOUT (instrumentation)", "class": "error" },
+                {"result": "TIMEOUT (verification)", "class": "error" },
                 {"result": "unknown", "class": "unknown" },
-                {"result": "false(unreach-call)", "class": "unknown" },
-                {"result": "", "class": "None" }
+                {"result": "", "class": "None" },
+                {"result": "false(unreach-call)", "class": "unknown"},
+                {"result": "ERROR", "class": "error" },
+                {"result": "ERROR (1)", "class": "error" },
+                {"result": "ERROR(unknown, verification-finished)", "class": "error" },
+                {"result": "OUT OF MEMORY", "class": "error" },
+				{"result": "OUT OF MEMORY (KILLED (signal 9, verification))", "class": "error" },
+				{"result": "PROBABLY OUT OF MEMORY (KILLED (signal 9, verification))", "class": "error" },
+                {"result": "PROBABLY OUT OF MEMORY (KILLED (signal 9, cex-confirmation))", "class": "error" },
+                {"result": "ERROR(unknown, cex-confirmation)", "class": "error" },
+                {"result": "ERROR(returned 1, before-instr)", "class": "error" },
+                {"result": "ERROR(returned 1, slicing)", "class": "error" },
+                {"result": "ERROR(returned 1, slicing)", "class": "error" },
+                {"result": "ERROR(unknown, slicing-finished)", "class": "error" },
+                {"result": "witness invalid (false(valid-deref))", "class": "error" },
+                {"result": "ERROR(returned 1, instr-finished)", "class": "error" },
+                {"result": "ERROR(returned 1, verification-finished)", "class": "error" }
               ]
           }
       ]
@@ -172,6 +224,7 @@
             {"result": "false(valid-deref)", "class": "correct"},
             {"result": "false(valid-free)", "class": "correct"},
             {"result": "false(valid-memtrack)", "class": "correct"},
+            {"result": "false(valid-memcleanup)", "class": "correct"},
             {"result": "false(unreach-call)", "class": "correct"},
             {"result": "true", "class": "correct"},
             {"result": "false(reach)", "class": "correct"},
@@ -187,6 +240,7 @@
             {"result": "false(valid-deref)", "class": "correct-unconfirmed"},
             {"result": "false(valid-free)", "class": "correct-unconfirmed"},
             {"result": "false(valid-memtrack)", "class": "correct-unconfirmed"},
+            {"result": "false(valid-memcleanup)", "class": "correct-unconfirmed"},
             {"result": "false(unreach-call)", "class": "correct-unconfirmed"},
             {"result": "true", "class": "correct-unconfirmed"},
             {"result": "false(reach)", "class": "correct-unconfirmed"},
@@ -202,6 +256,7 @@
             {"result": "false(valid-deref)", "class": "wrong"},
             {"result": "false(valid-free)", "class": "wrong"},
             {"result": "false(valid-memtrack)", "class": "wrong"},
+            {"result": "false(valid-memcleanup)", "class": "wrong"},
             {"result": "false(unreach-call)", "class": "wrong"},
             {"result": "true", "class": "wrong"},
             {"result": "false(reach)", "class": "wrong"},
@@ -214,14 +269,30 @@
           "displayName": "other",
           "nameClass": "classif status-error",
           "classifications": [
-            {"result": "ERROR", "class": "error" },
-            {"result": "ERROR (1)", "class": "error" },
-            {"result": "OUT OF MEMORY", "class": "error" },
             {"result": "unknown", "class": "unknown" },
             {"result": "false(unreach-call)", "class": "unknown"},
+            {"result": "", "class": "None" },
+            {"result": "ERROR", "class": "error" },
+            {"result": "ERROR (1)", "class": "error" },
+            {"result": "ERROR(unknown, verification-finished)", "class": "error" },
+            {"result": "OUT OF MEMORY", "class": "error" },
+            {"result": "PROBABLY OUT OF MEMORY (KILLED (signal 9, verification))", "class": "error" },
+            {"result": "OUT OF MEMORY (KILLED (signal 9, verification))", "class": "error" },
+            {"result": "PROBABLY OUT OF MEMORY (KILLED (signal 9, cex-confirmation))", "class": "error" },
+            {"result": "ERROR(unknown, cex-confirmation)", "class": "error" },
+            {"result": "ERROR(returned 1, before-instr)", "class": "error" },
+            {"result": "ERROR(returned 1, slicing)", "class": "error" },
+            {"result": "ERROR(returned 1, slicing)", "class": "error" },
+            {"result": "ERROR(unknown, slicing-finished)", "class": "error" },
+            {"result": "witness invalid (false(valid-deref))", "class": "error" },
+            {"result": "ERROR(returned 1, instr-finished)", "class": "error" },
+            {"result": "ERROR(returned 1, verification-finished)", "class": "error" },
             {"result": "TIMEOUT", "class": "error" },
             {"result": "TIMEOUT (timeout)", "class": "error" },
-            {"result": "", "class": "None" }
+            {"result": "TIMEOUT (cex-confirmation)", "class": "error" },
+            {"result": "TIMEOUT (slicing)", "class": "error" },
+            {"result": "TIMEOUT (instrumentation)", "class": "error" },
+            {"result": "TIMEOUT (verification)", "class": "error" }
           ]
         }
       ]
@@ -229,6 +300,47 @@
     {
       "displayName": "No Grouping",
       "buckets": []
+    },
+    {
+      "displayName": "Error&Timeout",
+      "buckets": [
+        {
+          "displayName": "Correct+Unconfirmed+Wrong",
+          "nameClass": "",
+          "classifications": [
+            {"result": "false(valid-deref)", "class": "correct"},
+            {"result": "false(valid-free)", "class": "correct"},
+            {"result": "false(valid-memtrack)", "class": "correct"},
+            {"result": "false(valid-memcleanup)", "class": "correct"},
+            {"result": "false(unreach-call)", "class": "correct"},
+            {"result": "true", "class": "correct"},
+            {"result": "false(reach)", "class": "correct"},
+            {"result": "false(termination)", "class": "correct"},
+            {"result": "false(no-overflow)", "class": "correct"},
+            {"result": "false(no-deadlock)", "class": "correct"},
+            {"result": "false(valid-deref)", "class": "correct-unconfirmed"},
+            {"result": "false(valid-free)", "class": "correct-unconfirmed"},
+            {"result": "false(valid-memtrack)", "class": "correct-unconfirmed"},
+            {"result": "false(valid-memcleanup)", "class": "correct-unconfirmed"},
+            {"result": "false(unreach-call)", "class": "correct-unconfirmed"},
+            {"result": "true", "class": "correct-unconfirmed"},
+            {"result": "false(reach)", "class": "correct-unconfirmed"},
+            {"result": "false(termination)", "class": "correct-unconfirmed"},
+            {"result": "false(no-overflow)", "class": "correct-unconfirmed"},
+            {"result": "false(no-deadlock)", "class": "correct-unconfirmed"},
+            {"result": "false(valid-deref)", "class": "wrong"},
+            {"result": "false(valid-free)", "class": "wrong"},
+            {"result": "false(valid-memtrack)", "class": "wrong"},
+            {"result": "false(valid-memcleanup)", "class": "wrong"},
+            {"result": "false(unreach-call)", "class": "wrong"},
+            {"result": "true", "class": "wrong"},
+            {"result": "false(reach)", "class": "wrong"},
+            {"result": "false(termination)", "class": "wrong"},
+            {"result": "false(no-overflow)", "class": "wrong"},
+            {"result": "false(no-deadlock)", "class": "wrong"}
+          ]
+        }
+      ]
     }
   ]
 }
