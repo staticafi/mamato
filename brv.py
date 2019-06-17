@@ -124,6 +124,9 @@ def load_data_with_prefix(path, prefix, xmls, bz2s, outputs, descr = None):
 
     # copy the archive with outputs
     if outfile:
+        if not os.path.isdir('outputs'):
+            os.mkdir('outputs')
+
         from shutil import copyfile
         copyfile(os.path.join(path, outfile), os.path.join('outputs/', outfile))
         print_col('Copied the output: {0}'.format(outputs[0]), 'CYAN')
