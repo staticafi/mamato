@@ -6,6 +6,17 @@ class GroupingBucket:
         self._display_name = display_name
         self._name_class = name_class
         self._classifications = classifications
+        GroupingBucket._checkClassifications(display_name, classifications)
+
+    @classmethod
+    def _checkClassifications(cls, display_name, classifications):
+        classifications = sorted(classifications)
+        last = None
+        for cls in classifications:
+            if last == cls:
+                print('warning! bucket {0} contains classification {1} two or more times!'.format(display_name, str(cls)))
+            last = cls
+
 
     @classmethod
     def fromConfig(cls, b):
