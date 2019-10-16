@@ -7,15 +7,15 @@
           "displayName": "false corr.",
           "nameClass": "classif status-correct",
           "classifications": [
-            {"result": "false(valid-deref)", "class": "correct"},
-            {"result": "false(valid-free)", "class": "correct"},
-            {"result": "false(valid-memtrack)", "class": "correct"},
-            {"result": "false(valid-memcleanup)", "class": "correct"},
-            {"result": "false(unreach-call)", "class": "correct"},
+            {"result": "false(no-deadlock)", "class": "correct"},
+            {"result": "false(no-overflow)", "class": "correct"},
             {"result": "false(reach)", "class": "correct"},
             {"result": "false(termination)", "class": "correct"},
-            {"result": "false(no-overflow)", "class": "correct"},
-            {"result": "false(no-deadlock)", "class": "correct"}
+            {"result": "false(unreach-call)", "class": "correct"},
+            {"result": "false(valid-deref)", "class": "correct"},
+            {"result": "false(valid-free)", "class": "correct"},
+            {"result": "false(valid-memcleanup)", "class": "correct"},
+            {"result": "false(valid-memtrack)", "class": "correct"}
           ]
         },
 		{
@@ -96,7 +96,6 @@
             {"result": "PROBABLY OUT OF MEMORY (KILLED (signal 9, cex-confirmation))", "class": "error" },
             {"result": "ERROR(unknown, cex-confirmation)", "class": "error" },
             {"result": "ERROR(returned 1, before-instr)", "class": "error" },
-            {"result": "ERROR(returned 1, slicing)", "class": "error" },
             {"result": "ERROR(returned 1, slicing)", "class": "error" },
             {"result": "ERROR(unknown, slicing-finished)", "class": "error" },
             {"result": "witness invalid (false(valid-deref))", "class": "error" },
@@ -205,7 +204,6 @@
                 {"result": "ERROR(unknown, cex-confirmation)", "class": "error" },
                 {"result": "ERROR(returned 1, before-instr)", "class": "error" },
                 {"result": "ERROR(returned 1, slicing)", "class": "error" },
-                {"result": "ERROR(returned 1, slicing)", "class": "error" },
                 {"result": "ERROR(unknown, slicing-finished)", "class": "error" },
                 {"result": "witness invalid (false(valid-deref))", "class": "error" },
                 {"result": "ERROR(returned 1, instr-finished)", "class": "error" },
@@ -281,7 +279,6 @@
             {"result": "PROBABLY OUT OF MEMORY (KILLED (signal 9, cex-confirmation))", "class": "error" },
             {"result": "ERROR(unknown, cex-confirmation)", "class": "error" },
             {"result": "ERROR(returned 1, before-instr)", "class": "error" },
-            {"result": "ERROR(returned 1, slicing)", "class": "error" },
             {"result": "ERROR(returned 1, slicing)", "class": "error" },
             {"result": "ERROR(unknown, slicing-finished)", "class": "error" },
             {"result": "witness invalid (false(valid-deref))", "class": "error" },
