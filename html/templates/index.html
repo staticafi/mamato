@@ -57,7 +57,7 @@ Status bar
 
 	#set @version_printed = 0:
 	#for @tool_with_options in @get(@tool_run, 1):
-	  #set @runs = @tool_with_options.getRuns(@runs_filter):
+	  #set @runs = @sortToolRuns(@tool_with_options.getRuns(@runs_filter)):
 	  #if(@version_printed == 0 && @nonempty_list(@runs))
 	  #set @version_printed = 1:
 	  <tr class="version"><td colspan=1>@vers</td></tr>

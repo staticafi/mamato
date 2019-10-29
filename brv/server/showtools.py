@@ -21,6 +21,12 @@ def _run_details(run):
 def _nonempty_list(l):
     return l != []
 
+def _sortToolRuns(truns):
+    def _toolRunKey(tr):
+        return tr.date()
+
+    return sorted(truns, key=_toolRunKey, reverse=True)
+
 def isIn(lst, elm):
     return elm in lst
 
@@ -29,6 +35,12 @@ def makeKeys(key, vals):
 
 def URIjoin(lst):
     return '&'.join(lst)
+
+def sortToolVersions(vers):
+    def _key(r):
+        return r[0]
+
+    return sorted(vers, key=_key, reverse=True)
 
 def showTools(wfile, datamanager, opts):
     def _getTags(run):
@@ -76,18 +88,20 @@ def showTools(wfile, datamanager, opts):
         _runs_filter = None
 
     tools = datamanager.getTools()
-    tools_sorted = {}
+    tools_grouped = {}
     for t in tools:
         # tools is a list of tool runs where each of the
         # tools has a unique name+version+options attributes
         # We want to divide them to groups according to names
         # and versions. So we have a mapping name -> version -> tools
-        nkey = tools_sorted.setdefault(t.name(), {})
+        nkey = tools_grouped.setdefault(t.name(), {})
         nkey.setdefault(t.version(), []).append(t)
 
     tools_final = []
-    for (name, tls) in tools_sorted.items():
-        tools_final.append((name, list(tls.items())))
+    for (name, tls) in tools_grouped.items():
+        tools_final.append((name, list(sortToolVersions(tls.items()))))
+
+    tools_final.sort(key=lambda t: t[0])
 
     tags = list(datamanager.tagsmanager.getTags())
 
@@ -105,6 +119,7 @@ def showTools(wfile, datamanager, opts):
                       'filters' : _filter,
                       'tags_filters' : _tags_filter,
                       'nonempty_list': _nonempty_list,
+                      'sortToolRuns': _sortToolRuns,
                       'descr' : getDescriptionOrVersion})
 
 

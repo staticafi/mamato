@@ -64,7 +64,7 @@ class ToolsManager(object):
         tool._runs.remove(t)
         if not tool._runs:
             self._tools.remove(tool)
-        
+
     def _find_tool(self, toolrun):
         for tool in self._tools:
             if tool.equalsToolRun(toolrun):
