@@ -86,6 +86,7 @@ Status bar
       </table>
   <br/>
   #end
+
   <input type="submit" value="Show!">
 </form>
 
@@ -118,7 +119,11 @@ Status bar
    <span class="tag" style="@tag.getCSS()">@tag.getName()</span></br>
 #end
    </br>
-   <input type="submit" value="Apply filters" style="float: right; margin-right: 3rem;">
+  <select name="sort">
+    <option selected value="version">Group Versions</option>
+    <option value="date">By Date</option>
+  </select>
+   <input type="submit" value="Apply" style="float: right; margin-right: 3rem;">
 
   </form>
 

@@ -21,7 +21,7 @@ def _run_details(run):
 def _nonempty_list(l):
     return l != []
 
-def _sortToolRuns(truns):
+def sortToolRuns(truns):
     def _toolRunKey(tr):
         return tr.date()
 
@@ -41,6 +41,40 @@ def sortToolVersions(vers):
         return r[0]
 
     return sorted(vers, key=_key, reverse=True)
+
+def prepareToolsMap(tools, runs_filter, sort_method):
+    if sort_method == 'version':
+        tools_grouped = {}
+        for t in tools:
+            # tools is a list of tool runs where each of the
+            # tools has a unique name+version+options attributes
+            # We want to divide them to groups according to names
+            # and versions. So we have a mapping name -> version -> tools
+            nkey = tools_grouped.setdefault(t.name(), {})
+            nkey.setdefault(t.version(), []).append(t)
+
+        tools_final = []
+        for (name, tls) in tools_grouped.items():
+            tools_final.append((name, list(sortToolVersions(tls.items()))))
+
+        tools_final.sort(key=lambda t: t[0])
+        return tools_final
+
+    elif sort_method == 'date':
+        tools_grouped = {}
+        for t in tools:
+            # tools is a list of tool runs where each of the
+            # tools has a unique name+version+options attributes
+            # just squash all of them into a single list
+            nkey = tools_grouped.setdefault(t.name(), [])
+            nkey += t.getRuns(runs_filter)
+
+        tools_final = []
+        for (name, tls) in tools_grouped.items():
+            tools_final.append((name, list(sortToolRuns(tls))))
+
+        tools_final.sort(key=lambda t: t[0])
+        return tools_final
 
 def showTools(wfile, datamanager, opts):
     def _getTags(run):
@@ -86,27 +120,22 @@ def showTools(wfile, datamanager, opts):
             return True
     else:
         _runs_filter = None
-
-    tools = datamanager.getTools()
-    tools_grouped = {}
-    for t in tools:
-        # tools is a list of tool runs where each of the
-        # tools has a unique name+version+options attributes
-        # We want to divide them to groups according to names
-        # and versions. So we have a mapping name -> version -> tools
-        nkey = tools_grouped.setdefault(t.name(), {})
-        nkey.setdefault(t.version(), []).append(t)
-
-    tools_final = []
-    for (name, tls) in tools_grouped.items():
-        tools_final.append((name, list(sortToolVersions(tls.items()))))
-
-    tools_final.sort(key=lambda t: t[0])
-
     tags = list(datamanager.tagsmanager.getTags())
 
-    render_template(wfile, 'index.html',
-                     {'tools' : tools_final,
+    sort_method = 'version'
+    if 'sort' in opts:
+        sort_method = opts['sort'][0]
+
+    template = None
+    if sort_method == 'date':
+        template = 'tools_date.html'
+    else:
+        template = 'tools_version.html'
+
+    tools_map = prepareToolsMap(datamanager.getTools(), _runs_filter, sort_method)
+
+    render_template(wfile, template,
+                     {'tools' : tools_map,
                       'get' : get_elem,
                       'setSize' : _setSize,
                       'getTags' : _getTags,
@@ -119,7 +148,6 @@ def showTools(wfile, datamanager, opts):
                       'filters' : _filter,
                       'tags_filters' : _tags_filter,
                       'nonempty_list': _nonempty_list,
-                      'sortToolRuns': _sortToolRuns,
+                      'sortToolRuns': sortToolRuns,
                       'descr' : getDescriptionOrVersion})
-
 
