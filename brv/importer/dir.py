@@ -57,7 +57,7 @@ def load_data_with_prefix(xmlparser, path, prefix, xmls, bz2s, outputs, descr, a
 
         from shutil import copyfile
         copyfile(os.path.join(path, outfile), os.path.join('outputs/', outfile))
-        print_col('Copied the output: {0}'.format(outputs[0]), 'CYAN')
+        print('Copied the output: {0}'.format(outputs[0]))
 
     # clean the temporary xml files
     for f in bz2xmls:
