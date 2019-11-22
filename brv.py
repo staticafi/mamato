@@ -16,6 +16,8 @@ def parse_cmd():
                         help='Name of the .zip archive with tool\'s outputs')
     parser.add_argument('--results-dir', default=None, metavar='DIR',
                         help='Load results (.zip and .xml/bz2 files) from DIR')
+    parser.add_argument('--svcomp', nargs='*', default=None, metavar='FILES',
+                        help='Download and import results from SV-COMP emails')
     parser.add_argument('--description', default=None,
                         help='Description of the run given in xml files')
 
@@ -77,6 +79,12 @@ def add_from_files(args):
                       args.append_vers, args.allow_duplicates)
     print_col('Added {0} results in total'.format(total), "GREEN")
 
+def add_from_svcomp(args):
+    from brv.importer.svcomp import load_svcomp
+    parser = create_parser(args.db)
+    total = load_svcomp(parser, args.svcomp, args.description, args.append_vers, args.allow_duplicates)
+    print_col('Added {0} results in total'.format(total), "GREEN")
+
 def start_server(args):
     if version_info < (3, 0):
         createServer()
@@ -91,5 +99,7 @@ if __name__ == "__main__":
         add_from_dir(args)
     elif args.files:
         add_from_files(args)
+    elif args.svcomp:
+        add_from_svcomp(args)
     else:
         start_server(args)
