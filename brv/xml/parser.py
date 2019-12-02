@@ -152,7 +152,7 @@ class XMLParser(object):
             cnt += 1
 
         writer.commit()
-        return cnt
+        return cnt, tool_run_id
 
 
 if __name__ == "__main__":

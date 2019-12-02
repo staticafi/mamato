@@ -71,6 +71,9 @@ def load_from_email(xmlparser, email, description, append_vers, allow_duplicates
 
 def load_svcomp(xmlparser, emails, description, append_vers, allow_duplicates):
     total = 0
+    toolrun_ids = []
     for email in emails:
-        total += load_from_email(xmlparser, email, description, append_vers, allow_duplicates)
-    return total
+        cnt, runs = load_from_email(xmlparser, email, description, append_vers, allow_duplicates)
+        total += cnt
+        toolrun_ids.extend(runs)
+    return total, toolrun_ids

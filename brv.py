@@ -10,6 +10,8 @@ else:
 
 def parse_cmd():
     parser = ArgumentParser()
+    parser.add_argument('--tag', default=[], metavar='TAGS', nargs='*',
+                        help='Tags to use with the added set of runs')
     parser.add_argument('--db', default='database.conf', metavar='FILE',
                         help='Name of file that contains database configuration')
     parser.add_argument('--outputs', default=None,
@@ -69,21 +71,18 @@ def create_parser(config_file):
 def add_from_dir(args):
     from brv.importer.dir import load_dir
     parser = create_parser(args.db)
-    total = load_dir(parser, args.results_dir, args.description, args.append_vers, args.allow_duplicates)
-    print_col('Added {0} results in total'.format(total), 'GREEN')
+    return load_dir(parser, args.results_dir, args.description, args.append_vers, args.allow_duplicates, args.tag)
 
 def add_from_files(args):
     from brv.importer.xml import load_xmls
     parser = create_parser(args.db)
-    total = load_xmls(parser, args.files, args.outputs, args.description,
-                      args.append_vers, args.allow_duplicates)
-    print_col('Added {0} results in total'.format(total), "GREEN")
+    return load_xmls(parser, args.files, args.outputs, args.description,
+                      args.append_vers, args.allow_duplicates, args.tag)
 
 def add_from_svcomp(args):
     from brv.importer.svcomp import load_svcomp
     parser = create_parser(args.db)
-    total = load_svcomp(parser, args.svcomp, args.description, args.append_vers, args.allow_duplicates)
-    print_col('Added {0} results in total'.format(total), "GREEN")
+    return load_svcomp(parser, args.svcomp, args.description, args.append_vers, args.allow_duplicates, args.tag)
 
 def start_server(args):
     if version_info < (3, 0):
@@ -91,15 +90,45 @@ def start_server(args):
     else:
         BRVServer.establish()
 
+def create_importer(args):
+    if args.results_dir:
+        return add_from_dir
+    elif args.files:
+        return add_from_files
+    elif args.svcomp:
+        return add_from_svcomp
+
+    return None
+
+def tag_runs(toolrun_ids, args):
+    if not args.tag:
+        return
+
+    from brv.database.writer import DatabaseWriter
+
+    db = DatabaseWriter(args.db)
+    tags_str = ';'.join(args.tag)
+    for trid in toolrun_ids:
+        db.setToolRunTags(trid, tags_str)
+
+    db.commit()
+    print_col('Tagged {0} tool runs using {1}'.format(len(toolrun_ids), ','.join(args.tag)), "GREEN") 
+
+def perform_import(args):
+    importer = create_importer(args)
+    total, toolrun_ids = importer(args)
+
+    print_col('Added {0} results in total'.format(total), "GREEN")
+    tag_runs(toolrun_ids, args)
+
+def is_importing_results(args):
+    return args.results_dir or args.files or args.svcomp
+
 if __name__ == "__main__":
     import sys
     args = parse_cmd()
 
-    if args.results_dir:
-        add_from_dir(args)
-    elif args.files:
-        add_from_files(args)
-    elif args.svcomp:
-        add_from_svcomp(args)
+    if is_importing_results(args):
+        perform_import(args)
     else:
         start_server(args)

@@ -46,7 +46,7 @@ def load_data_with_prefix(xmlparser, path, prefix, xmls, bz2s, outputs, descr, a
 
 
     outfile = outputs[0] if outputs else None
-    total = load_xmls(xmlparser, xmls, outfile, descr,
+    total, toolrun_ids = load_xmls(xmlparser, xmls, outfile, descr,
                       append_vers, allow_duplicates)
     print('Added {0} results'.format(total))
 
@@ -63,7 +63,7 @@ def load_data_with_prefix(xmlparser, path, prefix, xmls, bz2s, outputs, descr, a
     for f in bz2xmls:
         os.unlink(f)
 
-    return total
+    return total, toolrun_ids
 
 def load_dir(xmlparser, path, descr, append_vers, allow_duplicates):
     print("Loading results from {0}".format(path))
@@ -86,9 +86,12 @@ def load_dir(xmlparser, path, descr, append_vers, allow_duplicates):
             prefixes.add(getrundescr(fl))
 
     total = 0
+    toolrun_ids = []
     for (prefix, descr) in prefixes:
         print("Found results for: {0}.{1}".format(prefix, descr))
-        total += load_data_with_prefix(xmlparser, path, prefix, xmls, bz2s, outputs, descr, append_vers, allow_duplicates)
+        cnt, runs = load_data_with_prefix(xmlparser, path, prefix, xmls, bz2s, outputs, descr, append_vers, allow_duplicates)
+        total += count
+        toolrun_ids.extend(runs)
 
-    return total
+    return total, toolrun_ids
 
