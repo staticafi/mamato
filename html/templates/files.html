@@ -31,6 +31,14 @@ function modalToggle(modal) {
 //}
 }
 
+document.onkeydown = function(event) {
+    event = event || window.event;
+    if (event.key === "Escape") {
+        var modal = document.getElementById("modal");
+        modalToggle(modal);
+    }
+};
+
 function showOutput(archive, run_name, name) {
 	var modal = document.getElementById("modal");
 	modalToggle(modal);
