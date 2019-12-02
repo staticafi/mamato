@@ -90,7 +90,7 @@ def load_dir(xmlparser, path, descr, append_vers, allow_duplicates):
     for (prefix, descr) in prefixes:
         print("Found results for: {0}.{1}".format(prefix, descr))
         cnt, runs = load_data_with_prefix(xmlparser, path, prefix, xmls, bz2s, outputs, descr, append_vers, allow_duplicates)
-        total += count
+        total += cnt
         toolrun_ids.extend(runs)
 
     return total, toolrun_ids

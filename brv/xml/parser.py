@@ -131,7 +131,7 @@ class XMLParser(object):
 
         if tool_info.block == '':
             print(" -- Skipping overall category row (mamato frontend adds this automatically)")
-            return 0
+            return 0, []
 
         tool_run_id = writer.getOrCreateToolInfoID(tool_info, outputs)
         benchmarks_set_id = writer.getOrCreateBenchmarksSetID(tool_info.block)
@@ -140,7 +140,7 @@ class XMLParser(object):
         if rcnt and rcnt > 0:
             print(" -- Already have results for this xml file: {0}".format(filePath))
             print(" -- The results are under id {0}, benchmarks set id {1}".format(tool_run_id, benchmarks_set_id))
-            return 0
+            return 0, []
 
         assert tool_run_id is not None
         assert benchmarks_set_id is not None
@@ -152,7 +152,7 @@ class XMLParser(object):
             cnt += 1
 
         writer.commit()
-        return cnt, tool_run_id
+        return cnt, [tool_run_id]
 
 
 if __name__ == "__main__":

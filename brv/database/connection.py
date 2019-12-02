@@ -76,6 +76,7 @@ class DatabaseConnection(object):
             self._cursor.execute(q)
         except MySQLdb.Error as e:
             print("Got exception: '{0}'".format(str(e)))
+            print("While executing query  {0}".format(str(q)))
             print("args: '{0}'".format(e.args))
             print("args[0]: '{0}'".format(e.args[0]))
             if e.args[0] == 2006: # "MySQL server has gone away"

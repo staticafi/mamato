@@ -71,18 +71,18 @@ def create_parser(config_file):
 def add_from_dir(args):
     from brv.importer.dir import load_dir
     parser = create_parser(args.db)
-    return load_dir(parser, args.results_dir, args.description, args.append_vers, args.allow_duplicates, args.tag)
+    return load_dir(parser, args.results_dir, args.description, args.append_vers, args.allow_duplicates)
 
 def add_from_files(args):
     from brv.importer.xml import load_xmls
     parser = create_parser(args.db)
     return load_xmls(parser, args.files, args.outputs, args.description,
-                      args.append_vers, args.allow_duplicates, args.tag)
+                      args.append_vers, args.allow_duplicates)
 
 def add_from_svcomp(args):
     from brv.importer.svcomp import load_svcomp
     parser = create_parser(args.db)
-    return load_svcomp(parser, args.svcomp, args.description, args.append_vers, args.allow_duplicates, args.tag)
+    return load_svcomp(parser, args.svcomp, args.description, args.append_vers, args.allow_duplicates)
 
 def start_server(args):
     if version_info < (3, 0):
@@ -108,7 +108,9 @@ def tag_runs(toolrun_ids, args):
 
     db = DatabaseWriter(args.db)
     tags_str = ';'.join(args.tag)
-    for trid in toolrun_ids:
+    print('Tags_str: {}'.format(tags_str))
+    for trid in set(toolrun_ids):
+        print('Tagging run {}'.format(trid))
         db.setToolRunTags(trid, tags_str)
 
     db.commit()
