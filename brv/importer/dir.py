@@ -54,6 +54,8 @@ def load_data_with_prefix(xmlparser, path, prefix, xmls, bz2s, outputs, descr, a
     for f in bz2xmls:
         os.unlink(f)
 
+    # turn filenames into paths (relative or absolute)
+    outputs = list(map(lambda p: os.path.join(path, p), outputs))
     return total, toolrun_ids, outputs
 
 def load_dir(xmlparser, path, descr, append_vers, allow_duplicates):

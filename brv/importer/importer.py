@@ -45,17 +45,23 @@ def tag_runs(toolrun_ids, args):
     db.commit()
     print_col('Tagged {0} tool runs using {1}'.format(len(toolrun_ids), ','.join(args.tag)), "GREEN")
 
-# TODO
-def copy_outputs(outputs):
+def copy_outputs(outputs, args):
     import os
     # copy the archive with outputs
-    if outfile:
-        if not os.path.isdir('outputs'):
-            os.mkdir('outputs')
+    if args.scp:
+        import scp
+        with scp.open_client(args.scp) as client:
+            for outfile in outputs:
+                client.send_file(os.path.basename(outfile), outfile)
+                print('scp {0} --> {1}'.format(outfile, args.scp))
+    else:
+        for outfile in outputs:
+            if not os.path.isdir('outputs'):
+                os.mkdir('outputs')
 
-        from shutil import copyfile
-        copyfile(os.path.join(path, outfile), os.path.join('outputs/', outfile))
-        print('Copied the output: {0}'.format(outputs[0]))
+            from shutil import copyfile
+            copyfile(os.path.join(path, outfile), os.path.join('outputs/', outfile))
+            print('Copied the output: {0}'.format(outfile))
 
 
 # entrypoint function
@@ -65,5 +71,5 @@ def perform_import(args):
 
     print_col('Added {0} results in total'.format(total), "GREEN")
     tag_runs(toolrun_ids, args)
-    copy_outputs(outputs)
+    copy_outputs(outputs, args)
 

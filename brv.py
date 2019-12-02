@@ -10,6 +10,8 @@ else:
 
 def parse_cmd():
     parser = ArgumentParser()
+    parser.add_argument('--scp', default=None, metavar='USERNAME@HOST:/path/to/directory/',
+                        help='Where to copy logfiles ZIPs')
     parser.add_argument('--tag', default=[], metavar='TAGS', nargs='*',
                         help='Tags to use with the added set of runs')
     parser.add_argument('--db', default='database.conf', metavar='FILE',
