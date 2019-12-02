@@ -50,20 +50,11 @@ def load_data_with_prefix(xmlparser, path, prefix, xmls, bz2s, outputs, descr, a
                       append_vers, allow_duplicates)
     print('Added {0} results'.format(total))
 
-    # copy the archive with outputs
-    if outfile:
-        if not os.path.isdir('outputs'):
-            os.mkdir('outputs')
-
-        from shutil import copyfile
-        copyfile(os.path.join(path, outfile), os.path.join('outputs/', outfile))
-        print('Copied the output: {0}'.format(outputs[0]))
-
     # clean the temporary xml files
     for f in bz2xmls:
         os.unlink(f)
 
-    return total, toolrun_ids
+    return total, toolrun_ids, outputs
 
 def load_dir(xmlparser, path, descr, append_vers, allow_duplicates):
     print("Loading results from {0}".format(path))
@@ -87,11 +78,13 @@ def load_dir(xmlparser, path, descr, append_vers, allow_duplicates):
 
     total = 0
     toolrun_ids = []
+    outputs = []
     for (prefix, descr) in prefixes:
         print("Found results for: {0}.{1}".format(prefix, descr))
-        cnt, runs = load_data_with_prefix(xmlparser, path, prefix, xmls, bz2s, outputs, descr, append_vers, allow_duplicates)
+        cnt, runs, outs = load_data_with_prefix(xmlparser, path, prefix, xmls, bz2s, outputs, descr, append_vers, allow_duplicates)
         total += cnt
         toolrun_ids.extend(runs)
+        outputs.extend(outs)
 
-    return total, toolrun_ids
+    return total, toolrun_ids, outputs
 

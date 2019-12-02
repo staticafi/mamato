@@ -45,12 +45,25 @@ def tag_runs(toolrun_ids, args):
     db.commit()
     print_col('Tagged {0} tool runs using {1}'.format(len(toolrun_ids), ','.join(args.tag)), "GREEN")
 
+# TODO
+def copy_outputs(outputs):
+    import os
+    # copy the archive with outputs
+    if outfile:
+        if not os.path.isdir('outputs'):
+            os.mkdir('outputs')
+
+        from shutil import copyfile
+        copyfile(os.path.join(path, outfile), os.path.join('outputs/', outfile))
+        print('Copied the output: {0}'.format(outputs[0]))
+
 
 # entrypoint function
 def perform_import(args):
     importer = create_importer(args)
-    total, toolrun_ids = importer(args)
+    total, toolrun_ids, outputs = importer(args)
 
     print_col('Added {0} results in total'.format(total), "GREEN")
     tag_runs(toolrun_ids, args)
+    copy_outputs(outputs)
 

@@ -10,5 +10,5 @@ def load_xmls(xmlparser, xmls, outputs = None, descr = None,
         total += cnt
         toolrun_ids.extend(run_ids)
 
-    return total, toolrun_ids
+    return total, toolrun_ids, outputs
 
