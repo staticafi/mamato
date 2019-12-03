@@ -80,13 +80,13 @@ def load_dir(xmlparser, path, descr, append_vers, allow_duplicates):
 
     total = 0
     toolrun_ids = []
-    outputs = []
+    res_outputs = []
     for (prefix, descr) in prefixes:
         print("Found results for: {0}.{1}".format(prefix, descr))
         cnt, runs, outs = load_data_with_prefix(xmlparser, path, prefix, xmls, bz2s, outputs, descr, append_vers, allow_duplicates)
         total += cnt
         toolrun_ids.extend(runs)
-        outputs.extend(outs)
+        res_outputs.extend(outs)
 
-    return total, toolrun_ids, outputs
+    return total, toolrun_ids, res_outputs
 

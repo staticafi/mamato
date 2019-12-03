@@ -33,6 +33,10 @@ def tag_runs(toolrun_ids, args):
     if not args.tag:
         return
 
+    if len(toolrun_ids) == 0:
+        print('No tool runs imported, so no tool runs will be tagged')
+        return
+
     from brv.database.writer import DatabaseWriter
 
     db = DatabaseWriter(args.db)
@@ -43,17 +47,20 @@ def tag_runs(toolrun_ids, args):
         db.setToolRunTags(trid, tags_str)
 
     db.commit()
-    print_col('Tagged {0} tool runs using {1}'.format(len(toolrun_ids), ','.join(args.tag)), "GREEN")
+    print('Tagged {0} tool runs using {1}'.format(len(toolrun_ids), ','.join(args.tag)))
 
 def copy_outputs(outputs, args):
     import os
     # copy the archive with outputs
     if args.scp:
-        import scp
+        if len(outputs) == 0:
+            print('No tool runs imported and no output archives found')
+            return
+        import brv.importer.scp as scp
         with scp.open_client(args.scp) as client:
             for outfile in outputs:
-                client.send_file(os.path.basename(outfile), outfile)
                 print('scp {0} --> {1}'.format(outfile, args.scp))
+                client.send_file(os.path.basename(outfile), outfile)
     else:
         for outfile in outputs:
             if not os.path.isdir('outputs'):
@@ -69,7 +76,7 @@ def perform_import(args):
     importer = create_importer(args)
     total, toolrun_ids, outputs = importer(args)
 
-    print_col('Added {0} results in total'.format(total), "GREEN")
+    print('Added {0} results in total'.format(total))
     tag_runs(toolrun_ids, args)
+    outputs = set(outputs)
     copy_outputs(outputs, args)
-

@@ -1,2 +1,3 @@
 quik
 mysqlclient
+paramiko
