@@ -125,3 +125,29 @@ class DatabaseReader(DatabaseProxy):
 
         return ret
 
+    def getAllRunInfos(self, tool_run_id):
+        # 0 -> status
+        # 1 -> cputime
+        # 2 -> walltime
+        # 3 -> memusage
+        # 4 -> classification
+        # 5 -> exitcode
+        # 6 -> property
+        # 7 -> file name
+
+        q = """
+        SELECT status, cputime, walltime, memusage,
+               classification, exitcode, property, file
+        FROM run WHERE tool_run_id = '{0}'
+        ORDER BY file ASC;
+        """.format(tool_run_id);
+        print(q)
+        # FIXME: use fetchone
+        res = self.query(q)
+        ret = []
+        for r in res:
+            # FIXME: do this lazily -- return an object with this query
+            # and return DBRunInfo when iterating over this object
+            ret.append(DBRunInfo(r))
+
+        return ret

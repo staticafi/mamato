@@ -431,7 +431,7 @@ value="@get(@grouping, 1)">@get(@grouping, 0)</option>
       #if(@inlineView)
               class="sep-right"
       #end
-      rowspan="@rowspan">Overall</td>
+      rowspan="@rowspan"><a href="/overall?@toolsGETList()">Overall</a></td>
       #set @statsFunc = @getTotalStats:
       #if(@inlineView)
         #inlineViewRow @statsFunc:

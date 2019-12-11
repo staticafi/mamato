@@ -18,6 +18,7 @@ from . showtools import showTools
 from . showresults import showResults
 from . showoutput import showOutput
 from . showdiagram import showDiagram
+from . showoverall import showOverall
 from . manage import manageTools, performDelete, setToolRunAttr, adjustEnviron
 
 # the tools manager object -- it must be globals,
@@ -47,6 +48,7 @@ handlers = {
     'root'              : showTools,
     'results'           : showResults,
     'diagram'           : showDiagram,
+    'overall'           : showOverall,
     'files'             : showFiles,
     'filter'            : showFilter,
     'manage'            : manageTools,

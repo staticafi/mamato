@@ -68,6 +68,13 @@ class DataManager(object):
 
         return table
 
+    def getAllRunInfos(self, toolruns_id):
+        table = RunInfosTable()
+        for tid in toolruns_id:
+            table.add(self._db_reader.getAllRunInfos(tid))
+
+        return table
+
     def getToolRunTags(self, run):
         return self.tagsmanager.getToolRunTags(run)
 
