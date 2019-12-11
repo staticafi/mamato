@@ -139,7 +139,7 @@ def showFiles(wfile, datamanager, opts):
             print('Applying {0}'.format(pattern))
             results = filter(match, results)
 
-    results = sorted(list(results), key=lambda x: x[0])
+    results = sorted(list(results), key=lambda x: basename(x[0]))
     if results:
         assert len(runs) == len(results[0][1])
     outputs = [None2Empty(r.outputs()) for r in runs]
