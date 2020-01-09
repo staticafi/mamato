@@ -25,6 +25,7 @@ def showOverall(wfile, datamanager, opts):
         return
 
     run_ids = list(map(int, opts['run']))
+
     runs = datamanager.getToolRuns(run_ids)
     # sort the runs according to their ID's,
     # (and sort also the ID's)
@@ -121,31 +122,12 @@ def showOverall(wfile, datamanager, opts):
                 print('Applying {0}'.format(pattern))
                 results = filter(match, results)
 
-        def correct_buckets(x):
-            L = x[1]
-            stay = True
-            for r, run_id in zip(L, run_ids):
-                if r is None:
-                    return False
-                desired_bucket_name = run_bucket[run_id]
-                sc = (r.status(), r.classification())
-                found = False
-                for bucket in buckets:
-                    if sc in bucket.getClassifications() and bucket.getDisplayName() == desired_bucket_name:
-                        found = True
-                stay = stay and found
-            return stay
-        results = filter(correct_buckets, results)
         results = list(results)
         if results:
             assert len(runs) == len(results[0][1])
         if len(results) > 0:
             output_tables.append((bset, results))
 
-
-    results = sorted(list(results), key=lambda x: basename(x[0]))
-    if results:
-        assert len(runs) == len(results[0][1])
     outputs = [None2Empty(r.outputs()) for r in runs]
     run_names = [None2Empty(r.name()) for r in runs]
     render_template(wfile, 'filter.html',
@@ -161,5 +143,5 @@ def showOverall(wfile, datamanager, opts):
                       'timeDiff50' : _differentTimes50,
                       'descr' : getDescriptionOrVersion,
                       'filters' : _filter,
-                      'output_tables': output_tables})
+                      'outputTables': output_tables})
 
