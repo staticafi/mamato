@@ -39,95 +39,116 @@ def showOverall(wfile, datamanager, opts):
     _differentTimes50 = 'time_diff_50' in opts
     _filter = opts.setdefault('filter', [])
 
-    results = datamanager.getAllRunInfos(run_ids).getRows().items()
+    # list of tuples (bset, RunInfosTable)
+    output_tables = []
+    bsets = datamanager.getBenchmarksSets()
+    # the filtering must be done by category
+    for bset in bsets:
+        results = datamanager.getRunInfos(bset.id, run_ids).getRows().items()
 
-    if _showDifferent:
-        def some_different(x):
-            L = x[1]
-            if L[0] is None:
-                status = None
-                classification = None
-            else:
-                status = L[0].status()
-                classification = L[0].classification()
-
-            for r in L:
-                if r is None:
-                    if status is not None:
-                        return True
-                    if classification is not None:
-                        return True
-                elif r.status() != status:
-                    return True
-                elif r.classification() != classification:
-                    return True
-
-            return False
-
-        results = filter(some_different, results)
-
-    if _differentTimes10:
-        def time_diff_10(x):
-            L = x[1]
-            min_x = min(L, key=lambda x: sys.float_info.max if x is None else x.cputime())
-            max_x = max(L, key=lambda x: -1 if x is None else x.cputime())
-            if min_x.cputime() > 1 and max_x.cputime() > min_x.cputime() * 1.1:
-                return True
-
-            return False
-
-        results = filter(time_diff_10, results)
-
-    if _differentTimes50:
-        def time_diff_50(x):
-            L = x[1]
-            min_x = min(L, key=lambda x: sys.float_info.max if x is None else x.cputime())
-            max_x = max(L, key=lambda x: -1 if x is None else x.cputime())
-            if min_x.cputime() > 1 and max_x.cputime() > min_x.cputime() * 1.5:
-                return True
-
-            return False
-
-        results = filter(time_diff_50, results)
-
-    if _showIncorrect:
-        def some_incorrect(x):
-            L = x[1]
-            for r in L:
-                if r is not None and r.classification() == 'wrong':
-                    return True
-
-            return False
-
-        results = filter(some_incorrect, results)
-
-    if _filter:
-        filters = []
-        for f in _filter:
-            try:
-                rf = compile(f)
-            except Exception as e:
-                print('ERROR: Invalid regular expression given in filter: ' + str(e))
-                continue
-            filters.append((f, lambda x : rf.search(x)))
-
-        for (pattern, f) in filters:
-            def match(x):
+        if _showDifferent:
+            def some_different(x):
                 L = x[1]
+                if L[0] is None:
+                    status = None
+                else:
+                    status = L[0].status()
+
                 for r in L:
-                    if r and f(r.status()):
+                    if r is None:
+                        if status is not None:
+                            return True
+                    elif r.status() != status:
                         return True
+
                 return False
 
-            print('Applying {0}'.format(pattern))
-            results = filter(match, results)
+            results = filter(some_different, results)
+
+        if _differentTimes10:
+            def time_diff_10(x):
+                L = x[1]
+                min_x = min(L, key=lambda x: sys.float_info.max if x is None else x.cputime())
+                max_x = max(L, key=lambda x: -1 if x is None else x.cputime())
+                if min_x.cputime() > 1 and max_x.cputime() > min_x.cputime() * 1.1:
+                    return True
+
+                return False
+
+            results = filter(time_diff_10, results)
+
+        if _differentTimes50:
+            def time_diff_50(x):
+                L = x[1]
+                min_x = min(L, key=lambda x: sys.float_info.max if x is None else x.cputime())
+                max_x = max(L, key=lambda x: -1 if x is None else x.cputime())
+                if min_x.cputime() > 1 and max_x.cputime() > min_x.cputime() * 1.5:
+                    return True
+
+                return False
+
+            results = filter(time_diff_50, results)
+
+        if _showIncorrect:
+            def some_incorrect(x):
+                L = x[1]
+                for r in L:
+                    if r is not None and r.classification() == 'wrong':
+                        return True
+
+                return False
+
+            results = filter(some_incorrect, results)
+
+        if _filter:
+            filters = []
+            for f in _filter:
+                try:
+                    rf = compile(f)
+                except Exception as e:
+                    print('ERROR: Invalid regular expression given in filter: ' + str(e))
+                    continue
+                filters.append((f, lambda x : rf.search(x)))
+
+            for (pattern, f) in filters:
+                def match(x):
+                    L = x[1]
+                    for r in L:
+                        if r and f(r.status()):
+                            return True
+                    return False
+
+                print('Applying {0}'.format(pattern))
+                results = filter(match, results)
+
+        def correct_buckets(x):
+            L = x[1]
+            stay = True
+            for r, run_id in zip(L, run_ids):
+                if r is None:
+                    return False
+                desired_bucket_name = run_bucket[run_id]
+                sc = (r.status(), r.classification())
+                found = False
+                for bucket in buckets:
+                    if sc in bucket.getClassifications() and bucket.getDisplayName() == desired_bucket_name:
+                        found = True
+                stay = stay and found
+            return stay
+        results = filter(correct_buckets, results)
+        results = list(results)
+        if results:
+            assert len(runs) == len(results[0][1])
+        if len(results) > 0:
+            output_tables.append((bset, results))
+
 
     results = sorted(list(results), key=lambda x: basename(x[0]))
     if results:
         assert len(runs) == len(results[0][1])
     outputs = [None2Empty(r.outputs()) for r in runs]
     run_names = [None2Empty(r.name()) for r in runs]
-    render_template(wfile, 'files.html',
+    render_template(wfile, 'filter.html',
                      {'runs' : runs,
                       'outputs' : outputs,
                       'run_names' : run_names,
@@ -139,7 +160,6 @@ def showOverall(wfile, datamanager, opts):
                       'timeDiff10' : _differentTimes10,
                       'timeDiff50' : _differentTimes50,
                       'descr' : getDescriptionOrVersion,
-                      'bset': {'name': 'Overall'},
                       'filters' : _filter,
-                      'results': results})
+                      'output_tables': output_tables})
 
