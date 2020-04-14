@@ -14,7 +14,12 @@ function renderOutput(modal, text) {
 }
 
 function getOutput(modal, archive, run_name, name) {
-	httpGetAsync('output?arch='+archive+'&file='+run_name + "." + name + ".log" , function (resp) {
+    var url = 'output?arch=' + archive + '&file=';
+    if (run_name != "") {
+      url += run_name + ".";
+    }
+    url += name + ".log";
+	httpGetAsync(url , function (resp) {
 			hideStatusBar();
 			renderOutput(modal, resp);
 			});
