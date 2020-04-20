@@ -384,7 +384,11 @@ value="@get(@grouping, 1)">@get(@grouping, 0)</option>
   -->
 
   <tr class="header_row_manage">
-  <th></th> <th></th>
+  <th></th>
+#if(@inlineView)
+#else
+  <th></th>
+#end
   #for @run in @runs:
     <th
 #if(@inlineView)
