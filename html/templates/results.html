@@ -288,8 +288,8 @@ function enableRenaming(tid) {
 <div id="content">
   <a href="/diagram?
 #for @run in @runs:
-run=@run.getID()&grouping=@groupingId
-#end
+run=@run.getID()&
+#end&grouping=@groupingId
            ">Visual</a>
     <select name="grouping" onchange="changeSettings(this)">
 #for @grouping in @groupings:
