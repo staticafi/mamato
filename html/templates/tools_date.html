@@ -96,12 +96,12 @@ Status bar
     <br> <br>
 
 #for @tag in @tags:
-   <input type="checkbox" name="tags-filter" value="@tag.getName()"
+   <input id="cb-@tag.getName()" type="checkbox" name="tags-filter" value="@tag.getName()"
    #if(@isIn(@tags_filters, @tag.getName()))
    checked
    #end
    >
-   <span class="tag" style="@tag.getCSS()">@tag.getName()</span></br>
+   <label for="cb-@tag.getName()"><span class="tag" style="@tag.getCSS()">@tag.getName()</span></label></br>
 #end
    </br>
   <select name="sort">
