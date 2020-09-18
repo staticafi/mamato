@@ -57,7 +57,9 @@
             {"result": "TIMEOUT (slicing)", "class": "error" },
             {"result": "TIMEOUT (slicing-finished)", "class": "error" },
             {"result": "TIMEOUT (instrumentation)", "class": "error" },
-            {"result": "TIMEOUT (verification)", "class": "error" }
+            {"result": "TIMEOUT (verification)", "class": "error" },
+            {"result": "TIMEOUT (verification-finished)", "class": "error" },
+            {"result": "TIMEOUT (before-instr)", "class": "error" }
           ]
         },
         {
@@ -197,6 +199,8 @@
                 {"result": "TIMEOUT (slicing-finished)", "class": "error" },
                 {"result": "TIMEOUT (instrumentation)", "class": "error" },
                 {"result": "TIMEOUT (verification)", "class": "error" },
+                {"result": "TIMEOUT (before-instr)", "class": "error" },
+                {"result": "TIMEOUT (verification-finished)", "class": "error" },
                 {"result": "unknown", "class": "unknown" },
                 {"result": "", "class": "None" },
                 {"result": "false(unreach-call)", "class": "unknown"},
@@ -304,7 +308,9 @@
             {"result": "TIMEOUT (slicing)", "class": "error" },
             {"result": "TIMEOUT (slicing-finished)", "class": "error" },
             {"result": "TIMEOUT (instrumentation)", "class": "error" },
-            {"result": "TIMEOUT (verification)", "class": "error" }
+            {"result": "TIMEOUT (verification)", "class": "error" },
+            {"result": "TIMEOUT (before-instr)", "class": "error" },
+            {"result": "TIMEOUT (verification-finished)", "class": "error" }
           ]
         }
       ]
