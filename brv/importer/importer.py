@@ -62,12 +62,13 @@ def copy_outputs(outputs, args):
                 print('scp {0} --> {1}'.format(outfile, args.scp))
                 client.send_file(os.path.basename(outfile), outfile)
     else:
+        path = 'outputs/'
         for outfile in outputs:
-            if not os.path.isdir('outputs'):
-                os.mkdir('outputs')
+            if not os.path.isdir(path):
+                os.mkdir(path)
 
             from shutil import copyfile
-            copyfile(os.path.join(path, outfile), os.path.join('outputs/', outfile))
+            copyfile(os.path.join(path, outfile), os.path.join(path, outfile))
             print('Copied the output: {0}'.format(outfile))
 
 
