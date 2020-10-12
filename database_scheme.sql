@@ -18,6 +18,10 @@ CREATE TABLE `tool_run` (
   `memlimit` varchar(100) DEFAULT NULL,
   `cpulimit` varchar(100) DEFAULT NULL,
   `date` DATETIME DEFAULT NULL,
+  `description` VARCHAR(255) DEFAULT NULL,
+  `tags` TEXT DEFAULT NULL,
+  `outputs` VARCHAR(512) DEFAULT NULL,
+  `name` VARCHAR(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   FOREIGN KEY (`tool_id`) REFERENCES `tool` (`id`)
 );
