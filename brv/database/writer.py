@@ -119,10 +119,10 @@ class DatabaseWriter(DatabaseProxy):
         INSERT INTO run
         (status, cputime, walltime, memusage, classification, exitcode, exitsignal,
          terminationreason, tool_run_id, benchmarks_set_id, property, options, file)
-        VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}', '{8}', '{9}',
+        VALUES ('{0}', {1}, {2}, {3}, '{4}', {5}, '{6}', '{7}', '{8}', '{9}',
         '{10}', '{11}', '{12}');
-        """.format(runinfo.status(), runinfo.cputime(), runinfo.walltime(),
-                   runinfo.memusage(), runinfo.classification(), runinfo.exitcode(),
+        """.format(runinfo.status(), None2Null(runinfo.cputime()), None2Null(runinfo.walltime()),
+                   None2Null(runinfo.memusage()), runinfo.classification(), None2Null(runinfo.exitcode()),
                    0, 0, #FIXME
                    tool_run_id, benchmarks_set_id,
                    runinfo.property(), None, #FIXME
