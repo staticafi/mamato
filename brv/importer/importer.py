@@ -68,7 +68,7 @@ def copy_outputs(outputs, args):
                 os.mkdir(path)
 
             from shutil import copyfile
-            copyfile(os.path.join(path, outfile), os.path.join(path, outfile))
+            copyfile(outfile, os.path.join(path, os.path.basename(outfile)))
             print('Copied the output: {0}'.format(outfile))
 
 
