@@ -59,7 +59,9 @@
             {"result": "TIMEOUT (instrumentation)", "class": "error" },
             {"result": "TIMEOUT (verification)", "class": "error" },
             {"result": "TIMEOUT (verification-finished)", "class": "error" },
-            {"result": "TIMEOUT (before-instr)", "class": "error" }
+            {"result": "TIMEOUT (before-instr)", "class": "error" },
+            {"result": "TIMEOUT (in verification)", "class": "error" },
+            {"result": "TIMEOUT (after slicing)", "class": "error" }
           ]
         },
         {
@@ -95,11 +97,13 @@
             {"result": "ERROR(unknown, verification-finished)", "class": "error" },
             {"result": "OUT OF MEMORY", "class": "error" },
             {"result": "OUT OF MEMORY (KILLED (signal 9, verification))", "class": "error" },
+            {"result": "OUT OF MEMORY (KILLED (signal 9, in verification))", "class": "error" },
             {"result": "OUT OF MEMORY (KILLED (signal 9, slicing))", "class": "error" },
             {"result": "OUT OF MEMORY (KILLED (signal 9, slicing-finished))", "class": "error" },
             {"result": "PROBABLY OUT OF MEMORY (KILLED (signal 9, verification))", "class": "error" },
             {"result": "PROBABLY OUT OF MEMORY (KILLED (signal 9, cex-confirmation))", "class": "error" },
             {"result": "ERROR(unknown, cex-confirmation)", "class": "error" },
+            {"result": "ERROR(unknown, after verification)", "class": "error" },
             {"result": "ERROR(returned 1, before-instr)", "class": "error" },
             {"result": "ERROR(returned 1, instrumentation)", "class": "error" },
             {"result": "ERROR(returned 1, slicing)", "class": "error" },
@@ -196,8 +200,10 @@
                 {"result": "TIMEOUT (timeout)", "class": "error" },
                 {"result": "TIMEOUT (cex-confirmation)", "class": "error" },
                 {"result": "TIMEOUT (slicing)", "class": "error" },
+                {"result": "TIMEOUT (after slicing)", "class": "error" },
                 {"result": "TIMEOUT (slicing-finished)", "class": "error" },
                 {"result": "TIMEOUT (instrumentation)", "class": "error" },
+                {"result": "TIMEOUT (in verification)", "class": "error" },
                 {"result": "TIMEOUT (verification)", "class": "error" },
                 {"result": "TIMEOUT (before-instr)", "class": "error" },
                 {"result": "TIMEOUT (verification-finished)", "class": "error" },
@@ -209,11 +215,13 @@
                 {"result": "ERROR(unknown, verification-finished)", "class": "error" },
                 {"result": "OUT OF MEMORY", "class": "error" },
 				{"result": "OUT OF MEMORY (KILLED (signal 9, verification))", "class": "error" },
+				{"result": "OUT OF MEMORY (KILLED (signal 9, in verification))", "class": "error" },
                 {"result": "OUT OF MEMORY (KILLED (signal 9, slicing))", "class": "error" },
                 {"result": "OUT OF MEMORY (KILLED (signal 9, slicing-finished))", "class": "error" },
 				{"result": "PROBABLY OUT OF MEMORY (KILLED (signal 9, verification))", "class": "error" },
                 {"result": "PROBABLY OUT OF MEMORY (KILLED (signal 9, cex-confirmation))", "class": "error" },
                 {"result": "ERROR(unknown, cex-confirmation)", "class": "error" },
+                {"result": "ERROR(unknown, after verification)", "class": "error" },
                 {"result": "ERROR(returned 1, before-instr)", "class": "error" },
                 {"result": "ERROR(returned 1, instrumentation)", "class": "error" },
                 {"result": "ERROR(returned 1, slicing)", "class": "error" },
@@ -307,10 +315,15 @@
             {"result": "TIMEOUT (cex-confirmation)", "class": "error" },
             {"result": "TIMEOUT (slicing)", "class": "error" },
             {"result": "TIMEOUT (slicing-finished)", "class": "error" },
+            {"result": "TIMEOUT (after slicing)", "class": "error" },
+            {"result": "TIMEOUT (in verification)", "class": "error" },
             {"result": "TIMEOUT (instrumentation)", "class": "error" },
             {"result": "TIMEOUT (verification)", "class": "error" },
             {"result": "TIMEOUT (before-instr)", "class": "error" },
-            {"result": "TIMEOUT (verification-finished)", "class": "error" }
+            {"result": "TIMEOUT (verification-finished)", "class": "error" },
+            {"result": "TIMEOUT (in verification)", "class": "error" },
+            {"result": "OUT OF MEMORY (KILLED (signal 9, in verification))", "class": "error" },
+            {"result": "TIMEOUT (after slicing)", "class": "error" }
           ]
         }
       ]
