@@ -15,7 +15,9 @@ def _run_details(run):
     if run.options():
         d += run.options()
 
-    d += ' ; {0}, {1:2} GB'.format(run.timelimit(), int(run.memlimit().replace('B', ''))/(10**9))
+    memlimitstr = run.memlimit().replace('B', '')
+    memlimit = int(memlimitstr)/(10**9) if memlimitstr else 0
+    d += ' ; {0}, {1:2} GB'.format(run.timelimit(), memlimit)
     return d
 
 def _nonempty_list(l):

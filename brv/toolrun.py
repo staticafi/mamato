@@ -95,7 +95,11 @@ class DBToolRun(ToolRun):
 
 def sum_elems(lhs, rhs):
     "Sum elements in tuples pair-wise"
-    return (lhs[0] + rhs[0], lhs[1] + rhs[1])
+    l = lhs[0] or 0
+    l += rhs[0] or 0
+    r = lhs[1] or 0
+    r += rhs[1] or 0
+    return l, r
 
 class RunsStats(object):
     def __init__(self, cat, bset_id):
