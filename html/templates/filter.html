@@ -187,11 +187,16 @@ function showOutput(archive, run_name, name) {
 
 <div id="content">
   <form id="settingsform" action="/res">
-   <input type="checkbox" name="different_only"
-#if(@showDifferent)
+   <input type="checkbox" name="different_status"
+#if(@showDifferentStatus)
           checked="1"
 #end
-          onchange="toggleSettings(this)"> Show different only
+          onchange="toggleSettings(this)"> Different status
+   <input type="checkbox" name="different_classif"
+#if(@showDifferentClassif)
+          checked="1"
+#end
+          onchange="toggleSettings(this)"> Different classification
    <input type="checkbox" name="incorrect"
 #if(@showIncorrect)
           checked="1"

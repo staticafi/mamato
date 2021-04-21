@@ -43,7 +43,8 @@ def showFiles(wfile, datamanager, opts):
         wfile.write(b'<h2>Invalid benchmarks</h2>')
         return
 
-    _showDifferent = 'different_only' in opts
+    _showDifferentStatus = 'different_status' in opts
+    _showDifferentClassif = 'different_classif' in opts
     _showIncorrect = 'incorrect' in opts
     _differentTimes10 = 'time_diff_10' in opts
     _differentTimes50 = 'time_diff_50' in opts
@@ -58,7 +59,7 @@ def showFiles(wfile, datamanager, opts):
         if bs.id == bset_id:
             bset = bs
 
-    if _showDifferent:
+    if _showDifferentStatus:
         def some_different(x):
             L = x[1]
             if L[0] is None:
@@ -77,6 +78,25 @@ def showFiles(wfile, datamanager, opts):
                 elif r.status() != status:
                     return True
                 elif r.classification() != classification:
+                    return True
+
+            return False
+
+        results = filter(some_different, results)
+
+    if _showDifferentClassif:
+        def some_different(x):
+            L = x[1]
+            if L[0] is None:
+                classif = None
+            else:
+                classif = L[0].classification()
+
+            for r in L:
+                if r is None:
+                    if classif is not None:
+                        return True
+                elif r.classification() != classif:
                     return True
 
             return False
@@ -151,7 +171,8 @@ def showFiles(wfile, datamanager, opts):
                       'get' : get_elem,
                       'getBenchmarkURL' : _getBenchmarkURL,
                       'getShortName' : _getShortName,
-                      'showDifferent' : _showDifferent,
+                      'showDifferentStatus' : _showDifferentStatus,
+                      'showDifferentClassif' : _showDifferentClassif,
                       'showIncorrect' : _showIncorrect,
                       'timeDiff10' : _differentTimes10,
                       'timeDiff50' : _differentTimes50,
