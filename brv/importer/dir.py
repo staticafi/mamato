@@ -46,7 +46,7 @@ def load_data_with_prefix(xmlparser, path, prefix, xmls, bz2s, outputs, descr, a
 
 
     outfile = outputs[0] if outputs else None
-    total, toolrun_ids = load_xmls(xmlparser, xmls, outfile, descr,
+    total, toolrun_ids, _ = load_xmls(xmlparser, xmls, outfile, descr,
                       append_vers, allow_duplicates)
     print('Added {0} results'.format(total))
 
