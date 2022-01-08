@@ -3,7 +3,7 @@ from os.path import join, isfile
 from http.server import SimpleHTTPRequestHandler
 from urllib.parse import unquote
 
-from brv.datamanager import DataManager
+from .. datamanager import DataManager
 
 from . showfiles import showFiles
 from . showfilter import showFilter

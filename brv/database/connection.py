@@ -23,7 +23,7 @@
 # OF THIS SOFTWARE.
 #
 
-from .. utils import err, dbg
+from .. utils import err
 
 try:
     import MySQLdb

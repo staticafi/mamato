@@ -3,7 +3,6 @@ from brv.toolrun import ToolRun
 from brv.utils import err
 
 import sys
-import os
 
 from xml.dom import minidom
 

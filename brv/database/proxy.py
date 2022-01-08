@@ -20,8 +20,7 @@
 # OF THIS SOFTWARE.
 
 
-from os.path import basename
-from .. utils import err, dbg
+from .. utils import dbg
 
 from . connection import DatabaseConnection
 

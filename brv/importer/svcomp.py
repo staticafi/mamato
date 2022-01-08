@@ -1,7 +1,8 @@
 from time import time
-import re, sys, os
+import re, os
 import subprocess
 
+from .. utils import err
 from . dir import load_dir
 
 def extractXmlLinks(email):

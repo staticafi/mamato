@@ -69,7 +69,6 @@ def is_importing_results(args):
     return args.results_dir or args.files or args.svcomp
 
 if __name__ == "__main__":
-    import sys
     args = parse_cmd()
 
     if is_importing_results(args):

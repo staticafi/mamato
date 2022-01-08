@@ -21,7 +21,7 @@
 
 from . proxy import DatabaseProxy
 from brv.bset import BSet
-from brv.toolrun import DBToolRun, ToolRunStats, RunsStats
+from brv.toolrun import DBToolRun, ToolRunStats
 from brv.runinfo import DBRunInfo
 
 class DatabaseReader(DatabaseProxy):

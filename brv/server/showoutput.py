@@ -1,6 +1,4 @@
 from os import unlink
-from . rendering import render_template
-from . util import get_elem, getDescriptionOrVersion
 
 from zipfile import ZipFile
 
