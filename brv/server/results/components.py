@@ -1,5 +1,3 @@
-#!/usr/bin/python
-
 from math import ceil
 
 # define utility functions here

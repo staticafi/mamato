@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 class ToolRun(object):
     """
     Represents one tool in a given version with provided settings and environment

@@ -1,14 +1,7 @@
-#!/usr/bin/python
+from os.path import join, isfile
 
-import sys
-from os.path import basename, join, isfile
-
-if (sys.version_info > (3, 0)):
-    from http.server import SimpleHTTPRequestHandler
-    from urllib.parse import unquote
-else:
-    from urllib import unquote
-    from SimpleHTTPServer import SimpleHTTPRequestHandler
+from http.server import SimpleHTTPRequestHandler
+from urllib.parse import unquote
 
 from brv.datamanager import DataManager
 

@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-#
 # This script distributes task between computers. The task
 # is to be run the Symbiotic tool on given benchark.
 #
@@ -31,7 +29,7 @@ try:
     import MySQLdb
 except ImportError:
     err('Couldn\'t use database from python, please install MySQLdb package '\
-        '("pip install mysql-python" or "pip install mysqlclient" with python3)')
+        '("pip install mysqlclient")')
 
 from os.path import abspath
 

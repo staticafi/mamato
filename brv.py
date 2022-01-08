@@ -1,12 +1,9 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
 
-from sys import version_info, stdout
+from sys import stdout
 from argparse import ArgumentParser
 
-if version_info < (3, 0):
-    from brv.server.server import createServer
-else:
-    from brv.server.server import BRVServer
+from brv.server.server import BRVServer
 
 def parse_cmd():
     parser = ArgumentParser()
@@ -66,10 +63,7 @@ def print_col(msg, color=None):
     stdout.flush()
 
 def start_server(args):
-    if version_info < (3, 0):
-        createServer()
-    else:
-        BRVServer.establish()
+    BRVServer.establish()
 
 def is_importing_results(args):
     return args.results_dir or args.files or args.svcomp

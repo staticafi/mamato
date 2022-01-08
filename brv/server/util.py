@@ -1,4 +1,3 @@
-#!/usr/bin/python
 from os.path import basename
 
 def getDescriptionOrVersion(toolr):

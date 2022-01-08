@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 class ResultsSummary(object):
     def __init__(self):
         self.correct = 0

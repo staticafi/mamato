@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-#
 # Copyright (c) 2015, 2017 Marek Chalupa
 # E-mail: statica@fi.muni.cz, mchalupa@mail.muni.cz
 #

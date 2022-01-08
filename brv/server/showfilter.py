@@ -1,5 +1,3 @@
-#!/usr/bin/python
-
 from . rendering import render_template
 from . util import get_elem, getDescriptionOrVersion, getBenchmarkURL, getShortName
 from re import compile

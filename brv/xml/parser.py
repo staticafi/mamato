@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 from brv.runinfo import DirectRunInfo
 from brv.toolrun import ToolRun
 from brv.utils import err
