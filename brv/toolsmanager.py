@@ -1,6 +1,3 @@
-#!/usr/bin/env python
-
-
 def _replace_run_in_list(lst, newrun):
     new_list = []
     found = False

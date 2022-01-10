@@ -1,20 +1,8 @@
-#!/usr/bin/python
-
 from . rendering import render_template
-from . util import get_elem, getDescriptionOrVersion
+from . util import get_elem, getDescriptionOrVersion, getBenchmarkURL, getShortName
 from os.path import basename
 from re import compile
 import sys
-
-def _getBenchmarkURL(name):
-    base='https://github.com/sosy-lab/sv-benchmarks/tree/master'
-    try:
-        return base + name[name.index('/c/'):]
-    except ValueError:
-        return None
-
-def _getShortName(name):
-    return basename(name)
 
 def None2Empty(s):
     return s if s else ''
@@ -169,8 +157,8 @@ def showFiles(wfile, datamanager, opts):
                       'outputs' : outputs,
                       'run_names' : run_names,
                       'get' : get_elem,
-                      'getBenchmarkURL' : _getBenchmarkURL,
-                      'getShortName' : _getShortName,
+                      'getBenchmarkURL' : getBenchmarkURL,
+                      'getShortName' : getShortName,
                       'showDifferentStatus' : _showDifferentStatus,
                       'showDifferentClassif' : _showDifferentClassif,
                       'showIncorrect' : _showIncorrect,

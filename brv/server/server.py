@@ -1,12 +1,4 @@
-#!/usr/bin/python
-
-import sys
-if (sys.version_info > (3, 0)):
-    import http.server as httpserver
-    import socketserver
-else:
-    import SimpleHTTPServer as httpserver
-    import SocketServer as socketserver
+import socketserver
 
 import socket
 
@@ -21,11 +13,13 @@ class BRVServer(socketserver.TCPServer):
         self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         self.socket.bind(self.server_address)
 
-    def get(nm = "", port = 3000):
-        return BRVServer((nm, port), Handler)
+    @classmethod
+    def get(cls, nm = "", port = 3000):
+        return cls((nm, port), Handler)
 
-    def establish(nm = "", port = 3000):
-        httpd = BRVServer.get(nm, port)
+    @classmethod
+    def establish(cls, nm = "", port = 3000):
+        httpd = cls.get(nm, port)
         dbg("Serving at port {0}".format(port))
 
         try:
@@ -36,20 +30,3 @@ class BRVServer(socketserver.TCPServer):
             # explicitly close the socket
             httpd.socket.close()
             print("Stopping...")
-
-# for compatibility with old python that
-# does not like class methods and attributes
-def createServer(nm = "", port = 3000):
-    httpd = BRVServer((nm, port), Handler)
-    dbg("Serving at port {0}".format(port))
-
-    try:
-        httpd.serve_forever()
-    except KeyboardInterrupt:
-        httpd.shutdown()
-        httpd.server_close()
-        # explicitly close the socket
-        httpd.socket.close()
-        print("Stopping...")
-
-

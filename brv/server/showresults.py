@@ -1,8 +1,5 @@
-#!/usr/bin/python
-
 from . rendering import render_template
 from . util import get_elem, getDescriptionOrVersion
-from math import ceil
 from .. import groupingmanager
 from . results.components import *
 

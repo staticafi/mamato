@@ -1,16 +1,9 @@
-#!/usr/bin/python
+from os.path import join, isfile
 
-import sys
-from os.path import basename, join, isfile
+from http.server import SimpleHTTPRequestHandler
+from urllib.parse import unquote
 
-if (sys.version_info > (3, 0)):
-    from http.server import SimpleHTTPRequestHandler
-    from urllib.parse import unquote
-else:
-    from urllib import unquote
-    from SimpleHTTPServer import SimpleHTTPRequestHandler
-
-from brv.datamanager import DataManager
+from .. datamanager import DataManager
 
 from . showfiles import showFiles
 from . showfilter import showFilter

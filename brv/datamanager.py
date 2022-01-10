@@ -1,5 +1,3 @@
-#!/usr/bin/python
-
 from brv.toolsmanager import ToolsManager
 from brv.tagsmanager import TagsManager
 from brv.toolrun import RunInfosTable

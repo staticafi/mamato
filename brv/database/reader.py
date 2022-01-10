@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-#
 # (c) 2017 Marek Chalupa
 # E-mail(s): statica@fi.muni.cz, mchalupa@mail.muni.cz
 #
@@ -23,7 +21,7 @@
 
 from . proxy import DatabaseProxy
 from brv.bset import BSet
-from brv.toolrun import DBToolRun, ToolRunStats, RunsStats
+from brv.toolrun import DBToolRun, ToolRunStats
 from brv.runinfo import DBRunInfo
 
 class DatabaseReader(DatabaseProxy):

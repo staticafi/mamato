@@ -1,4 +1,11 @@
-from paramiko.client import SSHClient
+from .. utils import err
+
+try:
+    from paramiko.client import SSHClient
+except ImportError:
+    err('paramiko is required for SCP functionality. '
+        'Run "pip install paramiko".')
+
 from collections import namedtuple
 import re
 import getpass

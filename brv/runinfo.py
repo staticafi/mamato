@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 from os.path import basename
 
 class RunInfo(object):

@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-#
 # Copyright (c) 2015, 2017 Marek Chalupa
 # E-mail: statica@fi.muni.cz, mchalupa@mail.muni.cz
 #
@@ -22,8 +20,7 @@
 # OF THIS SOFTWARE.
 
 
-from os.path import basename
-from .. utils import err, dbg
+from .. utils import dbg
 
 from . connection import DatabaseConnection
 

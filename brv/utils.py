@@ -1,6 +1,3 @@
-#!/usr/bin/env python
-
-
 def err(msg):
     import sys
 
