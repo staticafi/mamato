@@ -169,12 +169,9 @@ def showFilter(wfile, datamanager, opts):
             output_tables.append((bset, results))
 
     outputs = [None2Empty(r.outputs()) for r in runs]
-    run_names = [None2Empty(r.name()) for r in runs]
-
     render_template(wfile, 'filter.html',
                      {'runs' : runs,
                       'outputs' : outputs,
-                      'run_names' : run_names,
                       'get' : get_elem,
                       'getBenchmarkURL' : getBenchmarkURL,
                       'getShortName' : getShortName,

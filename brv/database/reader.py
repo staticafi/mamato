@@ -37,7 +37,7 @@ class DatabaseReader(DatabaseProxy):
         SELECT tool_run.id, tool.name, tool.version, date,
                options, cpulimit, memlimit,
                tool_run.description, tool_run.tags,
-               tool_run.outputs, tool_run.name
+               tool_run.outputs
         FROM tool JOIN tool_run ON tool.id = tool_id;
         """
         res = self.query(q)
@@ -53,7 +53,7 @@ class DatabaseReader(DatabaseProxy):
         SELECT tool_run.id, tool.name, tool.version, date,
                options, cpulimit, memlimit,
                tool_run.description, tool_run.tags,
-               tool_run.outputs, tool_run.name
+               tool_run.outputs
         FROM tool JOIN tool_run ON tool.id = tool_id
         WHERE tool_run.id = {0};
         """.format(rid)
@@ -106,11 +106,12 @@ class DatabaseReader(DatabaseProxy):
         # 5 -> exitcode
         # 6 -> property
         # 7 -> file name
+        # 8 -> prefix
 
         q = """
         SELECT status, cputime, walltime, memusage,
-               classification, exitcode, property, file
-        FROM run WHERE tool_run_id = '{0}' AND benchmarks_set_id = '{1}'; 
+               classification, exitcode, property, file, prefix
+        FROM run WHERE tool_run_id = '{0}' AND benchmarks_set_id = '{1}';
         """.format(tool_run_id, bset_id);
         print(q)
         # FIXME: use fetchone
@@ -132,10 +133,11 @@ class DatabaseReader(DatabaseProxy):
         # 5 -> exitcode
         # 6 -> property
         # 7 -> file name
+        # 8 -> prefix
 
         q = """
         SELECT status, cputime, walltime, memusage,
-               classification, exitcode, property, file
+               classification, exitcode, property, file, prefix
         FROM run WHERE tool_run_id = '{0}'
         ORDER BY file ASC;
         """.format(tool_run_id);

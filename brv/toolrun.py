@@ -38,9 +38,6 @@ class ToolRun(object):
     def outputs(self):
         raise NotImplemented
 
-    def name(self):
-        raise NotImplemented
-
     def getResults(self):
         return self._runs
 
@@ -48,7 +45,7 @@ class ToolRun(object):
         return self._stats
 
     def getLimits(self):
-        return timelimit() + ' ' + memlimit()
+        return self.timelimit() + ' ' + self.memlimit()
 
     def addRun(self, r):
         """
@@ -87,9 +84,6 @@ class DBToolRun(ToolRun):
 
     def outputs(self):
         return self._query_result[9]
-
-    def name(self):
-        return self._query_result[10]
 
 def sum_elems(lhs, rhs):
     "Sum elements in tuples pair-wise"

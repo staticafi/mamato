@@ -38,6 +38,9 @@ class RunInfo(object):
     def property(self):
         raise NotImplemented
 
+    def prefix(self):
+        raise NotImplemented
+
     def dump(self):
         print(' -- Result --')
         print('  {0} ({1})'.format(self.name(), self.fullname()))
@@ -69,6 +72,7 @@ class DBRunInfo(RunInfo):
     # 5 -> exitcode
     # 6 -> property
     # 7 -> file name
+    # 8 -> prefix
 
     def status(self):
         return self._query_result[0]
@@ -94,6 +98,9 @@ class DBRunInfo(RunInfo):
     def fullname(self):
         return self._query_result[7]
 
+    def prefix(self):
+        return self._query_result[8]
+
 
 class DirectRunInfo(RunInfo):
     """
@@ -114,6 +121,7 @@ class DirectRunInfo(RunInfo):
         self._property = None
         self._exitcode = None
         self._returnvalue = None
+        self._prefix = None
         # other attributes
         #self.others = {}
 
@@ -122,6 +130,9 @@ class DirectRunInfo(RunInfo):
 
     def fullname(self):
         return self._fullname
+
+    def prefix(self):
+        return self._prefix
 
     def status(self):
         return self._status

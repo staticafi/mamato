@@ -21,7 +21,6 @@ CREATE TABLE `tool_run` (
   `description` VARCHAR(255) DEFAULT NULL,
   `tags` TEXT DEFAULT NULL,
   `outputs` VARCHAR(512) DEFAULT NULL,
-  `name` VARCHAR(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   FOREIGN KEY (`tool_id`) REFERENCES `tool` (`id`)
 );
@@ -38,6 +37,7 @@ CREATE TABLE `run` (
   `tool_run_id` int(11) NOT NULL,
   `benchmarks_set_id` int(11) NOT NULL,
   `property` varchar(100) DEFAULT NULL,
+  `prefix` varchar(255) DEFAULT NULL,
   `options` text,
   `file` text,
   FOREIGN KEY (`tool_run_id`) REFERENCES `tool_run` (`id`),
