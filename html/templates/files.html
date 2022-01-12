@@ -266,7 +266,7 @@ function showOutput(archive, run_name, name) {
     #for @runinfo in @get(@result, 1):
       <td>
       <span class="status status-@runinfo.classification()"
-            onclick="showOutput('@get(@outputs, @n)', '@get(@run_names, @n)', '@shortname')">
+            onclick="showOutput('@get(@outputs, @n)', '@runinfo.prefix()', '@shortname')">
       #if(@runinfo)
       @runinfo.status()
       #else

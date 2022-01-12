@@ -151,11 +151,9 @@ def showFiles(wfile, datamanager, opts):
     if results:
         assert len(runs) == len(results[0][1])
     outputs = [None2Empty(r.outputs()) for r in runs]
-    run_names = [None2Empty(r.name()) for r in runs]
     render_template(wfile, 'files.html',
                      {'runs' : runs,
                       'outputs' : outputs,
-                      'run_names' : run_names,
                       'get' : get_elem,
                       'getBenchmarkURL' : getBenchmarkURL,
                       'getShortName' : getShortName,

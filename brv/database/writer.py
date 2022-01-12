@@ -81,14 +81,14 @@ class DatabaseWriter(DatabaseProxy):
             q = """
             INSERT INTO tool_run
               (tool_id, options, memlimit, cpulimit, date,
-               description, name, outputs)
-              VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', {7});
+               description, outputs)
+              VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', {6});
             """.format(tool_id, toolinfo.options,
                        toolinfo.memlimit, toolinfo.timelimit,
                        toolinfo.date,
                        None2Empty(toolinfo.benchmarkname) + ":" +
                        None2Empty(toolinfo.description),
-                       toolinfo.name, None2Null(outputs))
+                       None2Null(outputs))
             self.query_noresult(q)
             tool_run_id = self.queryInt("SELECT LAST_INSERT_ID();")
 
@@ -116,15 +116,16 @@ class DatabaseWriter(DatabaseProxy):
         q = """
         INSERT INTO run
         (status, cputime, walltime, memusage, classification, exitcode, exitsignal,
-         terminationreason, tool_run_id, benchmarks_set_id, property, options, file)
+         terminationreason, tool_run_id, benchmarks_set_id, property, options,
+         file, prefix)
         VALUES ('{0}', {1}, {2}, {3}, '{4}', {5}, '{6}', '{7}', '{8}', '{9}',
-        '{10}', '{11}', '{12}');
+        '{10}', '{11}', '{12}', '{13}');
         """.format(runinfo.status(), None2Null(runinfo.cputime()), None2Null(runinfo.walltime()),
                    None2Null(runinfo.memusage()), runinfo.classification(), None2Null(runinfo.exitcode()),
                    0, 0, #FIXME
                    tool_run_id, benchmarks_set_id,
                    runinfo.property(), None, #FIXME
-                   runinfo.fullname())
+                   runinfo.fullname(), runinfo.prefix())
                     #FIXME: what return value?
         self.query_noresult(q)
 

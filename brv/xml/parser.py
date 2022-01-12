@@ -113,6 +113,7 @@ class XMLParser(object):
 
         for run in xmlfl.getElementsByTagName('run'):
             r = _parse_run_elem(run)
+            r._prefix = ret.name;
             ret.append(r)
 
         return ret
@@ -145,6 +146,7 @@ class XMLParser(object):
         cnt = 0;
         for run in xmlfl.getElementsByTagName('run'):
             r = _parse_run_elem(run)
+            r._prefix = tool_info.name;
             writer.writeRunInfo(tool_run_id, benchmarks_set_id, r)
             cnt += 1
 
