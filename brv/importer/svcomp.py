@@ -17,7 +17,7 @@ def extractXmlLinks(email):
 
 
 def extractVerifierName(email):
-    regex = re.compile(r'Please find below the (final|preliminary) results for verifier ([^,]+),')
+    regex = re.compile(r'Please find below the (final|preliminary|Pre-run) results for (verifier|tool) ([^,]+),')
     matches = regex.findall(email)
 
     if len(matches) == 0:
